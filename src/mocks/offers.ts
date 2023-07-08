@@ -37,7 +37,7 @@ export const MOCK_OFFERS: Offer[] = [
     host: 1,
     reviews: [1],
     picture: 'img/apartment-01.jpg',
-    pictureSmall: 'img/apartment-small-01.jpg',
+    pictureSmall: 'img/apartment-small-04.jpg',
     city: 'Amsterdam',
   },
   {
@@ -68,7 +68,7 @@ export const MOCK_OFFERS: Offer[] = [
     host: 3,
     reviews: [4, 5],
     picture: 'img/apartment-02.jpg',
-    pictureSmall: 'img/apartment-small-02.jpg',
+    pictureSmall: 'img/apartment-small-03.jpg',
     city: 'Amsterdam',
   },
   {
@@ -123,7 +123,7 @@ export const MOCK_OFFERS: Offer[] = [
     host: 7,
     reviews: [],
     picture: 'img/apartment-01.jpg',
-    pictureSmall: 'img/apartment-small-01.jpg',
+    pictureSmall: 'img/apartment-small-04.jpg',
     city: 'Cologne',
   },
 ];
