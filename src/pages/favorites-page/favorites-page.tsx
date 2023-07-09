@@ -6,7 +6,7 @@ type FavoritesScreenProps = {
   offers: Offer[];
 };
 
-function FavoritesScreen({ offers }: FavoritesScreenProps): JSX.Element {
+function FavoritesPage({ offers }: FavoritesScreenProps): JSX.Element {
   return (
     <div className="page">
       <header className="header">
@@ -94,4 +94,4 @@ function FavoritesScreen({ offers }: FavoritesScreenProps): JSX.Element {
   );
 }
 
-export default FavoritesScreen;
+export default FavoritesPage;

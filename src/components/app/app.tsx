@@ -1,10 +1,10 @@
 import { Route, BrowserRouter, Routes } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus } from '../../const';
-import MainScreen from '../../pages/main-screen/main-screen';
-import LoginScreen from '../../pages/login-screen/login-screen';
-import OfferScreen from '../../pages/offer-screen/offer-screen';
-import FavoritesScreen from '../../pages/favorites-screen/favorites-screen';
-import NotFoundScreen from '../../pages/not-found-screen/not-found-screen';
+import MainPage from '../../pages/main-page/main-page';
+import LoginPage from '../../pages/login-page/login-page';
+import OfferPage from '../../pages/offer-page/offer-page';
+import FavoritesPage from '../../pages/favorites-page/favorites-page';
+import NotFoundPage from '../../pages/not-found-page/not-found-page';
 import PrivateRoute from '../private-route/private-route';
 import { Offer } from '../../mocks/offer';
 
@@ -19,19 +19,19 @@ function App({ offersCount, offers }: AppProps): JSX.Element {
       <Routes>
         <Route
           path={AppRoute.Main}
-          element={<MainScreen offersCount={offersCount} offers={offers} />}
+          element={<MainPage offersCount={offersCount} />}
         />
-        <Route path={AppRoute.Login} element={<LoginScreen />} />
-        <Route path={AppRoute.Offer} element={<OfferScreen />} />
+        <Route path={AppRoute.Login} element={<LoginPage />} />
+        <Route path={AppRoute.Offer} element={<OfferPage />} />
         <Route
           path={AppRoute.Favorites}
           element={
             <PrivateRoute authorizationStatus={AuthorizationStatus.Auth}>
-              <FavoritesScreen offers={offers} />
+              <FavoritesPage offers={offers} />
             </PrivateRoute>
           }
         />
-        <Route path="*" element={<NotFoundScreen />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </BrowserRouter>
   );

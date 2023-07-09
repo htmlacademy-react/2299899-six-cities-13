@@ -1,12 +1,10 @@
-import CardMainList from '../../components/card-main-list/card-main-list';
-import { Offer } from '../../mocks/offer';
+import Card from '../../components/card/card';
 
-type MainScreenProps = {
+type MainPageProps = {
   offersCount: number;
-  offers: Offer[];
 };
 
-function MainScreen({ offersCount, offers }: MainScreenProps): JSX.Element {
+function MainPage({ offersCount }: MainPageProps): JSX.Element {
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -118,7 +116,13 @@ function MainScreen({ offersCount, offers }: MainScreenProps): JSX.Element {
                   </li>
                 </ul>
               </form>
-              <CardMainList offers={offers} />
+              <div className="cities__places-list places__list tabs__content">
+                <Card />
+                <Card />
+                <Card />
+                <Card />
+                <Card />
+              </div>
             </section>
             <div className="cities__right-section">
               <section className="cities__map map" />
@@ -130,4 +134,4 @@ function MainScreen({ offersCount, offers }: MainScreenProps): JSX.Element {
   );
 }
 
-export default MainScreen;
+export default MainPage;
