@@ -1,9 +1,9 @@
 import { Route, BrowserRouter, Routes } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus } from '../../const';
-import MainScreen from '../../pages/main-screen/main-screen';
-import LoginScreen from '../../pages/login-screen/login-screen';
-import OfferScreen from '../../pages/offer-screen/offer-screen';
-import FavoritesScreen from '../../pages/favorites-screen/favorites-screen';
+import MainPage from '../../pages/main-page/main-page';
+import LoginPage from '../../pages/login-page/login-page';
+import OfferPage from '../../pages/offer-page/offer-page';
+import FavoritesPage from '../../pages/favorites-page/favorites-page';
 import NotFoundScreen from '../../pages/not-found-screen/not-found-screen';
 import PrivateRoute from '../private-route/private-route';
 
@@ -17,15 +17,15 @@ function App({ offersCount }: AppProps): JSX.Element {
       <Routes>
         <Route
           path={AppRoute.Main}
-          element={<MainScreen offersCount={offersCount} />}
+          element={<MainPage offersCount={offersCount} />}
         />
-        <Route path={AppRoute.Login} element={<LoginScreen />} />
-        <Route path={AppRoute.Offer} element={<OfferScreen />} />
+        <Route path={AppRoute.Login} element={<LoginPage />} />
+        <Route path={AppRoute.Offer} element={<OfferPage />} />
         <Route
           path={AppRoute.Favorites}
           element={
             <PrivateRoute authorizationStatus={AuthorizationStatus.NoAuth}>
-              <FavoritesScreen />
+              <FavoritesPage />
             </PrivateRoute>
           }
         />
