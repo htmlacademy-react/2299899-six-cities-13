@@ -1,10 +1,12 @@
-import Card from '../../components/card/card';
+import CardMainList from '../../components/card-main-list/card-main-list';
+import { Offer } from '../../mocks/offer';
 
 type MainPageProps = {
   offersCount: number;
+  offers: Offer[];
 };
 
-function MainPage({ offersCount }: MainPageProps): JSX.Element {
+function MainPage({ offersCount, offers }: MainPageProps): JSX.Element {
   return (
     <div className="page page--gray page--main">
       <header className="header">
@@ -117,11 +119,7 @@ function MainPage({ offersCount }: MainPageProps): JSX.Element {
                 </ul>
               </form>
               <div className="cities__places-list places__list tabs__content">
-                <Card />
-                <Card />
-                <Card />
-                <Card />
-                <Card />
+                <CardMainList offers={offers} />
               </div>
             </section>
             <div className="cities__right-section">
