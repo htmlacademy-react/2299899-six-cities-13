@@ -1,7 +1,6 @@
 import { SyntheticEvent } from 'react';
 import { Offer } from '../../mocks/offer';
 import { Link } from 'react-router-dom';
-import { AppRoute } from '../../const';
 
 type Handler = (evt: SyntheticEvent) => void;
 
@@ -29,11 +28,10 @@ function CardMain({
         </div>
       )}
       <div className="cities__image-wrapper place-card__image-wrapper">
-        <Link to={AppRoute.Offer}>
-          {offer.title}
+        <Link to={`offer/${offer.id}`}>
           <img
             className="place-card__image"
-            src={offer.picture}
+            src={offer.pictures[0]}
             width={260}
             height={200}
             alt="Place image"
@@ -60,7 +58,7 @@ function CardMain({
           </div>
         </div>
         <h2 className="place-card__name">
-          <Link to={AppRoute.Offer}>{offer.title}</Link>
+          <Link to={`offer/${offer.id}`}>{offer.title}</Link>
         </h2>
         <p className="place-card__type">{offer.type}</p>
       </div>
