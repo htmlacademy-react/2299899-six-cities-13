@@ -1,6 +1,11 @@
+import { Helmet } from 'react-helmet-async';
+
 function NotFoundPage(): JSX.Element {
   return (
     <div className="page page--gray page--main">
+      <Helmet>
+        <title>404. Page not found</title>
+      </Helmet>
       <header className="header">
         <div className="container">
           <div className="header__wrapper">
@@ -40,8 +45,10 @@ function NotFoundPage(): JSX.Element {
         </div>
       </header>
       <main className="page__main page__main--index">
-        <h1>404. Page not found</h1>
-        <a href="/">Back to main page</a>
+        <div className="container" style={{ textAlign: 'center' }}>
+          <h1>404. Page not found</h1>
+          <a href="/">Back to main page</a>
+        </div>
       </main>
     </div>
   );
