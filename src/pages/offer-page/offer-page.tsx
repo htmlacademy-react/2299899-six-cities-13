@@ -1,4 +1,6 @@
 import { Helmet } from 'react-helmet-async';
+import { AppRoute } from '../../const';
+import { Link } from 'react-router-dom';
 
 function OfferPage(): JSX.Element {
   return (
@@ -10,7 +12,7 @@ function OfferPage(): JSX.Element {
         <div className="container">
           <div className="header__wrapper">
             <div className="header__left">
-              <a className="header__logo-link" href="main.html">
+              <Link className="header__logo-link" to={AppRoute.Main}>
                 <img
                   className="header__logo"
                   src="img/logo.svg"
@@ -18,7 +20,7 @@ function OfferPage(): JSX.Element {
                   width={81}
                   height={41}
                 />
-              </a>
+              </Link>
             </div>
             <nav className="header__nav">
               <ul className="header__nav-list">
