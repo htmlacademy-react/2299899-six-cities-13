@@ -1,3 +1,5 @@
+import { Helmet } from 'react-helmet-async';
+
 // import CardFavoritesList from '../../components/card-favorite-list/card-favorites-list';
 import CardFavorites from '../../components/card-favorites/card-favorites';
 import { Offer } from '../../mocks/offer';
@@ -9,6 +11,9 @@ type FavoritesScreenProps = {
 function FavoritesPage({ offers }: FavoritesScreenProps): JSX.Element {
   return (
     <div className="page">
+      <Helmet>
+        <title>6 cities: favorites</title>
+      </Helmet>
       <header className="header">
         <div className="container">
           <div className="header__wrapper">

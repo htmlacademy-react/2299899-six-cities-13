@@ -1,3 +1,4 @@
+import { Helmet } from 'react-helmet-async';
 import CardMainList from '../../components/card-main-list/card-main-list';
 import { Offer } from '../../mocks/offer';
 
@@ -9,6 +10,9 @@ type MainPageProps = {
 function MainPage({ offersCount, offers }: MainPageProps): JSX.Element {
   return (
     <div className="page page--gray page--main">
+      <Helmet>
+        <title>6 cities</title>
+      </Helmet>
       <header className="header">
         <div className="container">
           <div className="header__wrapper">
