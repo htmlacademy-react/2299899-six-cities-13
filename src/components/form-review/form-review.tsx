@@ -1,17 +1,16 @@
-import { FormEvent, useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 
 function FormReview(): JSX.Element {
-  const [formData, setFormData] = useState({
-    id: -1,
-    userId: -1,
-    rate: 5,
+  const [newReview, setNewReview] = useState({
+    rating: '5',
     review: '',
-    date: '',
   });
 
-  const handleFieldChange = (evt: FormEvent<HTMLFormElement>) => {
+  const handleFieldChange = (
+    evt: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
     const { name, value } = evt.target;
-    setFormData({ ...formData, [name]: value });
+    setNewReview({ ...newReview, [name]: value });
   };
 
   return (
@@ -26,6 +25,7 @@ function FormReview(): JSX.Element {
           defaultValue={5}
           id="5-stars"
           type="radio"
+          onChange={handleFieldChange}
         />
         <label
           htmlFor="5-stars"
@@ -42,6 +42,7 @@ function FormReview(): JSX.Element {
           defaultValue={4}
           id="4-stars"
           type="radio"
+          onChange={handleFieldChange}
         />
         <label
           htmlFor="4-stars"
@@ -58,6 +59,7 @@ function FormReview(): JSX.Element {
           defaultValue={3}
           id="3-stars"
           type="radio"
+          onChange={handleFieldChange}
         />
         <label
           htmlFor="3-stars"
@@ -74,6 +76,7 @@ function FormReview(): JSX.Element {
           defaultValue={2}
           id="2-stars"
           type="radio"
+          onChange={handleFieldChange}
         />
         <label
           htmlFor="2-stars"
@@ -90,6 +93,7 @@ function FormReview(): JSX.Element {
           defaultValue={1}
           id="1-star"
           type="radio"
+          onChange={handleFieldChange}
         />
         <label
           htmlFor="1-star"
@@ -106,7 +110,8 @@ function FormReview(): JSX.Element {
         id="review"
         name="review"
         placeholder="Tell how was your stay, what you like and what can be improved"
-        defaultValue={''}
+        defaultValue={newReview.review}
+        onChange={handleFieldChange}
       />
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
