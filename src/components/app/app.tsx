@@ -24,7 +24,10 @@ function App({ offersCount, offers }: AppProps): JSX.Element {
             element={<MainPage offersCount={offersCount} offers={offers} />}
           />
           <Route path={AppRoute.Login} element={<LoginPage />} />
-          <Route path={AppRoute.Offer} element={<OfferPage />} />
+          <Route
+            path={AppRoute.Offer}
+            element={<OfferPage offers={offers} />}
+          />
           <Route
             path={AppRoute.Favorites}
             element={

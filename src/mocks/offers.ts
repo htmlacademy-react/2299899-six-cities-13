@@ -10,7 +10,8 @@ export const MOCK_OFFERS: Offer[] = [
     children: 0,
     price: 120,
     rate: 4.8,
-    services: [
+    features: ['Apartment', '3 bedrooms', 'Max 4 adults'],
+    inside: [
       'Wi-Fi',
       'Heating',
       'Kitchen',
@@ -36,7 +37,7 @@ export const MOCK_OFFERS: Offer[] = [
     isFavorite: false,
     host: 1,
     reviews: [1],
-    picture: 'img/apartment-01.jpg',
+    pictures: ['img/apartment-01.jpg', 'img/room.jpg'],
     pictureSmall: 'img/apartment-small-04.jpg',
     city: 'Amsterdam',
   },
@@ -49,14 +50,8 @@ export const MOCK_OFFERS: Offer[] = [
     children: 1,
     price: 80,
     rate: 5.0,
-    services: [
-      'Wi-Fi',
-      'Heating',
-      'Kitchen',
-      'Towels',
-      'Baby seat',
-      'Cabel TV',
-    ],
+    features: ['Apartment', '2 bedrooms', 'Max 3 adults'],
+    inside: ['Wi-Fi', 'Heating', 'Kitchen', 'Towels', 'Baby seat', 'Cabel TV'],
     description: `
       An independent House, strategically
       located between Rembrand Square and National
@@ -67,7 +62,7 @@ export const MOCK_OFFERS: Offer[] = [
     isFavorite: true,
     host: 3,
     reviews: [4, 5],
-    picture: 'img/apartment-02.jpg',
+    pictures: ['img/apartment-02.jpg', 'img/studio-01.jpg'],
     pictureSmall: 'img/apartment-small-03.jpg',
     city: 'Amsterdam',
   },
@@ -80,7 +75,8 @@ export const MOCK_OFFERS: Offer[] = [
     children: 0,
     price: 132,
     rate: 4.0,
-    services: ['Wi-Fi', 'Heating', 'Towels', 'Cabel TV'],
+    features: ['Apartment', '1 bedroom', 'Max 2 adults'],
+    inside: ['Wi-Fi', 'Heating', 'Towels', 'Cabel TV'],
     description: `
     A quiet cozy and picturesque
     that hides behind a a river by
@@ -91,7 +87,7 @@ export const MOCK_OFFERS: Offer[] = [
     isFavorite: false,
     host: 5,
     reviews: [2, 3],
-    picture: 'img/apartment-03.jpg',
+    pictures: ['img/apartment-03.jpg', 'img/room.jpg', 'img/studio-01.jpg'],
     pictureSmall: 'img/apartment-small-03.jpg',
     city: 'Amsterdam',
   },
@@ -104,7 +100,8 @@ export const MOCK_OFFERS: Offer[] = [
     children: 2,
     price: 180,
     rate: 5.0,
-    services: [
+    features: ['Apartment', '1 bedrooms', 'Max 2 adults'],
+    inside: [
       'Wi-Fi',
       'Heating',
       'Kitchen',
@@ -122,7 +119,7 @@ export const MOCK_OFFERS: Offer[] = [
     isFavorite: true,
     host: 7,
     reviews: [],
-    picture: 'img/apartment-01.jpg',
+    pictures: ['img/apartment-01.jpg', 'img/studio-01.jpg', 'img/room.jpg'],
     pictureSmall: 'img/apartment-small-04.jpg',
     city: 'Cologne',
   },

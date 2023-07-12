@@ -7,13 +7,14 @@ export type Offer = {
   children: number;
   price: number;
   rate: number;
-  services: string[];
+  features: [string, string, string];
+  inside: string[];
   description: string;
   isPremium: boolean;
   isFavorite: boolean;
   host: number;
   reviews: number[];
-  picture: string;
+  pictures: string[];
   pictureSmall: string;
   city: string;
 };
