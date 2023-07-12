@@ -1,6 +1,10 @@
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useState } from 'react';
 
-function FormReview(): JSX.Element {
+type FormReviewProps = {
+  onReviewSubmit: () => void;
+};
+
+function FormReview({ onReviewSubmit }: FormReviewProps): JSX.Element {
   const [newReview, setNewReview] = useState({
     rating: '5',
     review: '',
@@ -14,7 +18,15 @@ function FormReview(): JSX.Element {
   };
 
   return (
-    <form className="reviews__form form" action="#" method="post">
+    <form
+      className="reviews__form form"
+      action="#"
+      method="post"
+      onSubmit={(evt: FormEvent<HTMLFormElement>) => {
+        evt.preventDefault();
+        onReviewSubmit();
+      }}
+    >
       <label className="reviews__label form__label" htmlFor="review">
         Your review
       </label>
@@ -122,7 +134,6 @@ function FormReview(): JSX.Element {
         <button
           className="reviews__submit form__submit button"
           type="submit"
-          disabled
         >
           Submit
         </button>
