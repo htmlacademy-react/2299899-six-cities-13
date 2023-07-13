@@ -3,6 +3,9 @@ import CardMainList from '../../components/card-main-list/card-main-list';
 import { Offer } from '../../mocks/offer';
 import { Link } from 'react-router-dom';
 import { AppRoute } from '../../const';
+import Map from '../../components/map/map';
+import { useState } from 'react';
+import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
 
 type MainPageProps = {
   offersCount: number;
@@ -10,6 +13,21 @@ type MainPageProps = {
 };
 
 function MainPage({ offersCount, offers }: MainPageProps): JSX.Element {
+  const [activeCardId, setActiveCardId] = useState<number | undefined>(
+    undefined
+  );
+  const activeCard = offers.find((offer) => offer.id === activeCardId);
+
+  const onMouseOverCard: MouseOverLeaveHandler = (evt) => {
+    evt.preventDefault();
+    setActiveCardId(Number(evt.currentTarget.dataset.id));
+  };
+
+  const onMouseLeaveCard: MouseOverLeaveHandler = (evt) => {
+    evt.preventDefault();
+    setActiveCardId(undefined);
+  };
+
   return (
     <div className="page page--gray page--main">
       <Helmet>
@@ -19,7 +37,10 @@ function MainPage({ offersCount, offers }: MainPageProps): JSX.Element {
         <div className="container">
           <div className="header__wrapper">
             <div className="header__left">
-              <Link className="header__logo-link header__logo-link--active" to={AppRoute.Main}>
+              <Link
+                className="header__logo-link header__logo-link--active"
+                to={AppRoute.Main}
+              >
                 <img
                   className="header__logo"
                   src="img/logo.svg"
@@ -125,11 +146,17 @@ function MainPage({ offersCount, offers }: MainPageProps): JSX.Element {
                 </ul>
               </form>
               <div className="cities__places-list places__list tabs__content">
-                <CardMainList offers={offers} />
+                <CardMainList
+                  offers={offers}
+                  onMouseOverCard={onMouseOverCard}
+                  onMouseLeaveCard={onMouseLeaveCard}
+                />
               </div>
             </section>
             <div className="cities__right-section">
-              <section className="cities__map map" />
+              <section className="cities__map map">
+                <Map offers={offers} selectedOffer={activeCard} />
+              </section>
             </div>
           </div>
         </div>

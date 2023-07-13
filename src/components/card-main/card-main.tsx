@@ -1,13 +1,13 @@
-import { SyntheticEvent } from 'react';
+import { MouseEvent } from 'react';
 import { Offer } from '../../mocks/offer';
 import { Link } from 'react-router-dom';
 
-type Handler = (evt: SyntheticEvent) => void;
+export type MouseOverLeaveHandler = (evt: MouseEvent<HTMLElement>) => void;
 
 type CardMainProps = {
   offer: Offer;
-  mouseOverHandler: Handler;
-  mouseLeaveHandler: Handler;
+  mouseOverHandler: MouseOverLeaveHandler;
+  mouseLeaveHandler: MouseOverLeaveHandler;
 };
 
 function CardMain({
