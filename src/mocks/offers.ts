@@ -40,6 +40,8 @@ export const MOCK_OFFERS: Offer[] = [
     pictures: ['img/apartment-01.jpg', 'img/room.jpg'],
     pictureSmall: 'img/apartment-small-04.jpg',
     city: 'Amsterdam',
+    lat: 52.3909553943508,
+    lng: 4.85309666406198,
   },
   {
     id: 2,
@@ -65,6 +67,8 @@ export const MOCK_OFFERS: Offer[] = [
     pictures: ['img/apartment-02.jpg', 'img/studio-01.jpg'],
     pictureSmall: 'img/apartment-small-03.jpg',
     city: 'Amsterdam',
+    lat: 52.3609553943508,
+    lng: 4.85309666406198,
   },
   {
     id: 3,
@@ -90,6 +94,8 @@ export const MOCK_OFFERS: Offer[] = [
     pictures: ['img/apartment-03.jpg', 'img/room.jpg', 'img/studio-01.jpg'],
     pictureSmall: 'img/apartment-small-03.jpg',
     city: 'Amsterdam',
+    lat: 52.3909553943508,
+    lng: 4.929309666406198,
   },
   {
     id: 4,
@@ -121,6 +127,8 @@ export const MOCK_OFFERS: Offer[] = [
     reviews: [],
     pictures: ['img/apartment-01.jpg', 'img/studio-01.jpg', 'img/room.jpg'],
     pictureSmall: 'img/apartment-small-04.jpg',
-    city: 'Cologne',
+    city: 'Amsterdam',
+    lat: 52.3809553943508,
+    lng: 4.939309666406198,
   },
 ];
