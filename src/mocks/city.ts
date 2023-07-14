@@ -5,7 +5,7 @@ export type City = {
 };
 
 export const CITY: City = {
-  title: 'Нью-Йорк',
+  title: 'Amsterdam',
   lat: 52.3909553943508,
   lng: 4.85309666406198,
 };

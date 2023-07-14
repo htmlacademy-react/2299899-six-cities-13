@@ -1,5 +1,5 @@
 import { Route, BrowserRouter, Routes } from 'react-router-dom';
-import { AppRoute, AuthorizationStatus } from '../../const';
+import { AppRoute, AuthorizationStatus, CITIES } from '../../const';
 import MainPage from '../../pages/main-page/main-page';
 import LoginPage from '../../pages/login-page/login-page';
 import OfferPage from '../../pages/offer-page/offer-page';
@@ -24,7 +24,12 @@ function App({ offersCount, offers, city }: AppProps): JSX.Element {
           <Route
             path={AppRoute.Main}
             element={
-              <MainPage offersCount={offersCount} offers={offers} city={city} />
+              <MainPage
+                offersCount={offersCount}
+                offers={offers}
+                cities={CITIES}
+                currentCity={city}
+              />
             }
           />
           <Route path={AppRoute.Login} element={<LoginPage />} />
