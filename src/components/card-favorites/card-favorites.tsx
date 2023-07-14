@@ -10,7 +10,7 @@ function CardFavorites({ offer }: CardFavoritesProps): JSX.Element {
   return (
     <article className="favorites__card place-card" data-id={offer.id}>
       <div className="favorites__image-wrapper place-card__image-wrapper">
-        <Link to={AppRoute.Offer}>
+        <Link to={`${AppRoute.Offer}/${offer.id}`}>
           <img
             className="place-card__image"
             src={offer.pictureSmall}
@@ -43,7 +43,7 @@ function CardFavorites({ offer }: CardFavoritesProps): JSX.Element {
           </div>
         </div>
         <h2 className="place-card__name">
-          <Link to={AppRoute.Offer}>{offer.title}</Link>
+          <Link to={`${AppRoute.Offer}/${offer.id}`}>{offer.title}</Link>
         </h2>
         <p className="place-card__type">{offer.type}</p>
       </div>
