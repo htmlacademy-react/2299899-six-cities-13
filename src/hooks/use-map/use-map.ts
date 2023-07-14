@@ -1,19 +1,19 @@
 import { useEffect, useState, useRef, MutableRefObject } from 'react';
-import { Offer } from '../../mocks/offer';
+import { City } from '../../mocks/city';
 import { Map, TileLayer } from 'leaflet';
 
 export default function useMap(
   mapRef: MutableRefObject<HTMLElement | null>,
-  offer: Offer | undefined
+  city: City,
 ): Map | null {
   const [map, setMap] = useState<Map | null>(null);
   const isRenderedRef = useRef<boolean>(false);
   useEffect(() => {
-    if (mapRef.current !== null && !isRenderedRef.current && offer) {
+    if (mapRef.current !== null && !isRenderedRef.current) {
       const instance = new Map(mapRef.current, {
         center: {
-          lat: offer.lat,
-          lng: offer.lng,
+          lat: city.lat,
+          lng: city.lng,
         },
         zoom: 10,
       });
@@ -31,7 +31,7 @@ export default function useMap(
       setMap(instance);
       isRenderedRef.current = true;
     }
-  }, [mapRef, offer]);
+  }, [mapRef, city]);
 
   return map;
 }

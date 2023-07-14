@@ -6,13 +6,15 @@ import { AppRoute } from '../../const';
 import Map from '../../components/map/map';
 import { useState } from 'react';
 import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
+import { City } from '../../mocks/city';
 
 type MainPageProps = {
   offersCount: number;
   offers: Offer[];
+  city: City;
 };
 
-function MainPage({ offersCount, offers }: MainPageProps): JSX.Element {
+function MainPage({ offersCount, offers, city }: MainPageProps): JSX.Element {
   const [activeCardId, setActiveCardId] = useState<number | undefined>(
     undefined
   );
@@ -155,7 +157,7 @@ function MainPage({ offersCount, offers }: MainPageProps): JSX.Element {
             </section>
             <div className="cities__right-section">
               <section className="cities__map map">
-                <Map offers={offers} selectedOffer={activeCard} />
+                <Map city={city} offers={offers} selectedOffer={activeCard} />
               </section>
             </div>
           </div>

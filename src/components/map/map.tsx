@@ -4,8 +4,10 @@ import { useRef, useEffect } from 'react';
 import useMap from '../../hooks/use-map/use-map';
 import { Offer } from '../../mocks/offer';
 import { URL_MARKER_CURRENT, URL_MARKER_DEFAULT } from '../../const';
+import { City } from '../../mocks/city';
 
 type MapProps = {
+  city: City;
   offers: Offer[];
   selectedOffer: Offer | undefined;
 };
@@ -23,9 +25,10 @@ const currentCustomIcon = new Icon({
 });
 
 export default function Map(props: MapProps): JSX.Element {
+  const { city } = props;
   const { offers, selectedOffer } = props;
   const mapRef = useRef(null);
-  const map = useMap(mapRef, selectedOffer);
+  const map = useMap(mapRef, city);
 
   useEffect(() => {
     if (map) {
