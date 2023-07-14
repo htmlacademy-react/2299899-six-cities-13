@@ -4,8 +4,13 @@ import { Link, useParams } from 'react-router-dom';
 import { Offer } from '../../mocks/offer';
 import NotFoundPage from '../not-found-page/not-found-page';
 import { MOCK_USERS } from '../../mocks/users';
-import CardMain from '../../components/card-main/card-main';
+import CardMain, {
+  MouseOverLeaveHandler,
+} from '../../components/card-main/card-main';
 import ReviewList from '../../components/review-list/review-list';
+import Map from '../../components/map/map';
+import { CITY } from '../../mocks/city';
+import { useState } from 'react';
 
 type OfferPageProps = {
   offers: Offer[];
@@ -14,6 +19,21 @@ type OfferPageProps = {
 function OfferPage({ offers }: OfferPageProps): JSX.Element {
   const { id } = useParams();
   const currentOffer = offers.find((offer) => offer.id === Number(id)) as Offer;
+  const [activeCardId, setActiveCardId] = useState<number | undefined>(
+    undefined
+  );
+  const activeCard = offers.find((offer) => offer.id === activeCardId);
+
+  const onMouseOverCard: MouseOverLeaveHandler = (evt) => {
+    evt.preventDefault();
+    setActiveCardId(Number(evt.currentTarget.dataset.id));
+  };
+
+  const onMouseLeaveCard: MouseOverLeaveHandler = (evt) => {
+    evt.preventDefault();
+    setActiveCardId(undefined);
+  };
+
   if (!currentOffer) {
     return <NotFoundPage />;
   }
@@ -52,7 +72,12 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
   const nearPlaces = offers
     .slice(0, 3)
     .map((place) => (
-      <CardMain offer={place} key={`${id as string}-places-${place.id}`} />
+      <CardMain
+        offer={place}
+        key={`${id as string}-places-${place.id}`}
+        mouseOverHandler={onMouseOverCard}
+        mouseLeaveHandler={onMouseLeaveCard}
+      />
     ));
 
   return (
@@ -168,7 +193,9 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
               <ReviewList currentOffer={currentOffer} />
             </div>
           </div>
-          <section className="offer__map map" />
+          <section className="offer__map map">
+            <Map city={CITY} offers={offers} selectedOffer={activeCard} />
+          </section>
         </section>
         <div className="container">
           <section className="near-places places">
