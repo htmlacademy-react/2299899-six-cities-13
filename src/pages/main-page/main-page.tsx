@@ -149,7 +149,7 @@ function MainPage({ offersCount, offers, city }: MainPageProps): JSX.Element {
               </form>
               <CardMainList
                 offers={offers}
-                className="cities__places-list places__list tabs__content"
+                page="main"
                 onMouseOverCard={onMouseOverCard}
                 onMouseLeaveCard={onMouseLeaveCard}
               />

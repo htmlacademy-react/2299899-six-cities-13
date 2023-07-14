@@ -198,7 +198,7 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
             </h2>
             <CardMainList
               offers={offers.slice(0, 3)}
-              className="near-places__list places__list"
+              page="offer"
               onMouseOverCard={onMouseOverCard}
               onMouseLeaveCard={onMouseLeaveCard}
             />
