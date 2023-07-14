@@ -4,13 +4,12 @@ import { Link, useParams } from 'react-router-dom';
 import { Offer } from '../../mocks/offer';
 import NotFoundPage from '../not-found-page/not-found-page';
 import { MOCK_USERS } from '../../mocks/users';
-import CardMain, {
-  MouseOverLeaveHandler,
-} from '../../components/card-main/card-main';
-import ReviewList from '../../components/review-list/review-list';
+import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
 import Map from '../../components/map/map';
 import { CITY } from '../../mocks/city';
 import { useState } from 'react';
+import CardMainList from '../../components/card-main-list/card-main-list';
+import ReviewList from '../../components/review-list/review-list';
 
 type OfferPageProps = {
   offers: Offer[];
@@ -68,17 +67,6 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
       {service}
     </li>
   ));
-
-  const nearPlaces = offers
-    .slice(0, 3)
-    .map((place) => (
-      <CardMain
-        offer={place}
-        key={`${id as string}-places-${place.id}`}
-        mouseOverHandler={onMouseOverCard}
-        mouseLeaveHandler={onMouseLeaveCard}
-      />
-    ));
 
   return (
     <div className="page">
@@ -193,8 +181,14 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
               <ReviewList currentOffer={currentOffer} />
             </div>
           </div>
-          <section className="offer__map map">
-            <Map city={CITY} offers={offers} selectedOffer={activeCard} />
+          <section className="offer__map map container">
+            <Map
+              city={CITY}
+              offers={offers.slice(0, 3)}
+              selectedOffer={activeCard}
+              height="579px"
+              zoom={13}
+            />
           </section>
         </section>
         <div className="container">
@@ -202,7 +196,12 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
             <h2 className="near-places__title">
               Other places in the neighbourhood
             </h2>
-            <div className="near-places__list places__list">{nearPlaces}</div>
+            <CardMainList
+              offers={offers.slice(0, 3)}
+              className="near-places__list places__list"
+              onMouseOverCard={onMouseOverCard}
+              onMouseLeaveCard={onMouseLeaveCard}
+            />
           </section>
         </div>
       </main>

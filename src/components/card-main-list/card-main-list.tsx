@@ -4,14 +4,17 @@ import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
 
 type CardMainListProps = {
   offers: Offer[];
+  className: string;
   onMouseOverCard: MouseOverLeaveHandler;
   onMouseLeaveCard: MouseOverLeaveHandler;
 };
 
 function CardMainList(props: CardMainListProps): JSX.Element {
-  const { offers, onMouseOverCard, onMouseLeaveCard } = props;
+  const { offers } = props;
+  const { className } = props;
+  const { onMouseOverCard, onMouseLeaveCard } = props;
   return (
-    <div className="cities__places-list places__list tabs__content">
+    <div className={className}>
       {offers.map((offer) => (
         <CardMain
           key={offer.id}

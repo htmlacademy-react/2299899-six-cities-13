@@ -10,6 +10,8 @@ type MapProps = {
   city: City;
   offers: Offer[];
   selectedOffer: Offer | undefined;
+  height: string;
+  zoom: number;
 };
 
 const defaultCustomIcon = new Icon({
@@ -25,10 +27,10 @@ const currentCustomIcon = new Icon({
 });
 
 export default function Map(props: MapProps): JSX.Element {
-  const { city } = props;
+  const { city, height, zoom } = props;
   const { offers, selectedOffer } = props;
   const mapRef = useRef(null);
-  const map = useMap(mapRef, city);
+  const map = useMap(mapRef, city, zoom);
 
   useEffect(() => {
     if (map) {
@@ -53,5 +55,5 @@ export default function Map(props: MapProps): JSX.Element {
     }
   }, [map, offers, selectedOffer]);
 
-  return <div style={{ height: '500px' }} ref={mapRef}></div>;
+  return <div style={{ height }} ref={mapRef}></div>;
 }

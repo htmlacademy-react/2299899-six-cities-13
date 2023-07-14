@@ -147,17 +147,22 @@ function MainPage({ offersCount, offers, city }: MainPageProps): JSX.Element {
                   </li>
                 </ul>
               </form>
-              <div className="cities__places-list places__list tabs__content">
-                <CardMainList
-                  offers={offers}
-                  onMouseOverCard={onMouseOverCard}
-                  onMouseLeaveCard={onMouseLeaveCard}
-                />
-              </div>
+              <CardMainList
+                offers={offers}
+                className="cities__places-list places__list tabs__content"
+                onMouseOverCard={onMouseOverCard}
+                onMouseLeaveCard={onMouseLeaveCard}
+              />
             </section>
             <div className="cities__right-section">
               <section className="cities__map map">
-                <Map city={city} offers={offers} selectedOffer={activeCard} />
+                <Map
+                  city={city}
+                  offers={offers}
+                  selectedOffer={activeCard}
+                  height="500px"
+                  zoom={10}
+                />
               </section>
             </div>
           </div>
