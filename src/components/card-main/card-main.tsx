@@ -6,15 +6,13 @@ export type MouseOverLeaveHandler = (evt: MouseEvent<HTMLElement>) => void;
 
 type CardMainProps = {
   offer: Offer;
-  mouseOverHandler: MouseOverLeaveHandler;
-  mouseLeaveHandler: MouseOverLeaveHandler;
+  mouseOverHandler?: MouseOverLeaveHandler;
+  mouseLeaveHandler?: MouseOverLeaveHandler;
 };
 
-function CardMain({
-  offer,
-  mouseOverHandler,
-  mouseLeaveHandler,
-}: CardMainProps): JSX.Element {
+function CardMain(props: CardMainProps): JSX.Element {
+  const { offer } = props;
+  const { mouseOverHandler, mouseLeaveHandler } = props;
   return (
     <article
       className="cities__card place-card"
