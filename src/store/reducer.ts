@@ -9,7 +9,6 @@ type InitalState = {
   offers: Offer[];
   currentSort: string;
   authorizationStatus: AuthorizationStatus;
-  error: string | null;
   isQuestionsDataLoading: boolean;
 };
 
@@ -17,8 +16,7 @@ const initialState: InitalState = {
   city: { title: 'Paris', lat: 59, lng: 10 },
   offers: [],
   currentSort: SORT_OPTIONS[0],
-  authorizationStatus: AuthorizationStatus.Auth,
-  error: null,
+  authorizationStatus: AuthorizationStatus.Unknown,
   isQuestionsDataLoading: false,
 };
 
@@ -32,9 +30,6 @@ const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(actions.requireAuthorization, (state, action) => {
       state.authorizationStatus = action.payload;
-    })
-    .addCase(actions.setError, (state, action) => {
-      state.error = action.payload;
     })
     .addCase(actions.setOffersDataLoadingStatus, (state, action) => {
       state.isQuestionsDataLoading = action.payload;
