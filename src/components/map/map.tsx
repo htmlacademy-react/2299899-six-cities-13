@@ -4,12 +4,12 @@ import { useRef, useEffect } from 'react';
 import useMap from '../../hooks/use-map/use-map';
 import { Offer } from '../../types/offer';
 import { URL_MARKER_CURRENT, URL_MARKER_DEFAULT } from '../../const';
-import { City } from '../../mocks/city';
+import { City } from '../../types/city';
 
 type MapProps = {
   city: City;
   offers: Offer[];
-  selectedOffer: Offer | undefined;
+  selectedOffer?: Offer | undefined;
   height: string;
   zoom: number;
 };

@@ -13,6 +13,8 @@ export enum AuthorizationStatus {
 
 export enum APIRoute {
   Offers = '/offers',
+  Reviews = '/comments',
+  NearOffers = '/nearby',
   Favorites = '/favorite',
   Login = '/login',
   Logout = '/logout',

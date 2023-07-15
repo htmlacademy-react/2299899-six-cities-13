@@ -6,7 +6,6 @@ import { AppRoute, SORT_OPTIONS } from '../../const';
 import Map from '../../components/map/map';
 import { useState } from 'react';
 import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
-import { City } from '../../mocks/city';
 import CitiesList from '../../components/cities-list/cities-list';
 import SortOptions from '../../components/sort-options/sort-options';
 import {
@@ -19,23 +18,23 @@ import HeaderUser from '../../components/header-user/header-user';
 type MainPageProps = {
   offers: Offer[];
   cities: string[];
-  currentCity: City;
 };
 
 function MainPage(props: MainPageProps): JSX.Element {
-  const { cities, currentCity } = props;
+  const { cities } = props;
+  const currentCity = 'Amsterdam';
 
-  const [activeCardId, setActiveCardId] = useState<number | undefined>(
+  const [activeCardId, setActiveCardId] = useState<string | undefined>(
     undefined
   );
   const [activeSort, setActiveSort] = useState<string>(SORT_OPTIONS[0]);
   const [isSortClosed, setIsSortClosed] = useState(true);
 
   const offers = props.offers.filter(
-    (offer) => offer.city.name === currentCity.title
+    (offer) => offer.city.name === currentCity
   );
 
-  const activeCard = offers.find((offer) => Number(offer.id) === activeCardId);
+  const activeCard = offers.find((offer) => offer.id === activeCardId);
   const sortedOffers = [...offers];
   switch (activeSort) {
     case SORT_OPTIONS[1]:
@@ -51,7 +50,7 @@ function MainPage(props: MainPageProps): JSX.Element {
 
   const onMouseOverCard: MouseOverLeaveHandler = (evt) => {
     evt.preventDefault();
-    setActiveCardId(Number(evt.currentTarget.dataset.id));
+    setActiveCardId(evt.currentTarget.dataset.id);
   };
 
   const onMouseLeaveCard: MouseOverLeaveHandler = (evt) => {
@@ -99,7 +98,7 @@ function MainPage(props: MainPageProps): JSX.Element {
       </header>
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
-        <CitiesList cities={cities} currentCity={currentCity.title} />
+        <CitiesList cities={cities} currentCity={currentCity} />
         <div className="cities">
           <div className="cities__places-container container">
             <section className="cities__places places">
@@ -123,11 +122,11 @@ function MainPage(props: MainPageProps): JSX.Element {
             <div className="cities__right-section">
               <section className="cities__map map">
                 <Map
-                  city={currentCity}
+                  city={offers[0].city}
                   offers={offers}
                   selectedOffer={activeCard}
                   height="500px"
-                  zoom={10}
+                  zoom={offers[0].city.location.zoom}
                 />
               </section>
             </div>

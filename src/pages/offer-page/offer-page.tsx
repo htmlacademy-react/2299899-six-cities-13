@@ -1,72 +1,40 @@
 import { Helmet } from 'react-helmet-async';
 import { AppRoute } from '../../const';
 import { Link, useParams } from 'react-router-dom';
-import { Offer } from '../../mocks/offer';
 import NotFoundPage from '../not-found-page/not-found-page';
-import { MOCK_USERS } from '../../mocks/users';
-import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
 import Map from '../../components/map/map';
-import { CITY } from '../../mocks/city';
-import { useState } from 'react';
+import { useEffect } from 'react';
 import CardMainList from '../../components/card-main-list/card-main-list';
 import ReviewList from '../../components/review-list/review-list';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import {
+  fetchNearOffersAction,
+  fetchOfferAction,
+} from '../../store/api-actions';
+import cn from 'classnames';
+import LoadingPage from '../loading-page/loading-page';
 
-type OfferPageProps = {
-  offers: Offer[];
-};
-
-function OfferPage({ offers }: OfferPageProps): JSX.Element {
+function OfferPage(): JSX.Element {
   const { id } = useParams();
-  const currentOffer = offers.find((offer) => offer.id === Number(id)) as Offer;
-  const [activeCardId, setActiveCardId] = useState<number | undefined>(
-    undefined
-  );
-  const activeCard = offers.find((offer) => offer.id === activeCardId);
 
-  const onMouseOverCard: MouseOverLeaveHandler = (evt) => {
-    evt.preventDefault();
-    setActiveCardId(Number(evt.currentTarget.dataset.id));
-  };
+  const dispatch = useAppDispatch();
 
-  const onMouseLeaveCard: MouseOverLeaveHandler = (evt) => {
-    evt.preventDefault();
-    setActiveCardId(undefined);
-  };
+  useEffect(() => {
+    dispatch(fetchOfferAction(id as string));
+    dispatch(fetchNearOffersAction(id as string));
+  }, [id, dispatch]);
+
+  const currentOffer = useAppSelector((state) => state.offer);
+  const nearOffers = useAppSelector((state) => state.nearOffers);
+  const isOfferLoading = useAppSelector((state) => state.isOfferLoading);
+
+  if (isOfferLoading) {
+    return <LoadingPage />;
+  }
 
   if (!currentOffer) {
     return <NotFoundPage />;
   }
-
-  const host = MOCK_USERS.find((user) => user.id === currentOffer.host);
-
-  const gallery = currentOffer.pictures.map((picture) => (
-    <div
-      className="offer__image-wrapper"
-      key={`${id as string}-gallery-${picture}`}
-    >
-      <img className="offer__image" src={picture} alt="Photo studio" />
-    </div>
-  ));
-
-  const FEATURES_CLASSES_SUFFIXES = ['entire', 'bedrooms', 'adults'];
-
-  const features = currentOffer.features.map((feature, index) => (
-    <li
-      className={`offer__feature offer__feature--${FEATURES_CLASSES_SUFFIXES[index]}`}
-      key={`${id as string}-features-${feature}`}
-    >
-      {feature}
-    </li>
-  ));
-
-  const inside = currentOffer.inside.map((service) => (
-    <li
-      className="offer__inside-item"
-      key={`${id as string}-inside-${service}`}
-    >
-      {service}
-    </li>
-  ));
 
   return (
     <div className="page">
@@ -114,7 +82,20 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
       <main className="page__main page__main--offer">
         <section className="offer">
           <div className="offer__gallery-container container">
-            <div className="offer__gallery">{gallery}</div>
+            <div className="offer__gallery">
+              {currentOffer.images.map((picture) => (
+                <div
+                  className="offer__image-wrapper"
+                  key={`gallery-${picture}`}
+                >
+                  <img
+                    className="offer__image"
+                    src={picture}
+                    alt="Photo studio"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
           <div className="offer__container container">
             <div className="offer__wrapper">
@@ -135,59 +116,86 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
                   <span
-                    style={{ width: `${(currentOffer.rate / 5) * 100}%` }}
+                    style={{ width: `${(currentOffer.rating / 5) * 100}%` }}
                   />
                   <span className="visually-hidden">Rating</span>
                 </div>
                 <span className="offer__rating-value rating__value">
-                  {currentOffer.rate}
+                  {currentOffer.rating}
                 </span>
               </div>
-              <ul className="offer__features">{features}</ul>
+              <ul className="offer__features">
+                <li className="offer__feature offer__feature--entire">
+                  {currentOffer.type.slice(0, 1).toUpperCase() +
+                    currentOffer.type.slice(1)}
+                </li>
+                <li className="offer__feature offer__feature--bedrooms">
+                  {`${currentOffer.bedrooms} Bedroom${
+                    currentOffer.bedrooms > 1 ? 's' : ''
+                  }`}
+                </li>
+                <li className="offer__feature offer__feature--adults">
+                  {`Max ${currentOffer.maxAdults} adult${
+                    currentOffer.maxAdults > 1 ? 's' : ''
+                  }`}
+                </li>
+              </ul>
               <div className="offer__price">
                 <b className="offer__price-value">€{currentOffer.price}</b>
                 <span className="offer__price-text">&nbsp;night</span>
               </div>
               <div className="offer__inside">
                 <h2 className="offer__inside-title">What&apos;s inside</h2>
-                <ul className="offer__inside-list">{inside}</ul>
+                <ul className="offer__inside-list">
+                  {currentOffer.goods.map((service) => (
+                    <li
+                      className="offer__inside-item"
+                      key={`${id as string}-inside-${service}`}
+                    >
+                      {service}
+                    </li>
+                  ))}
+                </ul>
               </div>
               <div className="offer__host">
                 <h2 className="offer__host-title">Meet the host</h2>
                 <div className="offer__host-user user">
-                  <div className="offer__avatar-wrapper offer__avatar-wrapper--pro user__avatar-wrapper">
+                  <div
+                    className={cn(
+                      'offer__avatar-wrapper user__avatar-wrapper',
+                      {
+                        'offer__avatar-wrapper--pro': currentOffer.host.isPro,
+                      }
+                    )}
+                  >
                     <img
                       className="offer__avatar user__avatar"
-                      src={host?.avatar}
+                      src={currentOffer.host.avatarUrl}
                       width={74}
                       height={74}
                       alt="Host avatar"
                     />
                   </div>
-                  <span className="offer__user-name">{host?.name}</span>
+                  <span className="offer__user-name">
+                    {currentOffer.host.name}
+                  </span>
                   <span className="offer__user-status">
-                    {host?.isPro && 'Pro'}
+                    {currentOffer.host.isPro && 'Pro'}
                   </span>
                 </div>
                 <div className="offer__description">
                   <p className="offer__text">{currentOffer.description}</p>
-                  {/* <p className="offer__text">
-                    An independent House, strategically located between Rembrand
-                    Square and National Opera, but where the bustle of the city
-                    comes to rest in this alley flowery and colorful.
-                  </p> */}
                 </div>
               </div>
-              <ReviewList currentOffer={currentOffer} />
+              <ReviewList offerId={id as string} />
             </div>
           </div>
           <section className="offer__map map container">
             <Map
-              city={CITY}
-              offers={offers.slice(0, 3)}
-              selectedOffer={activeCard}
+              city={currentOffer.city}
+              offers={nearOffers}
               height="579px"
-              zoom={13}
+              zoom={currentOffer.city.location.zoom}
             />
           </section>
         </section>
@@ -196,12 +204,7 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
             <h2 className="near-places__title">
               Other places in the neighbourhood
             </h2>
-            <CardMainList
-              offers={offers.slice(0, 3)}
-              page="offer"
-              onMouseOverCard={onMouseOverCard}
-              onMouseLeaveCard={onMouseLeaveCard}
-            />
+            <CardMainList offers={nearOffers} page="offer" />
           </section>
         </div>
       </main>

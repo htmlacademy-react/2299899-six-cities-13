@@ -8,26 +8,16 @@ import NotFoundPage from '../../pages/not-found-page/not-found-page';
 import PrivateRoute from '../private-route/private-route';
 import LoadingPage from '../../pages/loading-page/loading-page';
 import { HelmetProvider } from 'react-helmet-async';
-import { City } from '../../mocks/city';
 import { useAppSelector } from '../../hooks';
 
-type AppProps = {
-  city: City;
-};
-
-function App({ city }: AppProps): JSX.Element {
+function App(): JSX.Element {
   const authorizationStatus = useAppSelector(
     (state) => state.authorizationStatus
   );
-  const isQuestionsDataLoading = useAppSelector(
-    (state) => state.isQuestionsDataLoading
-  );
+  const isOffersLoading = useAppSelector((state) => state.isOffersLoading);
   const offers = useAppSelector((state) => state.offers);
 
-  if (
-    authorizationStatus === AuthorizationStatus.Unknown ||
-    isQuestionsDataLoading
-  ) {
+  if (authorizationStatus === AuthorizationStatus.Unknown || isOffersLoading) {
     return <LoadingPage />;
   }
   return (
@@ -36,15 +26,10 @@ function App({ city }: AppProps): JSX.Element {
         <Routes>
           <Route
             path={AppRoute.Main}
-            element={
-              <MainPage offers={offers} cities={CITIES} currentCity={city} />
-            }
+            element={<MainPage offers={offers} cities={CITIES} />}
           />
           <Route path={AppRoute.Login} element={<LoginPage />} />
-          <Route
-            path={`${AppRoute.Offer}/:id`}
-            element={<OfferPage offers={offers} />}
-          />
+          <Route path={`${AppRoute.Offer}/:id`} element={<OfferPage />} />
           <Route
             path={AppRoute.Favorites}
             element={

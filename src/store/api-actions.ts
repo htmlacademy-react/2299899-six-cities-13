@@ -7,6 +7,7 @@ import { APIRoute, AuthorizationStatus } from '../const';
 import { AuthData } from '../types/auth-data';
 import { UserData } from '../types/user-data';
 import { dropToken, saveToken } from '../services/token';
+import { Review } from '../types/review';
 
 export const fetchOffersAction = createAsyncThunk<
   void,
@@ -17,10 +18,57 @@ export const fetchOffersAction = createAsyncThunk<
     extra: AxiosInstance;
   }
 >('data/loadOffers', async (_arg, { dispatch, extra: api }) => {
-  dispatch(actions.setOffersDataLoadingStatus(true));
+  dispatch(actions.setOffersLoadingStatus(true));
   const { data } = await api.get<Offer[]>(APIRoute.Offers);
-  dispatch(actions.setOffersDataLoadingStatus(false));
+  dispatch(actions.setOffersLoadingStatus(false));
   dispatch(actions.loadOffers(data));
+});
+
+export const fetchOfferAction = createAsyncThunk<
+  void,
+  string,
+  {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }
+>('data/loadOffer', async (id, { dispatch, extra: api }) => {
+  dispatch(actions.setOfferLoadingStatus(true));
+  const { data } = await api.get<Offer>(`${APIRoute.Offers}/${id}`);
+  dispatch(actions.setOfferLoadingStatus(false));
+  dispatch(actions.loadOffer(data));
+});
+
+export const fetchReviewsAction = createAsyncThunk<
+  void,
+  string,
+  {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }
+>('data/loadReviews', async (id, { dispatch, extra: api }) => {
+  // dispatch(actions.setOffersDataLoadingStatus(true));
+  const { data } = await api.get<Review[]>(`${APIRoute.Reviews}/${id}`);
+  // dispatch(actions.setOffersDataLoadingStatus(false));
+  dispatch(actions.loadReviews(data));
+});
+
+export const fetchNearOffersAction = createAsyncThunk<
+  void,
+  string,
+  {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }
+>('data/loadNearOffers', async (id, { dispatch, extra: api }) => {
+  // dispatch(actions.setOffersDataLoadingStatus(true));
+  const { data } = await api.get<Offer[]>(
+    `${APIRoute.Offers}/${id}${APIRoute.NearOffers}`
+  );
+  // dispatch(actions.setOffersDataLoadingStatus(false));
+  dispatch(actions.loadNearOffers(data));
 });
 
 export const checkAuthAction = createAsyncThunk<
