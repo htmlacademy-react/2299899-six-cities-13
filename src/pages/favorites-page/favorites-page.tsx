@@ -2,7 +2,7 @@ import { Helmet } from 'react-helmet-async';
 
 // import CardFavoritesList from '../../components/card-favorite-list/card-favorites-list';
 import CardFavorites from '../../components/card-favorites/card-favorites';
-import { Offer } from '../../mocks/offer';
+import { Offer } from '../../types/offer';
 import { Link } from 'react-router-dom';
 import { AppRoute } from '../../const';
 
