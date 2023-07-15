@@ -16,14 +16,12 @@ import {
 } from './sort-options';
 
 type MainPageProps = {
-  offersCount: number;
   offers: Offer[];
   cities: string[];
   currentCity: City;
 };
 
 function MainPage(props: MainPageProps): JSX.Element {
-  const { offersCount } = props;
   const { cities, currentCity } = props;
 
   const [activeCardId, setActiveCardId] = useState<number | undefined>(
@@ -32,8 +30,9 @@ function MainPage(props: MainPageProps): JSX.Element {
   const [activeSort, setActiveSort] = useState<string>(SORT_OPTIONS[0]);
   const [isSortClosed, setIsSortClosed] = useState(true);
 
-  let offers = props.offers;
-  offers = offers.filter((offer) => offer.city.name === currentCity.title);
+  const offers = props.offers.filter(
+    (offer) => offer.city.name === currentCity.title
+  );
 
   const activeCard = offers.find((offer) => Number(offer.id) === activeCardId);
   const sortedOffers = [...offers];
@@ -121,7 +120,7 @@ function MainPage(props: MainPageProps): JSX.Element {
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">
-                {offersCount} places to stay in Amsterdam
+                {offers.length} places to stay in Amsterdam
               </b>
               <SortOptions
                 activeSort={activeSort}

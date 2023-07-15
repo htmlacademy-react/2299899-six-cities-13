@@ -12,11 +12,10 @@ import { City } from '../../mocks/city';
 import { useAppSelector } from '../../hooks';
 
 type AppProps = {
-  offersCount: number;
   city: City;
 };
 
-function App({ offersCount, city }: AppProps): JSX.Element {
+function App({ city }: AppProps): JSX.Element {
   const authorizationStatus = useAppSelector(
     (state) => state.authorizationStatus
   );
@@ -38,12 +37,7 @@ function App({ offersCount, city }: AppProps): JSX.Element {
           <Route
             path={AppRoute.Main}
             element={
-              <MainPage
-                offersCount={offersCount}
-                offers={offers}
-                cities={CITIES}
-                currentCity={city}
-              />
+              <MainPage offers={offers} cities={CITIES} currentCity={city} />
             }
           />
           <Route path={AppRoute.Login} element={<LoginPage />} />
