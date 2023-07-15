@@ -6,17 +6,31 @@ import OfferPage from '../../pages/offer-page/offer-page';
 import FavoritesPage from '../../pages/favorites-page/favorites-page';
 import NotFoundPage from '../../pages/not-found-page/not-found-page';
 import PrivateRoute from '../private-route/private-route';
+import LoadingPage from '../../pages/loading-page/loading-page';
 import { HelmetProvider } from 'react-helmet-async';
-import { Offer } from '../../mocks/offer';
 import { City } from '../../mocks/city';
+import { useAppSelector } from '../../hooks';
 
 type AppProps = {
   offersCount: number;
-  offers: Offer[];
   city: City;
 };
 
-function App({ offersCount, offers, city }: AppProps): JSX.Element {
+function App({ offersCount, city }: AppProps): JSX.Element {
+  const authorizationStatus = useAppSelector(
+    (state) => state.authorizationStatus
+  );
+  const isQuestionsDataLoading = useAppSelector(
+    (state) => state.isQuestionsDataLoading
+  );
+  const offers = useAppSelector((state) => state.offers);
+
+  if (
+    authorizationStatus === AuthorizationStatus.Unknown ||
+    isQuestionsDataLoading
+  ) {
+    return <LoadingPage />;
+  }
   return (
     <HelmetProvider>
       <BrowserRouter>
@@ -40,7 +54,7 @@ function App({ offersCount, offers, city }: AppProps): JSX.Element {
           <Route
             path={AppRoute.Favorites}
             element={
-              <PrivateRoute authorizationStatus={AuthorizationStatus.Auth}>
+              <PrivateRoute authorizationStatus={authorizationStatus}>
                 <FavoritesPage offers={offers} />
               </PrivateRoute>
             }

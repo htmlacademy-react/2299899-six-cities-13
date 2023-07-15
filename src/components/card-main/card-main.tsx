@@ -1,5 +1,5 @@
 import { MouseEvent } from 'react';
-import { Offer } from '../../mocks/offer';
+import { Offer } from '../../types/offer';
 import { Link } from 'react-router-dom';
 
 export type MouseOverLeaveHandler = (evt: MouseEvent<HTMLElement>) => void;
@@ -29,7 +29,7 @@ function CardMain(props: CardMainProps): JSX.Element {
         <Link to={`/offer/${offer.id}`}>
           <img
             className="place-card__image"
-            src={offer.pictures[0]}
+            src={offer.previewImage}
             width={260}
             height={200}
             alt="Place image"
@@ -51,7 +51,7 @@ function CardMain(props: CardMainProps): JSX.Element {
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: `${(offer.rate / 5) * 100}%` }} />
+            <span style={{ width: `${(offer.rating / 5) * 100}%` }} />
             <span className="visually-hidden">Rating</span>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import CardMainList from '../../components/card-main-list/card-main-list';
-import { Offer } from '../../mocks/offer';
+import { Offer } from '../../types/offer';
 import { Link } from 'react-router-dom';
 import { AppRoute, SORT_OPTIONS } from '../../const';
 import Map from '../../components/map/map';
@@ -23,7 +23,7 @@ type MainPageProps = {
 };
 
 function MainPage(props: MainPageProps): JSX.Element {
-  const { offersCount, offers } = props;
+  const { offersCount } = props;
   const { cities, currentCity } = props;
 
   const [activeCardId, setActiveCardId] = useState<number | undefined>(
@@ -32,7 +32,10 @@ function MainPage(props: MainPageProps): JSX.Element {
   const [activeSort, setActiveSort] = useState<string>(SORT_OPTIONS[0]);
   const [isSortClosed, setIsSortClosed] = useState(true);
 
-  const activeCard = offers.find((offer) => offer.id === activeCardId);
+  let offers = props.offers;
+  offers = offers.filter((offer) => offer.city.name === currentCity.title);
+
+  const activeCard = offers.find((offer) => Number(offer.id) === activeCardId);
   const sortedOffers = [...offers];
   switch (activeSort) {
     case SORT_OPTIONS[1]:
