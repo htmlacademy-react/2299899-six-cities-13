@@ -1,8 +1,8 @@
-import { SyntheticEvent } from 'react';
+import { MouseEvent } from 'react';
 import { Offer } from '../../mocks/offer';
 import { Link } from 'react-router-dom';
 
-type Handler = (evt: SyntheticEvent) => void;
+type Handler = (evt: MouseEvent<HTMLElement>) => void;
 
 type CardMainProps = {
   offer: Offer;
