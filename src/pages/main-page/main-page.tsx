@@ -1,11 +1,15 @@
 import { Helmet } from 'react-helmet-async';
-import Card from '../../components/card/card';
+import CardMainList from '../../components/card-main-list/card-main-list';
+import { Offer } from '../../mocks/offer';
+import { Link } from 'react-router-dom';
+import { AppRoute } from '../../const';
 
 type MainPageProps = {
   offersCount: number;
+  offers: Offer[];
 };
 
-function MainPage({ offersCount }: MainPageProps): JSX.Element {
+function MainPage({ offersCount, offers }: MainPageProps): JSX.Element {
   return (
     <div className="page page--gray page--main">
       <Helmet>
@@ -15,7 +19,7 @@ function MainPage({ offersCount }: MainPageProps): JSX.Element {
         <div className="container">
           <div className="header__wrapper">
             <div className="header__left">
-              <a className="header__logo-link header__logo-link--active">
+              <Link className="header__logo-link header__logo-link--active" to={AppRoute.Main}>
                 <img
                   className="header__logo"
                   src="img/logo.svg"
@@ -23,7 +27,7 @@ function MainPage({ offersCount }: MainPageProps): JSX.Element {
                   width={81}
                   height={41}
                 />
-              </a>
+              </Link>
             </div>
             <nav className="header__nav">
               <ul className="header__nav-list">
@@ -121,11 +125,7 @@ function MainPage({ offersCount }: MainPageProps): JSX.Element {
                 </ul>
               </form>
               <div className="cities__places-list places__list tabs__content">
-                <Card />
-                <Card />
-                <Card />
-                <Card />
-                <Card />
+                <CardMainList offers={offers} />
               </div>
             </section>
             <div className="cities__right-section">
