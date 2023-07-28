@@ -28,12 +28,12 @@ function OfferPage(): JSX.Element {
   const nearOffers = useAppSelector((state) => state.nearOffers);
   const isOfferLoading = useAppSelector((state) => state.isOfferLoading);
 
-  if (isOfferLoading) {
-    return <LoadingPage />;
-  }
-
   if (!currentOffer) {
     return <NotFoundPage />;
+  }
+
+  if (isOfferLoading) {
+    return <LoadingPage />;
   }
 
   return (
