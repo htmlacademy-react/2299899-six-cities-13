@@ -3,11 +3,13 @@ import * as actions from './action';
 import { Offer } from '../types/offer';
 import { SORT_OPTIONS, AuthorizationStatus } from '../const';
 import { Review } from '../types/review';
+import { UserData } from '../types/user-data';
 
 type InitalState = {
   offers: Offer[];
   currentSort: string;
   authorizationStatus: AuthorizationStatus;
+  currentUser: UserData | null;
   isOffersLoading: boolean;
   isOfferLoading: boolean;
   offer: Offer | null;
@@ -19,6 +21,7 @@ const initialState: InitalState = {
   offers: [],
   currentSort: SORT_OPTIONS[0],
   authorizationStatus: AuthorizationStatus.Unknown,
+  currentUser: null,
   isOffersLoading: false,
   isOfferLoading: false,
   offer: null,
@@ -48,6 +51,9 @@ const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(actions.loadNearOffers, (state, action) => {
       state.nearOffers = action.payload;
+    })
+    .addCase(actions.setCurrentUser, (state, action) => {
+      state.currentUser = action.payload;
     });
 });
 

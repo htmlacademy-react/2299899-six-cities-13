@@ -104,6 +104,7 @@ export const loginAction = createAsyncThunk<
       password,
     });
     saveToken(data.token);
+    dispatch(actions.setCurrentUser(data));
     dispatch(actions.requireAuthorization(AuthorizationStatus.Auth));
     dispatch(actions.redirectToRoute(AppRoute.Main));
   }

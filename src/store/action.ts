@@ -2,6 +2,7 @@ import { Offer } from '../types/offer';
 import { createAction } from '@reduxjs/toolkit';
 import { AppRoute, AuthorizationStatus } from '../const';
 import { Review } from '../types/review';
+import { UserData } from '../types/user-data';
 
 export const updateCity = createAction('updateCity');
 
@@ -30,3 +31,7 @@ export const setOfferLoadingStatus = createAction<boolean>(
 );
 
 export const redirectToRoute = createAction<AppRoute>('redirectToRoute');
+
+export const setCurrentUser = createAction<UserData | null>(
+  'data/setCurrentUser'
+);
