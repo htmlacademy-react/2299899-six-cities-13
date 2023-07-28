@@ -11,6 +11,8 @@ export enum AuthorizationStatus {
   Unknown = 'UNKNOWN',
 }
 
+export const STARS = ['perfect', 'good', 'not bad', 'badly', 'terribly'];
+
 export const CITIES = [
   'Paris',
   'Cologne',
