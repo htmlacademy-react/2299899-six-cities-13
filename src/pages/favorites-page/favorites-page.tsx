@@ -72,7 +72,7 @@ function FavoritesPage({ offers }: FavoritesScreenProps): JSX.Element {
         </div>
       </main>
       <footer className="footer container">
-        <a className="footer__logo-link" href="main.html">
+        <Link className="footer__logo-link" to={AppRoute.Main}>
           <img
             className="footer__logo"
             src="img/logo.svg"
@@ -80,7 +80,7 @@ function FavoritesPage({ offers }: FavoritesScreenProps): JSX.Element {
             width={64}
             height={33}
           />
-        </a>
+        </Link>
       </footer>
     </div>
   );
