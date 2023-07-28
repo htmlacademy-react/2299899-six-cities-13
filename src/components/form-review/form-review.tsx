@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useState } from 'react';
+import { ChangeEvent, FormEvent, useState, ReactElement } from 'react';
 import { STARS } from '../../const';
 
 type FormReviewProps = {
@@ -7,15 +7,21 @@ type FormReviewProps = {
 
 function FormReview({ onReviewSubmit }: FormReviewProps): JSX.Element {
   const [newReview, setNewReview] = useState({
-    rating: '5',
+    rating: null,
     review: '',
   });
+  const [isSubmitAvailable, setIsSubmitAvailable] = useState(false);
 
   const handleFieldChange = (
     evt: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = evt.target;
     setNewReview({ ...newReview, [name]: value });
+    if (newReview.rating && newReview.review.length >= 50) {
+      setIsSubmitAvailable(true);
+    } else {
+      setIsSubmitAvailable(false);
+    }
   };
 
   const handleFormSubmit = (evt: FormEvent<HTMLFormElement>) => {
@@ -23,29 +29,34 @@ function FormReview({ onReviewSubmit }: FormReviewProps): JSX.Element {
     onReviewSubmit();
   };
 
-  const ratingStars = STARS.map((star, index) => (
-    <>
-      <input
-        key={`star-${5 - index}-input`}
-        className="form__rating-input visually-hidden"
-        name="rating"
-        defaultValue={5 - index}
-        id={`${5 - index}-stars`}
-        type="radio"
-        onChange={handleFieldChange}
-      />
-      <label
-        key={`star-${5 - index}-label`}
-        htmlFor={`${5 - index}-stars`}
-        className="reviews__rating-label form__rating-label"
-        title={star}
-      >
-        <svg className="form__star-image" width={37} height={33}>
-          <use xlinkHref="#icon-star" />
-        </svg>
-      </label>
-    </>
+  const ratingStarsInputs = STARS.map((_star, index) => (
+    <input
+      key={`star-${5 - index}-input`}
+      className="form__rating-input visually-hidden"
+      name="rating"
+      defaultValue={5 - index}
+      id={`${5 - index}-stars`}
+      type="radio"
+      onChange={handleFieldChange}
+    />
   ));
+  const ratingStarsLabels = STARS.map((star, index) => (
+    <label
+      key={`star-${5 - index}-label`}
+      htmlFor={`${5 - index}-stars`}
+      className="reviews__rating-label form__rating-label"
+      title={star}
+    >
+      <svg className="form__star-image" width={37} height={33}>
+        <use xlinkHref="#icon-star" />
+      </svg>
+    </label>
+  ));
+  const ratingStars = [] as ReactElement[];
+  ratingStarsInputs.forEach((value, index) => {
+    ratingStars.push(value);
+    ratingStars.push(ratingStarsLabels[index]);
+  });
 
   return (
     <form
@@ -72,7 +83,11 @@ function FormReview({ onReviewSubmit }: FormReviewProps): JSX.Element {
           <span className="reviews__star">rating</span> and describe your stay
           with at least <b className="reviews__text-amount">50 characters</b>.
         </p>
-        <button className="reviews__submit form__submit button" type="submit">
+        <button
+          className="reviews__submit form__submit button"
+          type="submit"
+          disabled={!isSubmitAvailable}
+        >
           Submit
         </button>
       </div>
