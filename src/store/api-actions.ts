@@ -3,7 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AppDispatch, State } from '../types/state';
 import { Offer } from '../types/offer';
 import * as actions from './action';
-import { APIRoute, AuthorizationStatus } from '../const';
+import { APIRoute, AppRoute, AuthorizationStatus } from '../const';
 import { AuthData } from '../types/auth-data';
 import { UserData } from '../types/user-data';
 import { dropToken, saveToken } from '../services/token';
@@ -105,6 +105,7 @@ export const loginAction = createAsyncThunk<
     });
     saveToken(data.token);
     dispatch(actions.requireAuthorization(AuthorizationStatus.Auth));
+    dispatch(actions.redirectToRoute(AppRoute.Main));
   }
 );
 
