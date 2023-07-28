@@ -3,6 +3,7 @@ import FormReview from '../../components/form-review/form-review';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { fetchReviewsAction } from '../../store/api-actions';
 import ReviewElement from '../review/review';
+import { AuthorizationStatus } from '../../const';
 
 type ReviewListProps = {
   offerId: string;
@@ -15,6 +16,9 @@ export default function ReviewList(props: ReviewListProps): JSX.Element {
     dispatch(fetchReviewsAction(offerId));
   });
   const reviews = useAppSelector((state) => state.reviews);
+  const authorizationStatus = useAppSelector(
+    (state) => state.authorizationStatus
+  );
   return (
     <section className="offer__reviews reviews">
       <h2 className="reviews__title">
@@ -25,11 +29,13 @@ export default function ReviewList(props: ReviewListProps): JSX.Element {
           <ReviewElement key={`reviews-${review.id}`} review={review} />
         ))}
       </ul>
-      <FormReview
-        onReviewSubmit={() => {
-          throw new Error('Function "onReviewSubmit" isn\'t implemented.');
-        }}
-      />
+      {authorizationStatus === AuthorizationStatus.Auth && (
+        <FormReview
+          onReviewSubmit={() => {
+            throw new Error('Function "onReviewSubmit" isn\'t implemented.');
+          }}
+        />
+      )}
     </section>
   );
 }
