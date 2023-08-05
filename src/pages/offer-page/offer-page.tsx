@@ -1,12 +1,15 @@
 import { Helmet } from 'react-helmet-async';
 import { AppRoute } from '../../const';
 import { Link, useParams } from 'react-router-dom';
-import FormReview from '../../components/form-review/form-review';
 import { Offer } from '../../mocks/offer';
 import NotFoundPage from '../not-found-page/not-found-page';
 import { MOCK_USERS } from '../../mocks/users';
-import { MOCK_REVIEWS } from '../../mocks/reviews';
-import CardMain from '../../components/card-main/card-main';
+import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
+import Map from '../../components/map/map';
+import { CITY } from '../../mocks/city';
+import { useState } from 'react';
+import CardMainList from '../../components/card-main-list/card-main-list';
+import ReviewList from '../../components/review-list/review-list';
 
 type OfferPageProps = {
   offers: Offer[];
@@ -15,6 +18,21 @@ type OfferPageProps = {
 function OfferPage({ offers }: OfferPageProps): JSX.Element {
   const { id } = useParams();
   const currentOffer = offers.find((offer) => offer.id === Number(id)) as Offer;
+  const [activeCardId, setActiveCardId] = useState<number | undefined>(
+    undefined
+  );
+  const activeCard = offers.find((offer) => offer.id === activeCardId);
+
+  const onMouseOverCard: MouseOverLeaveHandler = (evt) => {
+    evt.preventDefault();
+    setActiveCardId(Number(evt.currentTarget.dataset.id));
+  };
+
+  const onMouseLeaveCard: MouseOverLeaveHandler = (evt) => {
+    evt.preventDefault();
+    setActiveCardId(undefined);
+  };
+
   if (!currentOffer) {
     return <NotFoundPage />;
   }
@@ -49,52 +67,6 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
       {service}
     </li>
   ));
-
-  const reviews = currentOffer.reviews.map((reviewId) =>
-    MOCK_REVIEWS.find((review) => review.id === reviewId)
-  );
-  const reviewsElements = reviews.map((review) => {
-    const reviewUser = MOCK_USERS.find((user) => user.id === review?.id);
-    return (
-      <li
-        className="reviews__item"
-        key={`${id as string}-reviews-${review?.id as number}`}
-      >
-        <div className="reviews__user user">
-          <div className="reviews__avatar-wrapper user__avatar-wrapper">
-            <img
-              className="reviews__avatar user__avatar"
-              src={reviewUser?.avatar}
-              width={54}
-              height={54}
-              alt="Reviews avatar"
-            />
-          </div>
-          <span className="reviews__user-name">{reviewUser?.name}</span>
-        </div>
-        <div className="reviews__info">
-          <div className="reviews__rating rating">
-            <div className="reviews__stars rating__stars">
-              <span
-                style={{ width: `${((review?.rate as number) / 5) * 100}%` }}
-              />
-              <span className="visually-hidden">Rating</span>
-            </div>
-          </div>
-          <p className="reviews__text">{review?.review}</p>
-          <time className="reviews__time" dateTime="2019-04-24">
-            {review?.date}
-          </time>
-        </div>
-      </li>
-    );
-  });
-
-  const nearPlaces = offers
-    .slice(0, 3)
-    .map((place) => (
-      <CardMain offer={place} key={`${id as string}-places-${place.id}`} />
-    ));
 
   return (
     <div className="page">
@@ -206,32 +178,30 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
                   </p> */}
                 </div>
               </div>
-              <section className="offer__reviews reviews">
-                <h2 className="reviews__title">
-                  Reviews ·{' '}
-                  <span className="reviews__amount">
-                    {currentOffer.reviews.length}
-                  </span>
-                </h2>
-                <ul className="reviews__list">{reviewsElements}</ul>
-                <FormReview
-                  onReviewSubmit={() => {
-                    throw new Error(
-                      'Function "onReviewSubmit" isn\'t implemented.'
-                    );
-                  }}
-                />
-              </section>
+              <ReviewList currentOffer={currentOffer} />
             </div>
           </div>
-          <section className="offer__map map" />
+          <section className="offer__map map container">
+            <Map
+              city={CITY}
+              offers={offers.slice(0, 3)}
+              selectedOffer={activeCard}
+              height="579px"
+              zoom={13}
+            />
+          </section>
         </section>
         <div className="container">
           <section className="near-places places">
             <h2 className="near-places__title">
               Other places in the neighbourhood
             </h2>
-            <div className="near-places__list places__list">{nearPlaces}</div>
+            <CardMainList
+              offers={offers.slice(0, 3)}
+              page="offer"
+              onMouseOverCard={onMouseOverCard}
+              onMouseLeaveCard={onMouseLeaveCard}
+            />
           </section>
         </div>
       </main>

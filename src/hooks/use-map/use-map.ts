@@ -5,6 +5,7 @@ import { Map, TileLayer } from 'leaflet';
 export default function useMap(
   mapRef: MutableRefObject<HTMLElement | null>,
   city: City,
+  zoom: number,
 ): Map | null {
   const [map, setMap] = useState<Map | null>(null);
   const isRenderedRef = useRef<boolean>(false);
@@ -15,7 +16,7 @@ export default function useMap(
           lat: city.lat,
           lng: city.lng,
         },
-        zoom: 10,
+        zoom,
       });
 
       const layer = new TileLayer(
@@ -31,7 +32,7 @@ export default function useMap(
       setMap(instance);
       isRenderedRef.current = true;
     }
-  }, [mapRef, city]);
+  }, [mapRef, city, zoom]);
 
   return map;
 }
