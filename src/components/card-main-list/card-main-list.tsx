@@ -1,27 +1,23 @@
 import { Offer } from '../../mocks/offer';
 import CardMain from '../../components/card-main/card-main';
-import { useState } from 'react';
+import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
 
 type CardMainListProps = {
   offers: Offer[];
+  onMouseOverCard: MouseOverLeaveHandler;
+  onMouseLeaveCard: MouseOverLeaveHandler;
 };
 
-function CardMainList({ offers }: CardMainListProps): JSX.Element {
-  const [, setActiveCard] = useState(-1);
+function CardMainList(props: CardMainListProps): JSX.Element {
+  const { offers, onMouseOverCard, onMouseLeaveCard } = props;
   return (
     <div className="cities__places-list places__list tabs__content">
       {offers.map((offer) => (
         <CardMain
           key={offer.id}
           offer={offer}
-          mouseOverHandler={(evt) => {
-            evt.preventDefault();
-            setActiveCard(offer.id);
-          }}
-          mouseLeaveHandler={(evt) => {
-            evt.preventDefault();
-            setActiveCard(-1);
-          }}
+          mouseOverHandler={onMouseOverCard}
+          mouseLeaveHandler={onMouseLeaveCard}
         />
       ))}
     </div>

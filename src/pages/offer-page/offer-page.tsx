@@ -93,12 +93,7 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
   const nearPlaces = offers
     .slice(0, 3)
     .map((place) => (
-      <CardMain
-        offer={place}
-        mouseOverHandler={(evt) => evt.preventDefault()}
-        mouseLeaveHandler={(evt) => evt.preventDefault()}
-        key={`${id as string}-places-${place.id}`}
-      />
+      <CardMain offer={place} key={`${id as string}-places-${place.id}`} />
     ));
 
   return (

@@ -17,4 +17,6 @@ export type Offer = {
   pictures: string[];
   pictureSmall: string;
   city: string;
+  lat: number;
+  lng: number;
 };
