@@ -6,21 +6,23 @@ import NotFoundPage from '../not-found-page/not-found-page';
 import { MOCK_USERS } from '../../mocks/users';
 import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
 import Map from '../../components/map/map';
-import { CITY } from '../../mocks/city';
 import { useState } from 'react';
 import CardMainList from '../../components/card-main-list/card-main-list';
 import ReviewList from '../../components/review-list/review-list';
+import { useAppSelector } from '../../hooks';
 
 type OfferPageProps = {
   offers: Offer[];
 };
 
 function OfferPage({ offers }: OfferPageProps): JSX.Element {
-  const { id } = useParams();
-  const currentOffer = offers.find((offer) => offer.id === Number(id)) as Offer;
+  const { id = '' } = useParams();
   const [activeCardId, setActiveCardId] = useState<number | undefined>(
     undefined
   );
+  const currentCity = useAppSelector((state) => state.city);
+
+  const currentOffer = offers.find((offer) => offer.id === Number(id)) as Offer;
   const activeCard = offers.find((offer) => offer.id === activeCardId);
 
   const onMouseOverCard: MouseOverLeaveHandler = (evt) => {
@@ -40,10 +42,7 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
   const host = MOCK_USERS.find((user) => user.id === currentOffer.host);
 
   const gallery = currentOffer.pictures.map((picture) => (
-    <div
-      className="offer__image-wrapper"
-      key={`${id as string}-gallery-${picture}`}
-    >
+    <div className="offer__image-wrapper" key={`${id}-gallery-${picture}`}>
       <img className="offer__image" src={picture} alt="Photo studio" />
     </div>
   ));
@@ -53,17 +52,14 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
   const features = currentOffer.features.map((feature, index) => (
     <li
       className={`offer__feature offer__feature--${FEATURES_CLASSES_SUFFIXES[index]}`}
-      key={`${id as string}-features-${feature}`}
+      key={`${id}-features-${feature}`}
     >
       {feature}
     </li>
   ));
 
   const inside = currentOffer.inside.map((service) => (
-    <li
-      className="offer__inside-item"
-      key={`${id as string}-inside-${service}`}
-    >
+    <li className="offer__inside-item" key={`${id}-inside-${service}`}>
       {service}
     </li>
   ));
@@ -171,11 +167,6 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
                 </div>
                 <div className="offer__description">
                   <p className="offer__text">{currentOffer.description}</p>
-                  {/* <p className="offer__text">
-                    An independent House, strategically located between Rembrand
-                    Square and National Opera, but where the bustle of the city
-                    comes to rest in this alley flowery and colorful.
-                  </p> */}
                 </div>
               </div>
               <ReviewList currentOffer={currentOffer} />
@@ -183,7 +174,7 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
           </div>
           <section className="offer__map map container">
             <Map
-              city={CITY}
+              city={currentCity}
               offers={offers.slice(0, 3)}
               selectedOffer={activeCard}
               height="579px"

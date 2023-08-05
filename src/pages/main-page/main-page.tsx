@@ -6,23 +6,27 @@ import { AppRoute } from '../../const';
 import Map from '../../components/map/map';
 import { useState } from 'react';
 import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
-import { City } from '../../mocks/city';
 import CitiesList from '../../components/cities-list/cities-list';
+import { useAppSelector } from '../../hooks';
 
 type MainPageProps = {
-  offersCount: number;
   offers: Offer[];
   cities: string[];
-  currentCity: City;
 };
 
 function MainPage(props: MainPageProps): JSX.Element {
-  const { offersCount, offers } = props;
-  const { cities, currentCity } = props;
+  const { offers, cities } = props;
   const [activeCardId, setActiveCardId] = useState<number | undefined>(
     undefined
   );
-  const activeCard = offers.find((offer) => offer.id === activeCardId);
+
+  const currentCity = useAppSelector((state) => state.city);
+  const filteredOffers = offers.filter(
+    (offer) => offer.city === currentCity.title
+  );
+  const filteredOffersCount = filteredOffers.length;
+
+  const activeCard = filteredOffers.find((offer) => offer.id === activeCardId);
 
   const onMouseOverCard: MouseOverLeaveHandler = (evt) => {
     evt.preventDefault();
@@ -88,7 +92,7 @@ function MainPage(props: MainPageProps): JSX.Element {
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">
-                {offersCount} places to stay in Amsterdam
+                {filteredOffersCount} places to stay in Amsterdam
               </b>
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
@@ -117,7 +121,7 @@ function MainPage(props: MainPageProps): JSX.Element {
                 </ul>
               </form>
               <CardMainList
-                offers={offers}
+                offers={filteredOffers}
                 page="main"
                 onMouseOverCard={onMouseOverCard}
                 onMouseLeaveCard={onMouseLeaveCard}

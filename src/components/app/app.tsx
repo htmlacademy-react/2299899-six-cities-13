@@ -8,15 +8,12 @@ import NotFoundPage from '../../pages/not-found-page/not-found-page';
 import PrivateRoute from '../private-route/private-route';
 import { HelmetProvider } from 'react-helmet-async';
 import { Offer } from '../../mocks/offer';
-import { City } from '../../mocks/city';
 
 type AppProps = {
-  offersCount: number;
   offers: Offer[];
-  city: City;
 };
 
-function App({ offersCount, offers, city }: AppProps): JSX.Element {
+function App({ offers }: AppProps): JSX.Element {
   return (
     <HelmetProvider>
       <BrowserRouter>
@@ -25,10 +22,8 @@ function App({ offersCount, offers, city }: AppProps): JSX.Element {
             path={AppRoute.Main}
             element={
               <MainPage
-                offersCount={offersCount}
                 offers={offers}
                 cities={CITIES}
-                currentCity={city}
               />
             }
           />
