@@ -6,8 +6,8 @@ import { AppRoute, SORT_OPTIONS } from '../../const';
 import Map from '../../components/map/map';
 import { useState } from 'react';
 import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
-import { City } from '../../mocks/city';
 import CitiesList from '../../components/cities-list/cities-list';
+import { useAppSelector } from '../../hooks';
 import SortOptions from '../../components/sort-options/sort-options';
 import {
   sortPriceHighToLow,
@@ -16,33 +16,37 @@ import {
 } from './sort-options';
 
 type MainPageProps = {
-  offersCount: number;
   offers: Offer[];
   cities: string[];
-  currentCity: City;
 };
 
 function MainPage(props: MainPageProps): JSX.Element {
-  const { offersCount, offers } = props;
-  const { cities, currentCity } = props;
+  const { offers, cities } = props;
 
   const [activeCardId, setActiveCardId] = useState<number | undefined>(
     undefined
   );
+
+  const currentCity = useAppSelector((state) => state.city);
+  const filteredOffers = offers.filter(
+    (offer) => offer.city === currentCity.title
+  );
+  const filteredOffersCount = filteredOffers.length;
+
   const [activeSort, setActiveSort] = useState<string>(SORT_OPTIONS[0]);
   const [isSortClosed, setIsSortClosed] = useState(true);
 
-  const activeCard = offers.find((offer) => offer.id === activeCardId);
-  const sortedOffers = [...offers];
+  const activeCard = filteredOffers.find((offer) => offer.id === activeCardId);
+  const sortedfilteredOffers = [...filteredOffers];
   switch (activeSort) {
     case SORT_OPTIONS[1]:
-      sortedOffers.sort(sortPriceLowToHigh);
+      sortedfilteredOffers.sort(sortPriceLowToHigh);
       break;
     case SORT_OPTIONS[2]:
-      sortedOffers.sort(sortPriceHighToLow);
+      sortedfilteredOffers.sort(sortPriceHighToLow);
       break;
     case SORT_OPTIONS[3]:
-      sortedOffers.sort(sortTop);
+      sortedfilteredOffers.sort(sortTop);
       break;
   }
 
@@ -118,7 +122,7 @@ function MainPage(props: MainPageProps): JSX.Element {
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">
-                {offersCount} places to stay in Amsterdam
+                {filteredOffersCount} places to stay in Amsterdam
               </b>
               <SortOptions
                 activeSort={activeSort}
@@ -127,7 +131,7 @@ function MainPage(props: MainPageProps): JSX.Element {
                 onSortOptionsClick={onSortOptionsClick}
               />
               <CardMainList
-                offers={sortedOffers}
+                offers={sortedfilteredOffers}
                 page="main"
                 onMouseOverCard={onMouseOverCard}
                 onMouseLeaveCard={onMouseLeaveCard}
@@ -137,7 +141,7 @@ function MainPage(props: MainPageProps): JSX.Element {
               <section className="cities__map map">
                 <Map
                   city={currentCity}
-                  offers={offers}
+                  offers={filteredOffers}
                   selectedOffer={activeCard}
                   height="500px"
                   zoom={10}
