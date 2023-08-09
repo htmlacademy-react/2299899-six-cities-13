@@ -41,3 +41,7 @@ export const SORT_OPTIONS = [
   'Price: high to low',
   'Top rated first',
 ];
+
+export const DateTimeFormat = {
+  COMMENT_DATE: 'MMMM YYYY',
+};

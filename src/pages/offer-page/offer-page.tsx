@@ -107,7 +107,6 @@ function OfferPage(): JSX.Element {
                 </div>
                 <span className="offer__rating-value rating__value">
                   {currentOffer.rating}
-                  {currentOffer.rating}
                 </span>
               </div>
               <ul className="offer__features">
