@@ -7,6 +7,8 @@ import {
 } from '../../store/api-actions';
 import ReviewElement from '../review/review';
 import { AuthorizationStatus } from '../../const';
+import { getReviews } from '../../store/data-process/data-process.selectors';
+import { getAuthorizationStatus } from '../../store/user-process/user-process.selectors';
 
 type ReviewListProps = {
   offerId: string;
@@ -15,13 +17,12 @@ type ReviewListProps = {
 export default function ReviewList(props: ReviewListProps): JSX.Element {
   const { offerId } = props;
   const dispatch = useAppDispatch();
+  const reviews = useAppSelector(getReviews);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+
   useEffect(() => {
     dispatch(fetchReviewsAction(offerId));
   }, [offerId, dispatch]);
-  const reviews = useAppSelector((state) => state.reviews);
-  const authorizationStatus = useAppSelector(
-    (state) => state.authorizationStatus
-  );
 
   const onReviewSubmit = (rating: number, review: string) => {
     dispatch(postNewCommentAction({ offerId, comment: review, rating }));

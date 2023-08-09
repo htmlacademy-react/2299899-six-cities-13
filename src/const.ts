@@ -11,6 +11,12 @@ export enum AuthorizationStatus {
   Unknown = 'UNKNOWN',
 }
 
+export enum NameSpace {
+  Data = 'DATA',
+  App = 'APP',
+  User = 'USER',
+}
+
 export const STARS = ['perfect', 'good', 'not bad', 'badly', 'terribly'];
 
 export enum APIRoute {

@@ -15,15 +15,20 @@ import cn from 'classnames';
 import LoadingPage from '../loading-page/loading-page';
 import { capitalizeFirstLetter } from '../../utils';
 import HeaderUser from '../../components/header-user/header-user';
+import {
+  getIsOfferLoading,
+  getNearOffers,
+  getOffer,
+} from '../../store/data-process/data-process.selectors';
 
 function OfferPage(): JSX.Element {
   const dispatch = useAppDispatch();
 
   const { id = '' } = useParams();
 
-  const currentOffer = useAppSelector((state) => state.offer);
-  const nearOffers = useAppSelector((state) => state.nearOffers);
-  const isOfferLoading = useAppSelector((state) => state.isOfferLoading);
+  const currentOffer = useAppSelector(getOffer);
+  const nearOffers = useAppSelector(getNearOffers);
+  const isOfferLoading = useAppSelector(getIsOfferLoading);
 
   useEffect(() => {
     dispatch(fetchOfferAction(id));

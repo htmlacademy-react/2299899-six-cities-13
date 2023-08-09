@@ -1,8 +1,8 @@
 import cn from 'classnames';
 import { MouseEvent } from 'react';
 import { useAppDispatch } from '../../hooks';
-import { updateCity } from '../../store/action';
 import { CITIES } from '../../const';
+import { setCity } from '../../store/app-process/app-process.slice';
 
 type CitiesListProps = {
   cities: string[];
@@ -18,7 +18,7 @@ export default function CitiesList(props: CitiesListProps): JSX.Element {
     const cityTitle = evt.currentTarget.innerText;
     const newCity = CITIES.find((city) => city === cityTitle);
     if (newCity) {
-      dispatch(updateCity(newCity));
+      dispatch(setCity(newCity));
     }
   };
   return (

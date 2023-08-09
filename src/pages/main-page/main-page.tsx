@@ -9,8 +9,9 @@ import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
 import CitiesList from '../../components/cities-list/cities-list';
 import SortOptions from '../../components/sort-options/sort-options';
 import * as sortOptions from './sort-options';
-import { useCurrentCity } from '../../store/selectors';
 import HeaderUser from '../../components/header-user/header-user';
+import { useAppSelector } from '../../hooks';
+import { getCity } from '../../store/app-process/app-process.selectors';
 
 type MainPageProps = {
   offers: Offer[];
@@ -32,7 +33,7 @@ function MainPage(props: MainPageProps): JSX.Element {
   const [activeSort, setActiveSort] = useState<string>(SORT_OPTIONS[0]);
   const [isSortClosed, setIsSortClosed] = useState(true);
 
-  const currentCity = useCurrentCity();
+  const currentCity = useAppSelector(getCity);
   const filteredOffers = offers.filter(
     (offer) => offer.city.name === currentCity
   );
