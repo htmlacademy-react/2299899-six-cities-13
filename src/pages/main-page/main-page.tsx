@@ -7,17 +7,23 @@ import Map from '../../components/map/map';
 import { useState } from 'react';
 import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
 import CitiesList from '../../components/cities-list/cities-list';
-import { useAppSelector } from '../../hooks';
 import SortOptions from '../../components/sort-options/sort-options';
 import {
   sortPriceHighToLow,
   sortPriceLowToHigh,
   sortTop,
 } from './sort-options';
+import { useCurrentCity } from '../../store/selectors';
 
 type MainPageProps = {
   offers: Offer[];
   cities: string[];
+};
+
+const sortFunctionMap = {
+  [SORT_OPTIONS[1]]: sortPriceLowToHigh,
+  [SORT_OPTIONS[2]]: sortPriceHighToLow,
+  [SORT_OPTIONS[3]]: sortTop,
 };
 
 function MainPage(props: MainPageProps): JSX.Element {
@@ -27,7 +33,7 @@ function MainPage(props: MainPageProps): JSX.Element {
     undefined
   );
 
-  const currentCity = useAppSelector((state) => state.city);
+  const currentCity = useCurrentCity();
   const filteredOffers = offers.filter(
     (offer) => offer.city === currentCity.title
   );
@@ -37,18 +43,9 @@ function MainPage(props: MainPageProps): JSX.Element {
   const [isSortClosed, setIsSortClosed] = useState(true);
 
   const activeCard = filteredOffers.find((offer) => offer.id === activeCardId);
-  const sortedfilteredOffers = [...filteredOffers];
-  switch (activeSort) {
-    case SORT_OPTIONS[1]:
-      sortedfilteredOffers.sort(sortPriceLowToHigh);
-      break;
-    case SORT_OPTIONS[2]:
-      sortedfilteredOffers.sort(sortPriceHighToLow);
-      break;
-    case SORT_OPTIONS[3]:
-      sortedfilteredOffers.sort(sortTop);
-      break;
-  }
+  const sortedfilteredOffers = [...filteredOffers].sort(
+    sortFunctionMap[activeSort]
+  );
 
   const onMouseOverCard: MouseOverLeaveHandler = (evt) => {
     evt.preventDefault();
@@ -63,7 +60,7 @@ function MainPage(props: MainPageProps): JSX.Element {
   const onSortClick: MouseOverLeaveHandler = (evt) => {
     evt.preventDefault();
     setActiveSort(evt.currentTarget.innerText);
-    setIsSortClosed(!isSortClosed);
+    setIsSortClosed((state) => !state);
   };
 
   const onSortOptionsClick = () => setIsSortClosed(!isSortClosed);

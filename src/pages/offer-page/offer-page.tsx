@@ -9,7 +9,7 @@ import Map from '../../components/map/map';
 import { useState } from 'react';
 import CardMainList from '../../components/card-main-list/card-main-list';
 import ReviewList from '../../components/review-list/review-list';
-import { useAppSelector } from '../../hooks';
+import { useCurrentCity } from '../../store/selectors';
 
 type OfferPageProps = {
   offers: Offer[];
@@ -20,7 +20,7 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
   const [activeCardId, setActiveCardId] = useState<number | undefined>(
     undefined
   );
-  const currentCity = useAppSelector((state) => state.city);
+  const currentCity = useCurrentCity();
   const currentOffer = offers.find((offer) => offer.id === Number(id)) as Offer;
 
   if (!currentOffer) {
