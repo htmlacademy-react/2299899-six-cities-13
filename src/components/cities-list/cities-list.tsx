@@ -1,4 +1,8 @@
 import cn from 'classnames';
+import { MouseEvent } from 'react';
+import { useAppDispatch } from '../../hooks';
+import { updateCity } from '../../store/action';
+import { CITIES } from '../../const';
 
 type CitiesListProps = {
   cities: string[];
@@ -7,6 +11,16 @@ type CitiesListProps = {
 
 export default function CitiesList(props: CitiesListProps): JSX.Element {
   const { cities, currentCity } = props;
+  const dispatch = useAppDispatch();
+
+  const handleCityChange = (evt: MouseEvent<HTMLSpanElement>) => {
+    evt.preventDefault();
+    const cityTitle = evt.currentTarget.innerText;
+    const newCity = CITIES.find((city) => city === cityTitle);
+    if (newCity) {
+      dispatch(updateCity(newCity));
+    }
+  };
   return (
     <div className="tabs">
       <section className="locations container">
@@ -19,7 +33,7 @@ export default function CitiesList(props: CitiesListProps): JSX.Element {
                 })}
                 href="#"
               >
-                <span>{city}</span>
+                <span onClick={handleCityChange}>{city}</span>
               </a>
             </li>
           ))}

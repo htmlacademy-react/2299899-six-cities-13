@@ -13,17 +13,13 @@ import {
 } from '../../store/api-actions';
 import cn from 'classnames';
 import LoadingPage from '../loading-page/loading-page';
+import { capitalizeFirstLetter } from '../../utils';
 import HeaderUser from '../../components/header-user/header-user';
 
 function OfferPage(): JSX.Element {
-  const { id } = useParams();
-
   const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    dispatch(fetchOfferAction(id as string));
-    dispatch(fetchNearOffersAction(id as string));
-  }, [id, dispatch]);
+  const { id = '' } = useParams();
 
   const currentOffer = useAppSelector((state) => state.offer);
   const nearOffers = useAppSelector((state) => state.nearOffers);
@@ -33,9 +29,26 @@ function OfferPage(): JSX.Element {
     return <NotFoundPage />;
   }
 
+  useEffect(() => {
+    dispatch(fetchOfferAction(id));
+    dispatch(fetchNearOffersAction(id));
+  }, [id, dispatch]);
+
   if (isOfferLoading) {
     return <LoadingPage />;
   }
+
+  const gallery = currentOffer.images.map((picture) => (
+    <div className="offer__image-wrapper" key={`${id}-gallery-${picture}`}>
+      <img className="offer__image" src={picture} alt="Photo studio" />
+    </div>
+  ));
+
+  const goods = currentOffer.goods.map((service) => (
+    <li className="offer__inside-item" key={`${id}-inside-${service}`}>
+      {service}
+    </li>
+  ));
 
   return (
     <div className="page">
@@ -67,20 +80,7 @@ function OfferPage(): JSX.Element {
       <main className="page__main page__main--offer">
         <section className="offer">
           <div className="offer__gallery-container container">
-            <div className="offer__gallery">
-              {currentOffer.images.map((picture) => (
-                <div
-                  className="offer__image-wrapper"
-                  key={`gallery-${picture}`}
-                >
-                  <img
-                    className="offer__image"
-                    src={picture}
-                    alt="Photo studio"
-                  />
-                </div>
-              ))}
-            </div>
+            <div className="offer__gallery">{gallery}</div>
           </div>
           <div className="offer__container container">
             <div className="offer__wrapper">
@@ -107,12 +107,12 @@ function OfferPage(): JSX.Element {
                 </div>
                 <span className="offer__rating-value rating__value">
                   {currentOffer.rating}
+                  {currentOffer.rating}
                 </span>
               </div>
               <ul className="offer__features">
                 <li className="offer__feature offer__feature--entire">
-                  {currentOffer.type.slice(0, 1).toUpperCase() +
-                    currentOffer.type.slice(1)}
+                  {capitalizeFirstLetter(currentOffer.type)}
                 </li>
                 <li className="offer__feature offer__feature--bedrooms">
                   {`${currentOffer.bedrooms} Bedroom${
@@ -131,16 +131,7 @@ function OfferPage(): JSX.Element {
               </div>
               <div className="offer__inside">
                 <h2 className="offer__inside-title">What&apos;s inside</h2>
-                <ul className="offer__inside-list">
-                  {currentOffer.goods.map((service) => (
-                    <li
-                      className="offer__inside-item"
-                      key={`${id as string}-inside-${service}`}
-                    >
-                      {service}
-                    </li>
-                  ))}
-                </ul>
+                <ul className="offer__inside-list">{goods}</ul>
               </div>
               <div className="offer__host">
                 <h2 className="offer__host-title">Meet the host</h2>
@@ -172,7 +163,7 @@ function OfferPage(): JSX.Element {
                   <p className="offer__text">{currentOffer.description}</p>
                 </div>
               </div>
-              <ReviewList offerId={id as string} />
+              <ReviewList offerId={id} />
             </div>
           </div>
           <section className="offer__map map container">

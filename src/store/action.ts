@@ -4,9 +4,9 @@ import { AppRoute, AuthorizationStatus } from '../const';
 import { Review } from '../types/review';
 import { UserData } from '../types/user-data';
 
-export const updateCity = createAction('updateCity');
+export const updateCity = createAction<string>('updateCity');
 
-export const updateOffers = createAction('updateOffers');
+export const updateOffers = createAction<Offer[]>('updateoffers');
 
 export const loadOffers = createAction<Offer[]>('data/loadOffers');
 
