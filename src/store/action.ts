@@ -3,9 +3,9 @@ import { createAction } from '@reduxjs/toolkit';
 import { AuthorizationStatus } from '../const';
 import { Review } from '../types/review';
 
-export const updateCity = createAction('updateCity');
+export const updateCity = createAction<string>('updateCity');
 
-export const updateOffers = createAction('updateOffers');
+export const updateOffers = createAction<Offer[]>('updateoffers');
 
 export const loadOffers = createAction<Offer[]>('data/loadOffers');
 

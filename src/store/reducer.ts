@@ -1,10 +1,11 @@
 import { createReducer } from '@reduxjs/toolkit';
 import * as actions from './action';
 import { Offer } from '../types/offer';
-import { SORT_OPTIONS, AuthorizationStatus } from '../const';
+import { SORT_OPTIONS, AuthorizationStatus, CITIES } from '../const';
 import { Review } from '../types/review';
 
 type InitalState = {
+  city: string;
   offers: Offer[];
   currentSort: string;
   authorizationStatus: AuthorizationStatus;
@@ -16,6 +17,7 @@ type InitalState = {
 };
 
 const initialState: InitalState = {
+  city: CITIES[0],
   offers: [],
   currentSort: SORT_OPTIONS[0],
   authorizationStatus: AuthorizationStatus.Unknown,
@@ -28,6 +30,9 @@ const initialState: InitalState = {
 
 const reducer = createReducer(initialState, (builder) => {
   builder
+    .addCase(actions.updateCity, (state, action) => {
+      state.city = action.payload;
+    })
     .addCase(actions.loadOffers, (state, action) => {
       state.offers = action.payload;
     })
