@@ -6,7 +6,6 @@ import { AppRoute, SORT_OPTIONS } from '../../const';
 import Map from '../../components/map/map';
 import { useState } from 'react';
 import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
-import { City } from '../../mocks/city';
 import CitiesList from '../../components/cities-list/cities-list';
 import SortOptions from '../../components/sort-options/sort-options';
 import {
@@ -14,15 +13,21 @@ import {
   sortPriceLowToHigh,
   sortTop,
 } from './sort-options';
+import { useCurrentCity } from '../../store/selectors';
 
 type MainPageProps = {
   offers: Offer[];
   cities: string[];
-  currentCity: City;
+};
+
+const sortFunctionMap = {
+  [SORT_OPTIONS[1]]: sortPriceLowToHigh,
+  [SORT_OPTIONS[2]]: sortPriceHighToLow,
+  [SORT_OPTIONS[3]]: sortTop,
 };
 
 function MainPage(props: MainPageProps): JSX.Element {
-  const { cities, currentCity } = props;
+  const { offers, cities } = props;
 
   const [activeCardId, setActiveCardId] = useState<number | undefined>(
     undefined
@@ -30,23 +35,18 @@ function MainPage(props: MainPageProps): JSX.Element {
   const [activeSort, setActiveSort] = useState<string>(SORT_OPTIONS[0]);
   const [isSortClosed, setIsSortClosed] = useState(true);
 
-  const offers = props.offers.filter(
+  const currentCity = useCurrentCity();
+  const filteredOffers = offers.filter(
     (offer) => offer.city.name === currentCity.title
   );
+  const filteredOffersCount = filteredOffers.length;
+  const sortedfilteredOffers = [...filteredOffers].sort(
+    sortFunctionMap[activeSort]
+  );
 
-  const activeCard = offers.find((offer) => Number(offer.id) === activeCardId);
-  const sortedOffers = [...offers];
-  switch (activeSort) {
-    case SORT_OPTIONS[1]:
-      sortedOffers.sort(sortPriceLowToHigh);
-      break;
-    case SORT_OPTIONS[2]:
-      sortedOffers.sort(sortPriceHighToLow);
-      break;
-    case SORT_OPTIONS[3]:
-      sortedOffers.sort(sortTop);
-      break;
-  }
+  const activeCard = filteredOffers.find(
+    (offer) => Number(offer.id) === activeCardId
+  );
 
   const onMouseOverCard: MouseOverLeaveHandler = (evt) => {
     evt.preventDefault();
@@ -61,7 +61,7 @@ function MainPage(props: MainPageProps): JSX.Element {
   const onSortClick: MouseOverLeaveHandler = (evt) => {
     evt.preventDefault();
     setActiveSort(evt.currentTarget.innerText);
-    setIsSortClosed(!isSortClosed);
+    setIsSortClosed((state) => !state);
   };
 
   const onSortOptionsClick = () => setIsSortClosed(!isSortClosed);
@@ -120,7 +120,7 @@ function MainPage(props: MainPageProps): JSX.Element {
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">
-                {offers.length} places to stay in Amsterdam
+                {filteredOffersCount} places to stay in Amsterdam
               </b>
               <SortOptions
                 activeSort={activeSort}
@@ -129,7 +129,7 @@ function MainPage(props: MainPageProps): JSX.Element {
                 onSortOptionsClick={onSortOptionsClick}
               />
               <CardMainList
-                offers={sortedOffers}
+                offers={sortedfilteredOffers}
                 page="main"
                 onMouseOverCard={onMouseOverCard}
                 onMouseLeaveCard={onMouseLeaveCard}
@@ -139,7 +139,7 @@ function MainPage(props: MainPageProps): JSX.Element {
               <section className="cities__map map">
                 <Map
                   city={currentCity}
-                  offers={offers}
+                  offers={filteredOffers}
                   selectedOffer={activeCard}
                   height="500px"
                   zoom={10}

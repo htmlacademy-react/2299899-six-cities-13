@@ -12,7 +12,7 @@ export const clearErrorAction = createAsyncThunk('data/clearError', () => {
 
 export const fetchOffersAction = createAsyncThunk<
   void,
-  undefined,
+  string,
   {
     dispatch: AppDispatch;
     state: State;

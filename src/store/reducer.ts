@@ -1,6 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit';
 import * as actions from './action';
-import { CITY, City } from '../mocks/city';
+import { CITIES, City } from '../mocks/city';
 import { Offer } from '../types/offer';
 import { SORT_OPTIONS, AuthorizationStatus } from '../const';
 
@@ -14,7 +14,7 @@ type InitalState = {
 };
 
 const initialState: InitalState = {
-  city: { title: 'Paris', lat: 59, lng: 10 },
+  city: CITIES[0],
   offers: [],
   currentSort: SORT_OPTIONS[0],
   authorizationStatus: AuthorizationStatus.Auth,
@@ -24,8 +24,8 @@ const initialState: InitalState = {
 
 const reducer = createReducer(initialState, (builder) => {
   builder
-    .addCase(actions.updateCity, (state) => {
-      state.city = CITY;
+    .addCase(actions.updateCity, (state, action) => {
+      state.city = action.payload;
     })
     .addCase(actions.loadOffers, (state, action) => {
       state.offers = action.payload;
