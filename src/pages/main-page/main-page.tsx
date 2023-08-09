@@ -6,19 +6,27 @@ import { AppRoute } from '../../const';
 import Map from '../../components/map/map';
 import { useState } from 'react';
 import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
-import { City } from '../../mocks/city';
+import CitiesList from '../../components/cities-list/cities-list';
+import { useAppSelector } from '../../hooks';
 
 type MainPageProps = {
-  offersCount: number;
   offers: Offer[];
-  city: City;
+  cities: string[];
 };
 
-function MainPage({ offersCount, offers, city }: MainPageProps): JSX.Element {
+function MainPage(props: MainPageProps): JSX.Element {
+  const { offers, cities } = props;
   const [activeCardId, setActiveCardId] = useState<number | undefined>(
     undefined
   );
-  const activeCard = offers.find((offer) => offer.id === activeCardId);
+
+  const currentCity = useAppSelector((state) => state.city);
+  const filteredOffers = offers.filter(
+    (offer) => offer.city === currentCity.title
+  );
+  const filteredOffersCount = filteredOffers.length;
+
+  const activeCard = filteredOffers.find((offer) => offer.id === activeCardId);
 
   const onMouseOverCard: MouseOverLeaveHandler = (evt) => {
     evt.preventDefault();
@@ -78,48 +86,13 @@ function MainPage({ offersCount, offers, city }: MainPageProps): JSX.Element {
       </header>
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
-        <div className="tabs">
-          <section className="locations container">
-            <ul className="locations__list tabs__list">
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Paris</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Cologne</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Brussels</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item tabs__item--active">
-                  <span>Amsterdam</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Hamburg</span>
-                </a>
-              </li>
-              <li className="locations__item">
-                <a className="locations__item-link tabs__item" href="#">
-                  <span>Dusseldorf</span>
-                </a>
-              </li>
-            </ul>
-          </section>
-        </div>
+        <CitiesList cities={cities} currentCity={currentCity.title} />
         <div className="cities">
           <div className="cities__places-container container">
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">
-                {offersCount} places to stay in Amsterdam
+                {filteredOffersCount} places to stay in Amsterdam
               </b>
               <form className="places__sorting" action="#" method="get">
                 <span className="places__sorting-caption">Sort by</span>
@@ -148,7 +121,7 @@ function MainPage({ offersCount, offers, city }: MainPageProps): JSX.Element {
                 </ul>
               </form>
               <CardMainList
-                offers={offers}
+                offers={filteredOffers}
                 page="main"
                 onMouseOverCard={onMouseOverCard}
                 onMouseLeaveCard={onMouseLeaveCard}
@@ -157,7 +130,7 @@ function MainPage({ offersCount, offers, city }: MainPageProps): JSX.Element {
             <div className="cities__right-section">
               <section className="cities__map map">
                 <Map
-                  city={city}
+                  city={currentCity}
                   offers={offers}
                   selectedOffer={activeCard}
                   height="500px"
