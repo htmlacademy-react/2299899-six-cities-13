@@ -1,16 +1,23 @@
 import { ChangeEvent, FormEvent, useState, ReactElement } from 'react';
 import { STARS } from '../../const';
+import { useDataPostedStatus } from '../../store/selectors';
+import { useAppDispatch } from '../../hooks';
+import { setDataPostedStatus } from '../../store/action';
 
 type FormReviewProps = {
-  onReviewSubmit: () => void;
+  onReviewSubmit: (rating: number, review: string) => void;
+};
+
+const FORM_DEFAULT_STATE = {
+  rating: null,
+  review: '',
 };
 
 function FormReview({ onReviewSubmit }: FormReviewProps): JSX.Element {
-  const [newReview, setNewReview] = useState({
-    rating: null,
-    review: '',
-  });
+  const [newReview, setNewReview] = useState(FORM_DEFAULT_STATE);
   const [isSubmitAvailable, setIsSubmitAvailable] = useState(false);
+  const isReviewPosted = useDataPostedStatus();
+  const dispatch = useAppDispatch();
 
   const handleFieldChange = (
     evt: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -26,7 +33,14 @@ function FormReview({ onReviewSubmit }: FormReviewProps): JSX.Element {
 
   const handleFormSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
-    onReviewSubmit();
+    if (newReview.rating) {
+      onReviewSubmit(Number(newReview.rating), newReview.review);
+    }
+    if (isReviewPosted) {
+      evt.currentTarget.reset();
+      setNewReview(FORM_DEFAULT_STATE);
+      dispatch(setDataPostedStatus(false));
+    }
   };
 
   const ratingStarsInputs = STARS.map((_star, index) => (

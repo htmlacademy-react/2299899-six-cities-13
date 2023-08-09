@@ -123,3 +123,24 @@ export const logoutAction = createAsyncThunk<
   dropToken();
   dispatch(actions.requireAuthorization(AuthorizationStatus.NoAuth));
 });
+
+export const postNewCommentAction = createAsyncThunk<
+  number,
+  { offerId: string; comment: string; rating: number },
+  { dispatch: AppDispatch; state: State; extra: AxiosInstance }
+>(
+  'offer/postNewComment',
+  async ({ offerId, comment, rating }, { dispatch, getState, extra: api }) => {
+    const state = getState();
+    const response = await api.post(`${APIRoute.Reviews}/${offerId}`, {
+      comment,
+      rating,
+    });
+    if (response.status === 201) {
+      const data = response.data as Review;
+      dispatch(actions.loadReviews([...state.reviews, data]));
+      dispatch(actions.setDataPostedStatus(true));
+    }
+    return response.status;
+  }
+);
