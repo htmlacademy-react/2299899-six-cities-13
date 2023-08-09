@@ -25,14 +25,14 @@ function OfferPage(): JSX.Element {
   const nearOffers = useAppSelector((state) => state.nearOffers);
   const isOfferLoading = useAppSelector((state) => state.isOfferLoading);
 
-  if (!currentOffer) {
-    return <NotFoundPage />;
-  }
-
   useEffect(() => {
     dispatch(fetchOfferAction(id));
     dispatch(fetchNearOffersAction(id));
   }, [id, dispatch]);
+
+  if (!currentOffer) {
+    return <NotFoundPage />;
+  }
 
   if (isOfferLoading) {
     return <LoadingPage />;
