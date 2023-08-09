@@ -6,7 +6,6 @@ import axios, {
 } from 'axios';
 import { StatusCodes } from 'http-status-codes';
 import { getToken } from './token';
-import { processErrorHandle } from './process-error-handle';
 
 type DetailMessageType = {
   type: string;
@@ -47,7 +46,7 @@ export const createAPI = (): AxiosInstance => {
       if (error.response && shouldDisplayError(error.response)) {
         const detailMessage = error.response.data;
 
-        processErrorHandle(detailMessage.message);
+        console.log(detailMessage.message);
       }
 
       throw error;
