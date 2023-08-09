@@ -27,9 +27,12 @@ export default function Map(props: MapProps): JSX.Element {
   const { offers, selectedOffer } = props;
   const mapRef = useRef(null);
   const map = useMap(mapRef, city, zoom);
+  const cityLat = city.location.latitude;
+  const cityLng = city.location.longitude;
 
   useEffect(() => {
     if (map) {
+      map.setView({ lat: cityLat, lng: cityLng }, zoom);
       const markerLayer = layerGroup().addTo(map);
       offers.forEach((offer) => {
         const marker = new Marker({
@@ -49,7 +52,7 @@ export default function Map(props: MapProps): JSX.Element {
         map.removeLayer(markerLayer);
       };
     }
-  }, [map, offers, selectedOffer]);
+  }, [map, offers, selectedOffer, cityLat, cityLng, zoom]);
 
   return <div style={{ height }} ref={mapRef}></div>;
 }
