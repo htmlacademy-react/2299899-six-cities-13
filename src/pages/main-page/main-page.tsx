@@ -2,31 +2,50 @@ import { Helmet } from 'react-helmet-async';
 import CardMainList from '../../components/card-main-list/card-main-list';
 import { Offer } from '../../mocks/offer';
 import { Link } from 'react-router-dom';
-import { AppRoute } from '../../const';
+import { AppRoute, SORT_OPTIONS } from '../../const';
 import Map from '../../components/map/map';
 import { useState } from 'react';
 import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
 import CitiesList from '../../components/cities-list/cities-list';
-import { useAppSelector } from '../../hooks';
+import SortOptions from '../../components/sort-options/sort-options';
+import {
+  sortPriceHighToLow,
+  sortPriceLowToHigh,
+  sortTop,
+} from './sort-options';
+import { useCurrentCity } from '../../store/selectors';
 
 type MainPageProps = {
   offers: Offer[];
   cities: string[];
 };
 
+const sortFunctionMap = {
+  [SORT_OPTIONS[1]]: sortPriceLowToHigh,
+  [SORT_OPTIONS[2]]: sortPriceHighToLow,
+  [SORT_OPTIONS[3]]: sortTop,
+};
+
 function MainPage(props: MainPageProps): JSX.Element {
   const { offers, cities } = props;
+
   const [activeCardId, setActiveCardId] = useState<number | undefined>(
     undefined
   );
 
-  const currentCity = useAppSelector((state) => state.city);
+  const currentCity = useCurrentCity();
   const filteredOffers = offers.filter(
     (offer) => offer.city === currentCity.title
   );
   const filteredOffersCount = filteredOffers.length;
 
+  const [activeSort, setActiveSort] = useState<string>(SORT_OPTIONS[0]);
+  const [isSortClosed, setIsSortClosed] = useState(true);
+
   const activeCard = filteredOffers.find((offer) => offer.id === activeCardId);
+  const sortedfilteredOffers = [...filteredOffers].sort(
+    sortFunctionMap[activeSort]
+  );
 
   const onMouseOverCard: MouseOverLeaveHandler = (evt) => {
     evt.preventDefault();
@@ -37,6 +56,14 @@ function MainPage(props: MainPageProps): JSX.Element {
     evt.preventDefault();
     setActiveCardId(undefined);
   };
+
+  const onSortClick: MouseOverLeaveHandler = (evt) => {
+    evt.preventDefault();
+    setActiveSort(evt.currentTarget.innerText);
+    setIsSortClosed((state) => !state);
+  };
+
+  const onSortOptionsClick = () => setIsSortClosed(!isSortClosed);
 
   return (
     <div className="page page--gray page--main">
@@ -94,34 +121,14 @@ function MainPage(props: MainPageProps): JSX.Element {
               <b className="places__found">
                 {filteredOffersCount} places to stay in Amsterdam
               </b>
-              <form className="places__sorting" action="#" method="get">
-                <span className="places__sorting-caption">Sort by</span>
-                <span className="places__sorting-type" tabIndex={0}>
-                  Popular
-                  <svg className="places__sorting-arrow" width={7} height={4}>
-                    <use xlinkHref="#icon-arrow-select" />
-                  </svg>
-                </span>
-                <ul className="places__options places__options--custom places__options--opened">
-                  <li
-                    className="places__option places__option--active"
-                    tabIndex={0}
-                  >
-                    Popular
-                  </li>
-                  <li className="places__option" tabIndex={0}>
-                    Price: low to high
-                  </li>
-                  <li className="places__option" tabIndex={0}>
-                    Price: high to low
-                  </li>
-                  <li className="places__option" tabIndex={0}>
-                    Top rated first
-                  </li>
-                </ul>
-              </form>
+              <SortOptions
+                activeSort={activeSort}
+                onSortClick={onSortClick}
+                isSortClosed={isSortClosed}
+                onSortOptionsClick={onSortOptionsClick}
+              />
               <CardMainList
-                offers={filteredOffers}
+                offers={sortedfilteredOffers}
                 page="main"
                 onMouseOverCard={onMouseOverCard}
                 onMouseLeaveCard={onMouseLeaveCard}
@@ -131,7 +138,7 @@ function MainPage(props: MainPageProps): JSX.Element {
               <section className="cities__map map">
                 <Map
                   city={currentCity}
-                  offers={offers}
+                  offers={filteredOffers}
                   selectedOffer={activeCard}
                   height="500px"
                   zoom={10}
