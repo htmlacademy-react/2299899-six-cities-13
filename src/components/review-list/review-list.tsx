@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect } from 'react';
 import FormReview from '../../components/form-review/form-review';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import {
@@ -24,9 +24,12 @@ export default function ReviewList(props: ReviewListProps): JSX.Element {
     dispatch(fetchReviewsAction(offerId));
   }, [offerId, dispatch]);
 
-  const onReviewSubmit = (rating: number, review: string) => {
-    dispatch(postNewCommentAction({ offerId, comment: review, rating }));
-  };
+  const onReviewSubmit = useCallback(
+    (rating: number, review: string) => {
+      dispatch(postNewCommentAction({ offerId, comment: review, rating }));
+    },
+    [dispatch, offerId]
+  );
 
   return (
     <section className="offer__reviews reviews">
