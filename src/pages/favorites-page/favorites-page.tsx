@@ -8,6 +8,7 @@ import HeaderUser from '../../components/header-user/header-user';
 import { useAppSelector } from '../../hooks';
 import { getFavorites } from '../../store/data-process/data-process.selectors';
 import { Offer } from '../../types/offer';
+import cn from 'classnames';
 
 function FavoritesPage(): JSX.Element {
   const favoriteOffers = useAppSelector(getFavorites);
@@ -73,15 +74,33 @@ function FavoritesPage(): JSX.Element {
           </div>
         </div>
       </header>
-      <main className="page__main page__main--favorites">
+      <main
+        className={cn('page__main page__main--favorites', {
+          'page__main--favorites-empty': favoriteOffers.length === 0,
+        })}
+      >
         <div className="page__favorites-container container">
-          <section className="favorites">
-            <h1 className="favorites__title">Saved listing</h1>
-            <ul className="favorites__list">{favoritesElements}</ul>
-          </section>
+          {favoriteOffers.length === 0 && (
+            <section className="favorites favorites--empty">
+              <h1 className="visually-hidden">Favorites (empty)</h1>
+              <div className="favorites__status-wrapper">
+                <b className="favorites__status">Nothing yet saved.</b>
+                <p className="favorites__status-description">
+                  Save properties to narrow down search or plan your future
+                  trips.
+                </p>
+              </div>
+            </section>
+          )}
+          {favoriteOffers.length !== 0 && (
+            <section className="favorites">
+              <h1 className="favorites__title">Saved listing</h1>
+              <ul className="favorites__list">{favoritesElements}</ul>
+            </section>
+          )}
         </div>
       </main>
-      <footer className="footer container">
+      <footer className="footer">
         <Link className="footer__logo-link" to={AppRoute.Main}>
           <img
             className="footer__logo"
