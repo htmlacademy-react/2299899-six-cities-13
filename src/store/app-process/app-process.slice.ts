@@ -13,7 +13,7 @@ export const appProcess = createSlice({
   initialState,
   reducers: {
     setCurrentSort: (state, action: PayloadAction<string>) => {
-      state.city = action.payload;
+      state.currentSort = action.payload;
     },
     setCity: (state, action: PayloadAction<string>) => {
       state.city = action.payload;
