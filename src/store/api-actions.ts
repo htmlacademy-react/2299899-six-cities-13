@@ -2,7 +2,7 @@ import { AxiosInstance } from 'axios';
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AppDispatch, State } from '../types/state';
 import { Offer } from '../types/offer';
-import * as actions from './action';
+import { redirectToRoute } from './action';
 import { APIRoute, AppRoute } from '../const';
 import { AuthData } from '../types/auth-data';
 import { UserData } from '../types/user-data';
@@ -105,7 +105,7 @@ export const checkAuthAction = createAsyncThunk<
 });
 
 export const loginAction = createAsyncThunk<
-  UserData,
+  void,
   AuthData,
   {
     dispatch: AppDispatch;
@@ -120,8 +120,7 @@ export const loginAction = createAsyncThunk<
       password,
     });
     saveToken(data.token);
-    dispatch(actions.redirectToRoute(AppRoute.Main));
-    return data;
+    dispatch(redirectToRoute(AppRoute.Main));
   }
 );
 
