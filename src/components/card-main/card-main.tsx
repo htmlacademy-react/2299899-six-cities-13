@@ -2,8 +2,11 @@ import { MouseEvent, useState } from 'react';
 import { Offer } from '../../types/offer';
 import { Link } from 'react-router-dom';
 import cn from 'classnames';
-import { useAppDispatch } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { toggleFavoriteAction } from '../../store/api-actions';
+import { getAuthorizationStatus } from '../../store/user-process/user-process.selectors';
+import { AppRoute, AuthorizationStatus } from '../../const';
+import { redirectToRoute } from '../../store/action';
 
 export type MouseOverLeaveHandler = (evt: MouseEvent<HTMLElement>) => void;
 
@@ -18,13 +21,18 @@ function CardMain(props: CardMainProps): JSX.Element {
   const { mouseOverHandler, mouseLeaveHandler } = props;
   const dispatch = useAppDispatch();
   const [isFavorite, setIsFavorite] = useState(offer.isFavorite);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
 
   const handleFavoriteButoonClick = (evt: MouseEvent<HTMLButtonElement>) => {
     evt.preventDefault();
-    const offerId = evt.currentTarget.dataset.offerId as string;
-    const status = Number(!Number(evt.currentTarget.dataset.isFavorite));
-    dispatch(toggleFavoriteAction({ offerId, status }));
-    setIsFavorite(!isFavorite);
+    if (authorizationStatus !== AuthorizationStatus.Auth) {
+      dispatch(redirectToRoute(AppRoute.Login));
+    } else {
+      const offerId = evt.currentTarget.dataset.offerId as string;
+      const status = Number(!Number(evt.currentTarget.dataset.isFavorite));
+      dispatch(toggleFavoriteAction({ offerId, status }));
+      setIsFavorite(!isFavorite);
+    }
   };
 
   return (

@@ -1,5 +1,5 @@
 import { Helmet } from 'react-helmet-async';
-import { AppRoute } from '../../const';
+import { AppRoute, AuthorizationStatus } from '../../const';
 import { Link, useParams } from 'react-router-dom';
 import NotFoundPage from '../not-found-page/not-found-page';
 import Map from '../../components/map/map';
@@ -21,12 +21,15 @@ import {
   getNearOffers,
   getOffer,
 } from '../../store/data-process/data-process.selectors';
+import { getAuthorizationStatus } from '../../store/user-process/user-process.selectors';
+import { redirectToRoute } from '../../store/action';
 
 function OfferPage(): JSX.Element {
   const dispatch = useAppDispatch();
 
   const { id = '' } = useParams();
 
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const currentOffer = useAppSelector(getOffer);
   const nearOffers = useAppSelector(getNearOffers);
   const isOfferLoading = useAppSelector(getIsOfferLoading);
@@ -47,12 +50,16 @@ function OfferPage(): JSX.Element {
 
   const handleFavoriteButoonClick = (evt: MouseEvent<HTMLButtonElement>) => {
     evt.preventDefault();
-    const offerId = evt.currentTarget.dataset.offerId as string;
-    const status = Number(!Number(evt.currentTarget.dataset.isFavorite));
-    dispatch(toggleFavoriteAction({ offerId, status }));
-    if (bookmarkRef.current) {
-      bookmarkRef.current.classList.toggle('offer__bookmark-button--active');
-      bookmarkRef.current.dataset.isFavorite = String(status);
+    if (authorizationStatus !== AuthorizationStatus.Auth) {
+      dispatch(redirectToRoute(AppRoute.Login));
+    } else {
+      const offerId = evt.currentTarget.dataset.offerId as string;
+      const status = Number(!Number(evt.currentTarget.dataset.isFavorite));
+      dispatch(toggleFavoriteAction({ offerId, status }));
+      if (bookmarkRef.current) {
+        bookmarkRef.current.classList.toggle('offer__bookmark-button--active');
+        bookmarkRef.current.dataset.isFavorite = String(status);
+      }
     }
   };
 
