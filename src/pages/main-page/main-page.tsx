@@ -8,11 +8,12 @@ import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
 import CitiesList from '../../components/cities-list/cities-list';
 import * as sortOptions from './sort-options';
 import HeaderUser from '../../components/header-user/header-user';
-import { useAppSelector } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getCity } from '../../store/app-process/app-process.selectors';
 import cn from 'classnames';
 import Main from '../../components/main/main';
 import MainEmpty from '../../components/main-empty/main-empty';
+import { setCardUnderMouse } from '../../store/app-process/app-process.slice';
 
 type MainPageProps = {
   offers: Offer[];
@@ -27,10 +28,8 @@ const sortFunctionMap = {
 
 function MainPage(props: MainPageProps): JSX.Element {
   const { offers, cities } = props;
+  const dispatch = useAppDispatch();
 
-  const [activeCardId, setActiveCardId] = useState<string | undefined>(
-    undefined
-  );
   const [activeSort, setActiveSort] = useState<string>(SORT_OPTIONS[0]);
   const [isSortClosed, setIsSortClosed] = useState(true);
 
@@ -43,17 +42,21 @@ function MainPage(props: MainPageProps): JSX.Element {
     sortFunctionMap[activeSort]
   );
 
-  const activeCard = filteredOffers.find((offer) => offer.id === activeCardId);
+  const onMouseOverCard: MouseOverLeaveHandler = useCallback(
+    (evt) => {
+      evt.preventDefault();
+      dispatch(setCardUnderMouse(evt.currentTarget.dataset.id));
+    },
+    [dispatch]
+  );
 
-  const onMouseOverCard: MouseOverLeaveHandler = useCallback((evt) => {
-    evt.preventDefault();
-    setActiveCardId(evt.currentTarget.dataset.id);
-  }, []);
-
-  const onMouseLeaveCard: MouseOverLeaveHandler = useCallback((evt) => {
-    evt.preventDefault();
-    setActiveCardId(undefined);
-  }, []);
+  const onMouseLeaveCard: MouseOverLeaveHandler = useCallback(
+    (evt) => {
+      evt.preventDefault();
+      dispatch(setCardUnderMouse(undefined));
+    },
+    [dispatch]
+  );
 
   const onSortClick: MouseOverLeaveHandler = useCallback((evt) => {
     evt.preventDefault();
@@ -131,7 +134,6 @@ function MainPage(props: MainPageProps): JSX.Element {
                   <Map
                     city={filteredOffers[0].city}
                     offers={filteredOffers}
-                    selectedOffer={activeCard}
                     height="500px"
                     zoom={filteredOffers[0].city.location.zoom}
                   />

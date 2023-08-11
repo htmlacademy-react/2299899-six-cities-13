@@ -16,6 +16,7 @@ export type UserProcess = {
 export type AppProcess = {
   currentSort: string;
   city: string;
+  cardUnderMouse: string | undefined;
 };
 
 export type DataProcess = {
