@@ -1,7 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { AppRoute } from '../../const';
 import { Link, useParams } from 'react-router-dom';
-import { Offer } from '../../mocks/offer';
 import NotFoundPage from '../not-found-page/not-found-page';
 import { MOCK_USERS } from '../../mocks/users';
 import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
@@ -10,6 +9,7 @@ import { useState } from 'react';
 import CardMainList from '../../components/card-main-list/card-main-list';
 import ReviewList from '../../components/review-list/review-list';
 import { useCurrentCity } from '../../store/selectors';
+import { Offer } from '../../types/offer';
 
 type OfferPageProps = {
   offers: Offer[];
@@ -17,11 +17,9 @@ type OfferPageProps = {
 
 function OfferPage({ offers }: OfferPageProps): JSX.Element {
   const { id = '' } = useParams();
-  const [activeCardId, setActiveCardId] = useState<number | undefined>(
-    undefined
-  );
+  const [activeCardId, setActiveCardId] = useState<string>('');
   const currentCity = useCurrentCity();
-  const currentOffer = offers.find((offer) => offer.id === Number(id)) as Offer;
+  const currentOffer = offers.find((offer) => offer.id === id) as Offer;
 
   if (!currentOffer) {
     return <NotFoundPage />;
@@ -31,17 +29,19 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
 
   const onMouseOverCard: MouseOverLeaveHandler = (evt) => {
     evt.preventDefault();
-    setActiveCardId(Number(evt.currentTarget.dataset.id));
+    if (evt.currentTarget.dataset.id) {
+      setActiveCardId(evt.currentTarget.dataset.id);
+    }
   };
 
   const onMouseLeaveCard: MouseOverLeaveHandler = (evt) => {
     evt.preventDefault();
-    setActiveCardId(undefined);
+    setActiveCardId('');
   };
 
-  const host = MOCK_USERS.find((user) => user.id === currentOffer.host);
+  const host = MOCK_USERS.find((user) => user.name === currentOffer.host.name);
 
-  const gallery = currentOffer.pictures.map((picture) => (
+  const gallery = currentOffer.images.map((picture) => (
     <div className="offer__image-wrapper" key={`${id}-gallery-${picture}`}>
       <img className="offer__image" src={picture} alt="Photo studio" />
     </div>
@@ -49,7 +49,7 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
 
   const FEATURES_CLASSES_SUFFIXES = ['entire', 'bedrooms', 'adults'];
 
-  const features = currentOffer.features.map((feature, index) => (
+  const features = currentOffer.goods.map((feature, index) => (
     <li
       className={`offer__feature offer__feature--${FEATURES_CLASSES_SUFFIXES[index]}`}
       key={`${id}-features-${feature}`}
@@ -58,7 +58,7 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
     </li>
   ));
 
-  const inside = currentOffer.inside.map((service) => (
+  const inside = currentOffer.goods.map((service) => (
     <li className="offer__inside-item" key={`${id}-inside-${service}`}>
       {service}
     </li>
@@ -131,12 +131,12 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
                   <span
-                    style={{ width: `${(currentOffer.rate / 5) * 100}%` }}
+                    style={{ width: `${(currentOffer.rating / 5) * 100}%` }}
                   />
                   <span className="visually-hidden">Rating</span>
                 </div>
                 <span className="offer__rating-value rating__value">
-                  {currentOffer.rate}
+                  {currentOffer.rating}
                 </span>
               </div>
               <ul className="offer__features">{features}</ul>

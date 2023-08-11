@@ -2,7 +2,7 @@ import { Icon, Marker, layerGroup } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { useRef, useEffect } from 'react';
 import useMap from '../../hooks/use-map/use-map';
-import { Offer } from '../../mocks/offer';
+import { Offer } from '../../types/offer';
 import { URL_MARKER_CURRENT, URL_MARKER_DEFAULT } from '../../const';
 import { City } from '../../mocks/city';
 
@@ -33,8 +33,8 @@ export default function Map(props: MapProps): JSX.Element {
       const markerLayer = layerGroup().addTo(map);
       offers.forEach((offer) => {
         const marker = new Marker({
-          lat: offer.lat,
-          lng: offer.lng,
+          lat: offer.location.latitude,
+          lng: offer.location.longitude,
         });
 
         marker

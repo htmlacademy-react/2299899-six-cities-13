@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import CardMainList from '../../components/card-main-list/card-main-list';
-import { Offer } from '../../mocks/offer';
+import { Offer } from '../../types/offer';
 import { Link } from 'react-router-dom';
 import { AppRoute, SORT_OPTIONS } from '../../const';
 import Map from '../../components/map/map';
@@ -32,19 +32,20 @@ function MainPage(props: MainPageProps): JSX.Element {
   const [activeCardId, setActiveCardId] = useState<number | undefined>(
     undefined
   );
-
-  const currentCity = useCurrentCity();
-  const filteredOffers = offers.filter(
-    (offer) => offer.city === currentCity.title
-  );
-  const filteredOffersCount = filteredOffers.length;
-
   const [activeSort, setActiveSort] = useState<string>(SORT_OPTIONS[0]);
   const [isSortClosed, setIsSortClosed] = useState(true);
 
-  const activeCard = filteredOffers.find((offer) => offer.id === activeCardId);
+  const currentCity = useCurrentCity();
+  const filteredOffers = offers.filter(
+    (offer) => offer.city.name === currentCity.title
+  );
+  const filteredOffersCount = filteredOffers.length;
   const sortedfilteredOffers = [...filteredOffers].sort(
     sortFunctionMap[activeSort]
+  );
+
+  const activeCard = filteredOffers.find(
+    (offer) => Number(offer.id) === activeCardId
   );
 
   const onMouseOverCard: MouseOverLeaveHandler = (evt) => {

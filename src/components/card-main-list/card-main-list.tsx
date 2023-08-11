@@ -1,4 +1,4 @@
-import { Offer } from '../../mocks/offer';
+import { Offer } from '../../types/offer';
 import CardMain from '../../components/card-main/card-main';
 import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
 import cn from 'classnames';
