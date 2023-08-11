@@ -61,6 +61,16 @@ export const dataProcess = createSlice({
       })
       .addCase(toggleFavoriteAction.fulfilled, (state, action) => {
         const updatedOffer = action.payload;
+
+        const updatedOffers = state.offers.map((offer) => {
+          if (offer.id === updatedOffer.id) {
+            return updatedOffer;
+          } else {
+            return offer;
+          }
+        });
+        state.offers = updatedOffers;
+
         const otherFavoriteOffers = state.favorites.filter(
           (offer) => offer.id !== updatedOffer.id
         );

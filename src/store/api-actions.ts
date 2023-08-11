@@ -120,6 +120,9 @@ export const loginAction = createAsyncThunk<
       password,
     });
     saveToken(data.token);
+    dispatch(checkAuthAction());
+    dispatch(fetchOffersAction());
+    dispatch(fetchFavoritesAction());
     dispatch(redirectToRoute(AppRoute.Main));
   }
 );
@@ -132,9 +135,10 @@ export const logoutAction = createAsyncThunk<
     state: State;
     extra: AxiosInstance;
   }
->('user/logout', async (_arg, { extra: api }) => {
+>('user/logout', async (_arg, { dispatch, extra: api }) => {
   await api.delete(APIRoute.Logout);
   dropToken();
+  dispatch(fetchOffersAction());
 });
 
 export const postNewCommentAction = createAsyncThunk<
