@@ -1,7 +1,6 @@
 import { Helmet } from 'react-helmet-async';
-import { Offer } from '../../types/offer';
 import { Link } from 'react-router-dom';
-import { AppRoute } from '../../const';
+import { AppRoute, CITIES } from '../../const';
 import Map from '../../components/map/map';
 import { useCallback } from 'react';
 import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
@@ -14,16 +13,12 @@ import cn from 'classnames';
 import Main from '../../components/main/main';
 import MainEmpty from '../../components/main-empty/main-empty';
 import { setCardUnderMouse } from '../../store/app-process/app-process.slice';
+import { getOffers } from '../../store/data-process/data-process.selectors';
 
-type MainPageProps = {
-  offers: Offer[];
-  cities: string[];
-};
-
-function MainPage(props: MainPageProps): JSX.Element {
-  const { offers, cities } = props;
+function MainPage(): JSX.Element {
   const dispatch = useAppDispatch();
 
+  const offers = useAppSelector(getOffers);
   const currentCity = useAppSelector(getCity);
   const filteredOffers = offers.filter(
     (offer) => offer.city.name === currentCity
@@ -82,7 +77,7 @@ function MainPage(props: MainPageProps): JSX.Element {
       </header>
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
-        <CitiesList cities={cities} currentCity={currentCity} />
+        <CitiesList cities={CITIES} currentCity={currentCity} />
         <div className="cities">
           <div
             className={cn('cities__places-container container', {
