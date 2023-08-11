@@ -8,10 +8,6 @@ type MainProps = {
   filteredOffersCount: number;
   onMouseOverCard: MouseOverLeaveHandler;
   onMouseLeaveCard: MouseOverLeaveHandler;
-  onSortClick: MouseOverLeaveHandler;
-  onSortOptionsClick: () => void;
-  isSortClosed: boolean;
-  activeSort: string;
   currentCity: string;
 };
 
@@ -21,10 +17,6 @@ export default function Main(props: MainProps): JSX.Element {
     filteredOffersCount,
     onMouseOverCard,
     onMouseLeaveCard,
-    onSortClick,
-    onSortOptionsClick,
-    isSortClosed,
-    activeSort,
     currentCity,
   } = props;
 
@@ -34,12 +26,7 @@ export default function Main(props: MainProps): JSX.Element {
       <b className="places__found">
         {filteredOffersCount} places to stay in {currentCity}
       </b>
-      <SortOptions
-        activeSort={activeSort}
-        onSortClick={onSortClick}
-        isSortClosed={isSortClosed}
-        onSortOptionsClick={onSortOptionsClick}
-      />
+      <SortOptions />
       <CardMainList
         offers={offers}
         page="main"

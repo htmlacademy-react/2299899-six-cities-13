@@ -1,12 +1,12 @@
 import { Helmet } from 'react-helmet-async';
 import { Offer } from '../../types/offer';
 import { Link } from 'react-router-dom';
-import { AppRoute, SORT_OPTIONS } from '../../const';
+import { AppRoute } from '../../const';
 import Map from '../../components/map/map';
-import { useState, useCallback } from 'react';
+import { useCallback } from 'react';
 import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
 import CitiesList from '../../components/cities-list/cities-list';
-import * as sortOptions from './sort-options';
+
 import HeaderUser from '../../components/header-user/header-user';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { getCity } from '../../store/app-process/app-process.selectors';
@@ -20,27 +20,15 @@ type MainPageProps = {
   cities: string[];
 };
 
-const sortFunctionMap = {
-  [SORT_OPTIONS[1]]: sortOptions.sortPriceLowToHigh,
-  [SORT_OPTIONS[2]]: sortOptions.sortPriceHighToLow,
-  [SORT_OPTIONS[3]]: sortOptions.sortTop,
-};
-
 function MainPage(props: MainPageProps): JSX.Element {
   const { offers, cities } = props;
   const dispatch = useAppDispatch();
-
-  const [activeSort, setActiveSort] = useState<string>(SORT_OPTIONS[0]);
-  const [isSortClosed, setIsSortClosed] = useState(true);
 
   const currentCity = useAppSelector(getCity);
   const filteredOffers = offers.filter(
     (offer) => offer.city.name === currentCity
   );
   const filteredOffersCount = filteredOffers.length;
-  const sortedfilteredOffers = [...filteredOffers].sort(
-    sortFunctionMap[activeSort]
-  );
 
   const onMouseOverCard: MouseOverLeaveHandler = useCallback(
     (evt) => {
@@ -56,17 +44,6 @@ function MainPage(props: MainPageProps): JSX.Element {
       dispatch(setCardUnderMouse(undefined));
     },
     [dispatch]
-  );
-
-  const onSortClick: MouseOverLeaveHandler = useCallback((evt) => {
-    evt.preventDefault();
-    setActiveSort(evt.currentTarget.innerText);
-    setIsSortClosed((state) => !state);
-  }, []);
-
-  const onSortOptionsClick = useCallback(
-    () => setIsSortClosed((state) => !state),
-    []
   );
 
   return (
@@ -117,14 +94,10 @@ function MainPage(props: MainPageProps): JSX.Element {
             )}
             {filteredOffers.length !== 0 && (
               <Main
-                offers={sortedfilteredOffers}
+                offers={filteredOffers}
                 filteredOffersCount={filteredOffersCount}
                 onMouseOverCard={onMouseOverCard}
                 onMouseLeaveCard={onMouseLeaveCard}
-                onSortClick={onSortClick}
-                onSortOptionsClick={onSortOptionsClick}
-                isSortClosed={isSortClosed}
-                activeSort={activeSort}
                 currentCity={currentCity}
               />
             )}
