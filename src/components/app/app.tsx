@@ -8,7 +8,7 @@ import NotFoundPage from '../../pages/not-found-page/not-found-page';
 import PrivateRoute from '../private-route/private-route';
 import LoadingPage from '../../pages/loading-page/loading-page';
 import { HelmetProvider } from 'react-helmet-async';
-import { useAppSelector } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import HistoryRouter from '../history-route/history-route';
 import browserHistory from '../../browser-history';
 import { getAuthorizationStatus } from '../../store/user-process/user-process.selectors';
@@ -16,11 +16,20 @@ import {
   getIsOffersLoading,
   getOffers,
 } from '../../store/data-process/data-process.selectors';
+import { useEffect } from 'react';
+import { checkAuthAction, fetchOffersAction } from '../../store/api-actions';
 
 function App(): JSX.Element {
+  const dispatch = useAppDispatch();
+
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const isOffersLoading = useAppSelector(getIsOffersLoading);
   const offers = useAppSelector(getOffers);
+
+  useEffect(() => {
+    dispatch(checkAuthAction());
+    dispatch(fetchOffersAction());
+  }, [dispatch]);
 
   if (authorizationStatus === AuthorizationStatus.Unknown || isOffersLoading) {
     return <LoadingPage />;
