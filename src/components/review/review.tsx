@@ -1,4 +1,6 @@
+import { DateTimeFormat } from '../../const';
 import { Review } from '../../types/review';
+import { humanizeDate } from '../../utils';
 
 type ReviewProps = {
   review: Review;
@@ -28,7 +30,7 @@ export default function ReviewElement({ review }: ReviewProps): JSX.Element {
         </div>
         <p className="reviews__text">{review.comment}</p>
         <time className="reviews__time" dateTime={review.date}>
-          {review.date}
+          {humanizeDate(review.date, DateTimeFormat.COMMENT_DATE)}
         </time>
       </div>
     </li>

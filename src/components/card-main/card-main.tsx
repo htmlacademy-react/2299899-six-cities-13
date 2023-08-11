@@ -27,7 +27,7 @@ function CardMain(props: CardMainProps): JSX.Element {
       )}
       <div className="cities__image-wrapper place-card__image-wrapper">
         {!!offer.previewImage && (
-          <Link to={`offer/${offer.id}`}>
+          <Link to={`/offer/${offer.id}`}>
             <img
               className="place-card__image"
               src={offer.previewImage}

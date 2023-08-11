@@ -3,14 +3,17 @@ import * as actions from './action';
 import { Offer } from '../types/offer';
 import { SORT_OPTIONS, AuthorizationStatus, CITIES } from '../const';
 import { Review } from '../types/review';
+import { UserData } from '../types/user-data';
 
 type InitalState = {
   city: string;
   offers: Offer[];
   currentSort: string;
   authorizationStatus: AuthorizationStatus;
+  currentUser: UserData | null;
   isOffersLoading: boolean;
   isOfferLoading: boolean;
+  isPosted: boolean;
   offer: Offer | null;
   reviews: Review[];
   nearOffers: Offer[];
@@ -21,8 +24,10 @@ const initialState: InitalState = {
   offers: [],
   currentSort: SORT_OPTIONS[0],
   authorizationStatus: AuthorizationStatus.Unknown,
+  currentUser: null,
   isOffersLoading: false,
   isOfferLoading: false,
+  isPosted: false,
   offer: null,
   reviews: [],
   nearOffers: [],
@@ -45,6 +50,9 @@ const reducer = createReducer(initialState, (builder) => {
     .addCase(actions.setOfferLoadingStatus, (state, action) => {
       state.isOfferLoading = action.payload;
     })
+    .addCase(actions.setDataPostedStatus, (state, action) => {
+      state.isPosted = action.payload;
+    })
     .addCase(actions.loadOffer, (state, action) => {
       state.offer = action.payload;
     })
@@ -53,6 +61,9 @@ const reducer = createReducer(initialState, (builder) => {
     })
     .addCase(actions.loadNearOffers, (state, action) => {
       state.nearOffers = action.payload;
+    })
+    .addCase(actions.setCurrentUser, (state, action) => {
+      state.currentUser = action.payload;
     });
 });
 

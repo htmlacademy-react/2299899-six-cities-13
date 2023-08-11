@@ -59,7 +59,7 @@ function MainPage(props: MainPageProps): JSX.Element {
     setIsSortClosed((state) => !state);
   };
 
-  const onSortOptionsClick = () => setIsSortClosed(!isSortClosed);
+  const onSortOptionsClick = () => setIsSortClosed((state) => !state);
 
   return (
     <div className="page page--gray page--main">
@@ -99,7 +99,7 @@ function MainPage(props: MainPageProps): JSX.Element {
             <section className="cities__places places">
               <h2 className="visually-hidden">Places</h2>
               <b className="places__found">
-                {filteredOffersCount} places to stay in Amsterdam
+                {filteredOffersCount} places to stay in {currentCity}
               </b>
               <SortOptions
                 activeSort={activeSort}
@@ -117,11 +117,11 @@ function MainPage(props: MainPageProps): JSX.Element {
             <div className="cities__right-section">
               <section className="cities__map map">
                 <Map
-                  city={offers[0].city}
+                  city={filteredOffers[0].city}
                   offers={filteredOffers}
                   selectedOffer={activeCard}
                   height="500px"
-                  zoom={offers[0].city.location.zoom}
+                  zoom={filteredOffers[0].city.location.zoom}
                 />
               </section>
             </div>

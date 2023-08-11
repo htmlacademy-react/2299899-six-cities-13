@@ -3,7 +3,7 @@ import { createAsyncThunk } from '@reduxjs/toolkit';
 import { AppDispatch, State } from '../types/state';
 import { Offer } from '../types/offer';
 import * as actions from './action';
-import { APIRoute, AuthorizationStatus } from '../const';
+import { APIRoute, AppRoute, AuthorizationStatus } from '../const';
 import { AuthData } from '../types/auth-data';
 import { UserData } from '../types/user-data';
 import { dropToken, saveToken } from '../services/token';
@@ -104,7 +104,9 @@ export const loginAction = createAsyncThunk<
       password,
     });
     saveToken(data.token);
+    dispatch(actions.setCurrentUser(data));
     dispatch(actions.requireAuthorization(AuthorizationStatus.Auth));
+    dispatch(actions.redirectToRoute(AppRoute.Main));
   }
 );
 
@@ -121,3 +123,24 @@ export const logoutAction = createAsyncThunk<
   dropToken();
   dispatch(actions.requireAuthorization(AuthorizationStatus.NoAuth));
 });
+
+export const postNewCommentAction = createAsyncThunk<
+  number,
+  { offerId: string; comment: string; rating: number },
+  { dispatch: AppDispatch; state: State; extra: AxiosInstance }
+>(
+  'offer/postNewComment',
+  async ({ offerId, comment, rating }, { dispatch, getState, extra: api }) => {
+    const state = getState();
+    const response = await api.post(`${APIRoute.Reviews}/${offerId}`, {
+      comment,
+      rating,
+    });
+    if (response.status === 201) {
+      const data = response.data as Review;
+      dispatch(actions.loadReviews([...state.reviews, data]));
+      dispatch(actions.setDataPostedStatus(true));
+    }
+    return response.status;
+  }
+);
