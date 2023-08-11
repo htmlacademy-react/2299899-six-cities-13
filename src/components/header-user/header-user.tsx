@@ -7,12 +7,14 @@ import {
   getCurrentUser,
 } from '../../store/user-process/user-process.selectors';
 import { getToken } from '../../services/token';
+import { getFavorites } from '../../store/data-process/data-process.selectors';
 
 export default function HeaderUser(): JSX.Element {
   const dispatch = useAppDispatch();
 
   const authorizationStatus = useAppSelector(getAuthorizationStatus);
   const currentUser = useAppSelector(getCurrentUser);
+  const favoritesCount = useAppSelector(getFavorites).length;
   const token = getToken();
 
   if (authorizationStatus !== AuthorizationStatus.Auth) {
@@ -44,7 +46,7 @@ export default function HeaderUser(): JSX.Element {
           <span className="header__user-name user__name">
             {currentUser?.email}
           </span>
-          <span className="header__favorite-count">3</span>
+          <span className="header__favorite-count">{favoritesCount}</span>
         </Link>
       </li>
       <li className="header__nav-item">

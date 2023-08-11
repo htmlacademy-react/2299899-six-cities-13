@@ -1,6 +1,9 @@
-import { MouseEvent } from 'react';
+import { MouseEvent, useState } from 'react';
 import { Offer } from '../../types/offer';
 import { Link } from 'react-router-dom';
+import cn from 'classnames';
+import { useAppDispatch } from '../../hooks';
+import { toggleFavoriteAction } from '../../store/api-actions';
 
 export type MouseOverLeaveHandler = (evt: MouseEvent<HTMLElement>) => void;
 
@@ -13,6 +16,17 @@ type CardMainProps = {
 function CardMain(props: CardMainProps): JSX.Element {
   const { offer } = props;
   const { mouseOverHandler, mouseLeaveHandler } = props;
+  const dispatch = useAppDispatch();
+  const [isFavorite, setIsFavorite] = useState(offer.isFavorite);
+
+  const handleFavoriteButoonClick = (evt: MouseEvent<HTMLButtonElement>) => {
+    evt.preventDefault();
+    const offerId = evt.currentTarget.dataset.offerId as string;
+    const status = Number(!Number(evt.currentTarget.dataset.isFavorite));
+    dispatch(toggleFavoriteAction({ offerId, status }));
+    setIsFavorite(!isFavorite);
+  };
+
   return (
     <article
       className="cities__card place-card"
@@ -44,7 +58,15 @@ function CardMain(props: CardMainProps): JSX.Element {
             <b className="place-card__price-value">€{offer.price}</b>
             <span className="place-card__price-text">/&nbsp;night</span>
           </div>
-          <button className="place-card__bookmark-button button" type="button">
+          <button
+            className={cn('place-card__bookmark-button button', {
+              'place-card__bookmark-button--active': isFavorite,
+            })}
+            type="button"
+            data-offer-id={offer.id}
+            data-is-favorite={Number(isFavorite)}
+            onClick={handleFavoriteButoonClick}
+          >
             <svg className="place-card__bookmark-icon" width={18} height={19}>
               <use xlinkHref="#icon-bookmark" />
             </svg>

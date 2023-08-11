@@ -26,4 +26,5 @@ export type DataProcess = {
   isOffersLoading: boolean;
   isOfferLoading: boolean;
   isPosted: boolean;
+  favorites: Offer[];
 };

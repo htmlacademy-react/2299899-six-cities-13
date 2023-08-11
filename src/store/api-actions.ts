@@ -17,7 +17,7 @@ export const fetchOffersAction = createAsyncThunk<
     state: State;
     extra: AxiosInstance;
   }
->('data/loadOffers', async (_arg, { extra: api }) => {
+>('data/fetchOffers', async (_arg, { extra: api }) => {
   const { data } = await api.get<Offer[]>(APIRoute.Offers);
   return data;
 });
@@ -30,7 +30,7 @@ export const fetchOfferAction = createAsyncThunk<
     state: State;
     extra: AxiosInstance;
   }
->('data/loadOffer', async (id, { extra: api }) => {
+>('data/fetchOffer', async (id, { extra: api }) => {
   const { data } = await api.get<Offer>(`${APIRoute.Offers}/${id}`);
   return data;
 });
@@ -43,7 +43,7 @@ export const fetchReviewsAction = createAsyncThunk<
     state: State;
     extra: AxiosInstance;
   }
->('data/loadReviews', async (id, { extra: api }) => {
+>('data/fetchReviews', async (id, { extra: api }) => {
   const { data } = await api.get<Review[]>(`${APIRoute.Reviews}/${id}`);
   return data;
 });
@@ -56,9 +56,37 @@ export const fetchNearOffersAction = createAsyncThunk<
     state: State;
     extra: AxiosInstance;
   }
->('data/loadNearOffers', async (id, { extra: api }) => {
+>('data/fetchNearOffers', async (id, { extra: api }) => {
   const { data } = await api.get<Offer[]>(
     `${APIRoute.Offers}/${id}${APIRoute.NearOffers}`
+  );
+  return data;
+});
+
+export const fetchFavoritesAction = createAsyncThunk<
+  Offer[],
+  undefined,
+  {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }
+>('data/fetchFavorites', async (_arg, { extra: api }) => {
+  const { data } = await api.get<Offer[]>(APIRoute.Favorites);
+  return data;
+});
+
+export const toggleFavoriteAction = createAsyncThunk<
+  Offer,
+  { offerId: string; status: number },
+  {
+    dispatch: AppDispatch;
+    state: State;
+    extra: AxiosInstance;
+  }
+>('data/toggleFavorite', async ({ offerId, status }, { extra: api }) => {
+  const { data } = await api.post<Offer>(
+    `${APIRoute.Favorites}/${offerId}/${status}`
   );
   return data;
 });
@@ -115,7 +143,7 @@ export const postNewCommentAction = createAsyncThunk<
   { offerId: string; comment: string; rating: number },
   { dispatch: AppDispatch; state: State; extra: AxiosInstance }
 >(
-  'offer/postNewComment',
+  'data/postNewComment',
   async ({ offerId, comment, rating }, { extra: api }) => {
     const data = (
       await api.post(`${APIRoute.Reviews}/${offerId}`, {

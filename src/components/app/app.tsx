@@ -17,7 +17,11 @@ import {
   getOffers,
 } from '../../store/data-process/data-process.selectors';
 import { useEffect } from 'react';
-import { checkAuthAction, fetchOffersAction } from '../../store/api-actions';
+import {
+  checkAuthAction,
+  fetchFavoritesAction,
+  fetchOffersAction,
+} from '../../store/api-actions';
 
 function App(): JSX.Element {
   const dispatch = useAppDispatch();
@@ -29,6 +33,7 @@ function App(): JSX.Element {
   useEffect(() => {
     dispatch(checkAuthAction());
     dispatch(fetchOffersAction());
+    dispatch(fetchFavoritesAction());
   }, [dispatch]);
 
   if (authorizationStatus === AuthorizationStatus.Unknown || isOffersLoading) {
@@ -48,7 +53,7 @@ function App(): JSX.Element {
             path={AppRoute.Favorites}
             element={
               <PrivateRoute authorizationStatus={authorizationStatus}>
-                <FavoritesPage offers={offers} />
+                <FavoritesPage />
               </PrivateRoute>
             }
           />

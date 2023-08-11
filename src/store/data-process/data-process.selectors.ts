@@ -17,3 +17,5 @@ export const getNearOffers = (state: State): Offer[] =>
   state[NameSpace.Data].nearOffers;
 export const getIsPosted = (state: State): boolean =>
   state[NameSpace.Data].isPosted;
+export const getFavorites = (state: State): Offer[] =>
+  state[NameSpace.Data].favorites;

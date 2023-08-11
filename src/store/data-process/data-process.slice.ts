@@ -2,11 +2,13 @@ import { PayloadAction, createSlice } from '@reduxjs/toolkit';
 import { NameSpace } from '../../const';
 import { DataProcess } from '../../types/state';
 import {
+  fetchFavoritesAction,
   fetchNearOffersAction,
   fetchOfferAction,
   fetchOffersAction,
   fetchReviewsAction,
   postNewCommentAction,
+  toggleFavoriteAction,
 } from '../api-actions';
 
 const initialState: DataProcess = {
@@ -17,6 +19,7 @@ const initialState: DataProcess = {
   isOffersLoading: false,
   isOfferLoading: false,
   isPosted: false,
+  favorites: [],
 };
 
 export const dataProcess = createSlice({
@@ -52,6 +55,20 @@ export const dataProcess = createSlice({
       .addCase(postNewCommentAction.fulfilled, (state, action) => {
         state.reviews = [...state.reviews, action.payload];
         state.isPosted = true;
+      })
+      .addCase(fetchFavoritesAction.fulfilled, (state, action) => {
+        state.favorites = action.payload;
+      })
+      .addCase(toggleFavoriteAction.fulfilled, (state, action) => {
+        const updatedOffer = action.payload;
+        const otherFavoriteOffers = state.favorites.filter(
+          (offer) => offer.id !== updatedOffer.id
+        );
+        if (updatedOffer.isFavorite) {
+          state.favorites = [...otherFavoriteOffers, updatedOffer];
+        } else {
+          state.favorites = [...otherFavoriteOffers];
+        }
       });
   },
 });

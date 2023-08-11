@@ -2,16 +2,50 @@ import { Helmet } from 'react-helmet-async';
 
 // import CardFavoritesList from '../../components/card-favorite-list/card-favorites-list';
 import CardFavorites from '../../components/card-favorites/card-favorites';
-import { Offer } from '../../types/offer';
 import { Link } from 'react-router-dom';
-import { AppRoute } from '../../const';
+import { AppRoute, CITIES } from '../../const';
 import HeaderUser from '../../components/header-user/header-user';
+import { useAppSelector } from '../../hooks';
+import { getFavorites } from '../../store/data-process/data-process.selectors';
+import { Offer } from '../../types/offer';
 
-type FavoritesScreenProps = {
-  offers: Offer[];
-};
+function FavoritesPage(): JSX.Element {
+  const favoriteOffers = useAppSelector(getFavorites);
 
-function FavoritesPage({ offers }: FavoritesScreenProps): JSX.Element {
+  const favoriteOffersGrouped: { [key: string]: Offer[] } = CITIES.reduce(
+    (object, city) => ({ ...object, [city]: [] }),
+    {}
+  );
+  favoriteOffers.forEach((offer) => {
+    favoriteOffersGrouped[offer.city.name].push(offer);
+  });
+
+  const favoritesElements = CITIES.map((city) => {
+    if (favoriteOffersGrouped[city].length !== 0) {
+      const cityOffers = favoriteOffersGrouped[city].map((offer) => (
+        <CardFavorites
+          offer={offer}
+          key={`favorites-city-${city}-${offer.id}`}
+        />
+      ));
+      return (
+        <li
+          className="favorites__locations-items"
+          key={`favorites-city-${city}`}
+        >
+          <div className="favorites__locations locations locations--current">
+            <div className="locations__item">
+              <a className="locations__item-link" href="#">
+                <span>{city}</span>
+              </a>
+            </div>
+          </div>
+          <div className="favorites__places">{cityOffers}</div>
+        </li>
+      );
+    }
+  });
+
   return (
     <div className="page">
       <Helmet>
@@ -43,31 +77,7 @@ function FavoritesPage({ offers }: FavoritesScreenProps): JSX.Element {
         <div className="page__favorites-container container">
           <section className="favorites">
             <h1 className="favorites__title">Saved listing</h1>
-            <ul className="favorites__list">
-              <li className="favorites__locations-items">
-                <div className="favorites__locations locations locations--current">
-                  <div className="locations__item">
-                    <a className="locations__item-link" href="#">
-                      <span>Amsterdam</span>
-                    </a>
-                  </div>
-                </div>
-                <div className="favorites__places">
-                  <CardFavorites offer={offers[1]} />
-                </div>
-              </li>
-              <li className="favorites__locations-items">
-                <div className="favorites__locations locations locations--current">
-                  <div className="locations__item">
-                    <a className="locations__item-link" href="#">
-                      <span>Cologne</span>
-                    </a>
-                  </div>
-                </div>
-                {/* <CardFavoritesList offers={offers} /> */}
-                <CardFavorites offer={offers[3]} />
-              </li>
-            </ul>
+            <ul className="favorites__list">{favoritesElements}</ul>
           </section>
         </div>
       </main>
