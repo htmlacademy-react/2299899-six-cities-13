@@ -2,44 +2,40 @@ import { Helmet } from 'react-helmet-async';
 import { AppRoute } from '../../const';
 import { Link, useParams } from 'react-router-dom';
 import NotFoundPage from '../not-found-page/not-found-page';
-import { MOCK_USERS } from '../../mocks/users';
-import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
 import Map from '../../components/map/map';
-import { useState } from 'react';
+import { useEffect } from 'react';
 import CardMainList from '../../components/card-main-list/card-main-list';
 import ReviewList from '../../components/review-list/review-list';
-import { useCurrentCity } from '../../store/selectors';
-import { Offer } from '../../types/offer';
+import { useAppDispatch, useAppSelector } from '../../hooks';
+import {
+  fetchNearOffersAction,
+  fetchOfferAction,
+} from '../../store/api-actions';
+import cn from 'classnames';
+import LoadingPage from '../loading-page/loading-page';
+import { capitalizeFirstLetter } from '../../utils';
 
-type OfferPageProps = {
-  offers: Offer[];
-};
+function OfferPage(): JSX.Element {
+  const dispatch = useAppDispatch();
 
-function OfferPage({ offers }: OfferPageProps): JSX.Element {
   const { id = '' } = useParams();
-  const [activeCardId, setActiveCardId] = useState<string>('');
-  const currentCity = useCurrentCity();
-  const currentOffer = offers.find((offer) => offer.id === id) as Offer;
+
+  const currentOffer = useAppSelector((state) => state.offer);
+  const nearOffers = useAppSelector((state) => state.nearOffers);
+  const isOfferLoading = useAppSelector((state) => state.isOfferLoading);
+
+  useEffect(() => {
+    dispatch(fetchOfferAction(id));
+    dispatch(fetchNearOffersAction(id));
+  }, [id, dispatch]);
 
   if (!currentOffer) {
     return <NotFoundPage />;
   }
 
-  const activeCard = offers.find((offer) => offer.id === activeCardId);
-
-  const onMouseOverCard: MouseOverLeaveHandler = (evt) => {
-    evt.preventDefault();
-    if (evt.currentTarget.dataset.id) {
-      setActiveCardId(evt.currentTarget.dataset.id);
-    }
-  };
-
-  const onMouseLeaveCard: MouseOverLeaveHandler = (evt) => {
-    evt.preventDefault();
-    setActiveCardId('');
-  };
-
-  const host = MOCK_USERS.find((user) => user.name === currentOffer.host.name);
+  if (isOfferLoading) {
+    return <LoadingPage />;
+  }
 
   const gallery = currentOffer.images.map((picture) => (
     <div className="offer__image-wrapper" key={`${id}-gallery-${picture}`}>
@@ -47,18 +43,7 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
     </div>
   ));
 
-  const FEATURES_CLASSES_SUFFIXES = ['entire', 'bedrooms', 'adults'];
-
-  const features = currentOffer.goods.map((feature, index) => (
-    <li
-      className={`offer__feature offer__feature--${FEATURES_CLASSES_SUFFIXES[index]}`}
-      key={`${id}-features-${feature}`}
-    >
-      {feature}
-    </li>
-  ));
-
-  const inside = currentOffer.goods.map((service) => (
+  const goods = currentOffer.goods.map((service) => (
     <li className="offer__inside-item" key={`${id}-inside-${service}`}>
       {service}
     </li>
@@ -137,48 +122,71 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
                 </div>
                 <span className="offer__rating-value rating__value">
                   {currentOffer.rating}
+                  {currentOffer.rating}
                 </span>
               </div>
-              <ul className="offer__features">{features}</ul>
+              <ul className="offer__features">
+                <li className="offer__feature offer__feature--entire">
+                  {capitalizeFirstLetter(currentOffer.type)}
+                </li>
+                <li className="offer__feature offer__feature--bedrooms">
+                  {`${currentOffer.bedrooms} Bedroom${
+                    currentOffer.bedrooms > 1 ? 's' : ''
+                  }`}
+                </li>
+                <li className="offer__feature offer__feature--adults">
+                  {`Max ${currentOffer.maxAdults} adult${
+                    currentOffer.maxAdults > 1 ? 's' : ''
+                  }`}
+                </li>
+              </ul>
               <div className="offer__price">
                 <b className="offer__price-value">€{currentOffer.price}</b>
                 <span className="offer__price-text">&nbsp;night</span>
               </div>
               <div className="offer__inside">
                 <h2 className="offer__inside-title">What&apos;s inside</h2>
-                <ul className="offer__inside-list">{inside}</ul>
+                <ul className="offer__inside-list">{goods}</ul>
               </div>
               <div className="offer__host">
                 <h2 className="offer__host-title">Meet the host</h2>
                 <div className="offer__host-user user">
-                  <div className="offer__avatar-wrapper offer__avatar-wrapper--pro user__avatar-wrapper">
+                  <div
+                    className={cn(
+                      'offer__avatar-wrapper user__avatar-wrapper',
+                      {
+                        'offer__avatar-wrapper--pro': currentOffer.host.isPro,
+                      }
+                    )}
+                  >
                     <img
                       className="offer__avatar user__avatar"
-                      src={host?.avatar}
+                      src={currentOffer.host.avatarUrl}
                       width={74}
                       height={74}
                       alt="Host avatar"
                     />
                   </div>
-                  <span className="offer__user-name">{host?.name}</span>
+                  <span className="offer__user-name">
+                    {currentOffer.host.name}
+                  </span>
                   <span className="offer__user-status">
-                    {host?.isPro && 'Pro'}
+                    {currentOffer.host.isPro && 'Pro'}
                   </span>
                 </div>
                 <div className="offer__description">
                   <p className="offer__text">{currentOffer.description}</p>
                 </div>
               </div>
-              <ReviewList currentOffer={currentOffer} />
+              <ReviewList offerId={id} />
             </div>
           </div>
           <section className="offer__map map container">
             <Map
-              city={currentCity}
-              offers={offers.slice(0, 3)}
-              selectedOffer={activeCard}
+              city={currentOffer.city}
+              offers={nearOffers}
               height="579px"
-              zoom={13}
+              zoom={currentOffer.city.location.zoom}
             />
           </section>
         </section>
@@ -187,12 +195,7 @@ function OfferPage({ offers }: OfferPageProps): JSX.Element {
             <h2 className="near-places__title">
               Other places in the neighbourhood
             </h2>
-            <CardMainList
-              offers={offers.slice(0, 3)}
-              page="offer"
-              onMouseOverCard={onMouseOverCard}
-              onMouseLeaveCard={onMouseLeaveCard}
-            />
+            <CardMainList offers={nearOffers} page="offer" />
           </section>
         </div>
       </main>

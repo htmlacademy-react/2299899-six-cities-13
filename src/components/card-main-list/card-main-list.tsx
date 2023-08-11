@@ -6,8 +6,8 @@ import cn from 'classnames';
 type CardMainListProps = {
   offers: Offer[];
   page: string;
-  onMouseOverCard: MouseOverLeaveHandler;
-  onMouseLeaveCard: MouseOverLeaveHandler;
+  onMouseOverCard?: MouseOverLeaveHandler;
+  onMouseLeaveCard?: MouseOverLeaveHandler;
 };
 
 function CardMainList(props: CardMainListProps): JSX.Element {

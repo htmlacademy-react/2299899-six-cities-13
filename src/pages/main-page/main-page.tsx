@@ -8,12 +8,9 @@ import { useState } from 'react';
 import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
 import CitiesList from '../../components/cities-list/cities-list';
 import SortOptions from '../../components/sort-options/sort-options';
-import {
-  sortPriceHighToLow,
-  sortPriceLowToHigh,
-  sortTop,
-} from './sort-options';
+import * as sortOptions from './sort-options';
 import { useCurrentCity } from '../../store/selectors';
+import HeaderUser from '../../components/header-user/header-user';
 
 type MainPageProps = {
   offers: Offer[];
@@ -21,15 +18,15 @@ type MainPageProps = {
 };
 
 const sortFunctionMap = {
-  [SORT_OPTIONS[1]]: sortPriceLowToHigh,
-  [SORT_OPTIONS[2]]: sortPriceHighToLow,
-  [SORT_OPTIONS[3]]: sortTop,
+  [SORT_OPTIONS[1]]: sortOptions.sortPriceLowToHigh,
+  [SORT_OPTIONS[2]]: sortOptions.sortPriceHighToLow,
+  [SORT_OPTIONS[3]]: sortOptions.sortTop,
 };
 
 function MainPage(props: MainPageProps): JSX.Element {
   const { offers, cities } = props;
 
-  const [activeCardId, setActiveCardId] = useState<number | undefined>(
+  const [activeCardId, setActiveCardId] = useState<string | undefined>(
     undefined
   );
   const [activeSort, setActiveSort] = useState<string>(SORT_OPTIONS[0]);
@@ -37,20 +34,18 @@ function MainPage(props: MainPageProps): JSX.Element {
 
   const currentCity = useCurrentCity();
   const filteredOffers = offers.filter(
-    (offer) => offer.city.name === currentCity.title
+    (offer) => offer.city.name === currentCity
   );
   const filteredOffersCount = filteredOffers.length;
   const sortedfilteredOffers = [...filteredOffers].sort(
     sortFunctionMap[activeSort]
   );
 
-  const activeCard = filteredOffers.find(
-    (offer) => Number(offer.id) === activeCardId
-  );
+  const activeCard = filteredOffers.find((offer) => offer.id === activeCardId);
 
   const onMouseOverCard: MouseOverLeaveHandler = (evt) => {
     evt.preventDefault();
-    setActiveCardId(Number(evt.currentTarget.dataset.id));
+    setActiveCardId(evt.currentTarget.dataset.id);
   };
 
   const onMouseLeaveCard: MouseOverLeaveHandler = (evt) => {
@@ -90,23 +85,7 @@ function MainPage(props: MainPageProps): JSX.Element {
             </div>
             <nav className="header__nav">
               <ul className="header__nav-list">
-                <li className="header__nav-item user">
-                  <a
-                    className="header__nav-link header__nav-link--profile"
-                    href="#"
-                  >
-                    <div className="header__avatar-wrapper user__avatar-wrapper"></div>
-                    <span className="header__user-name user__name">
-                      Oliver.conner@gmail.com
-                    </span>
-                    <span className="header__favorite-count">3</span>
-                  </a>
-                </li>
-                <li className="header__nav-item">
-                  <a className="header__nav-link" href="#">
-                    <span className="header__signout">Sign out</span>
-                  </a>
-                </li>
+                <HeaderUser />
               </ul>
             </nav>
           </div>
@@ -114,7 +93,7 @@ function MainPage(props: MainPageProps): JSX.Element {
       </header>
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
-        <CitiesList cities={cities} currentCity={currentCity.title} />
+        <CitiesList cities={cities} currentCity={currentCity} />
         <div className="cities">
           <div className="cities__places-container container">
             <section className="cities__places places">
@@ -138,11 +117,11 @@ function MainPage(props: MainPageProps): JSX.Element {
             <div className="cities__right-section">
               <section className="cities__map map">
                 <Map
-                  city={currentCity}
+                  city={offers[0].city}
                   offers={filteredOffers}
                   selectedOffer={activeCard}
                   height="500px"
-                  zoom={10}
+                  zoom={offers[0].city.location.zoom}
                 />
               </section>
             </div>

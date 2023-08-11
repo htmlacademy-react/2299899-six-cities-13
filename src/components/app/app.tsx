@@ -14,15 +14,10 @@ function App(): JSX.Element {
   const authorizationStatus = useAppSelector(
     (state) => state.authorizationStatus
   );
-  const isQuestionsDataLoading = useAppSelector(
-    (state) => state.isQuestionsDataLoading
-  );
+  const isOffersLoading = useAppSelector((state) => state.isOffersLoading);
   const offers = useAppSelector((state) => state.offers);
 
-  if (
-    authorizationStatus === AuthorizationStatus.Unknown ||
-    isQuestionsDataLoading
-  ) {
+  if (authorizationStatus === AuthorizationStatus.Unknown || isOffersLoading) {
     return <LoadingPage />;
   }
   return (
@@ -34,10 +29,7 @@ function App(): JSX.Element {
             element={<MainPage offers={offers} cities={CITIES} />}
           />
           <Route path={AppRoute.Login} element={<LoginPage />} />
-          <Route
-            path={`${AppRoute.Offer}/:id`}
-            element={<OfferPage offers={offers} />}
-          />
+          <Route path={`${AppRoute.Offer}/:id`} element={<OfferPage />} />
           <Route
             path={AppRoute.Favorites}
             element={

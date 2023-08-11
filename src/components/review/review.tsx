@@ -1,38 +1,33 @@
-import { Review } from '../../mocks/review';
-import { User } from '../../mocks/user';
+import { Review } from '../../types/review';
 
 type ReviewProps = {
-  user: User;
   review: Review;
 };
 
-export default function ReviewElement(props: ReviewProps): JSX.Element {
-  const { user, review } = props;
+export default function ReviewElement({ review }: ReviewProps): JSX.Element {
   return (
     <li className="reviews__item">
       <div className="reviews__user user">
         <div className="reviews__avatar-wrapper user__avatar-wrapper">
           <img
             className="reviews__avatar user__avatar"
-            src={user.avatar}
+            src={review.user.avatarUrl}
             width={54}
             height={54}
             alt="Reviews avatar"
           />
         </div>
-        <span className="reviews__user-name">{user.name}</span>
+        <span className="reviews__user-name">{review.user.name}</span>
       </div>
       <div className="reviews__info">
         <div className="reviews__rating rating">
           <div className="reviews__stars rating__stars">
-            <span
-              style={{ width: `${((review.rate) / 5) * 100}%` }}
-            />
+            <span style={{ width: `${(review.rating / 5) * 100}%` }} />
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
-        <p className="reviews__text">{review.review}</p>
-        <time className="reviews__time" dateTime="2019-04-24">
+        <p className="reviews__text">{review.comment}</p>
+        <time className="reviews__time" dateTime={review.date}>
           {review.date}
         </time>
       </div>

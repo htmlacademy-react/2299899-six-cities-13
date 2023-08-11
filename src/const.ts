@@ -15,6 +15,8 @@ export const STARS = ['perfect', 'good', 'not bad', 'badly', 'terribly'];
 
 export enum APIRoute {
   Offers = '/offers',
+  Reviews = '/comments',
+  NearOffers = '/nearby',
   Favorites = '/favorite',
   Login = '/login',
   Logout = '/logout',
@@ -39,5 +41,3 @@ export const SORT_OPTIONS = [
   'Price: high to low',
   'Top rated first',
 ];
-
-export const TIMEOUT_SHOW_ERROR = 2000;

@@ -2,7 +2,7 @@ import cn from 'classnames';
 import { MouseEvent } from 'react';
 import { useAppDispatch } from '../../hooks';
 import { updateCity } from '../../store/action';
-import { CITIES } from '../../mocks/city';
+import { CITIES } from '../../const';
 
 type CitiesListProps = {
   cities: string[];
@@ -16,7 +16,7 @@ export default function CitiesList(props: CitiesListProps): JSX.Element {
   const handleCityChange = (evt: MouseEvent<HTMLSpanElement>) => {
     evt.preventDefault();
     const cityTitle = evt.currentTarget.innerText;
-    const newCity = CITIES.find((city) => city.title === cityTitle);
+    const newCity = CITIES.find((city) => city === cityTitle);
     if (newCity) {
       dispatch(updateCity(newCity));
     }
