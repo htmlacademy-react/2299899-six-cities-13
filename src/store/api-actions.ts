@@ -100,7 +100,7 @@ export const checkAuthAction = createAsyncThunk<
     extra: AxiosInstance;
   }
 >('user/checkAuth', async (_arg, { extra: api }) => {
-  const data = (await api.get(APIRoute.Login)).data as UserData;
+  const { data } = await api.get<UserData>(APIRoute.Login);
   return data;
 });
 

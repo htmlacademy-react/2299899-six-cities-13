@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
@@ -6,7 +7,7 @@ import {
   selectAuthorizationStatus,
   selectCurrentUser,
 } from '../../store/user-process/user-process.selectors';
-import { getToken } from '../../services/token';
+import { Token, getToken } from '../../services/token';
 import { selectFavorites } from '../../store/data-process/data-process.selectors';
 
 export default function HeaderUser(): JSX.Element {
@@ -15,7 +16,11 @@ export default function HeaderUser(): JSX.Element {
   const authorizationStatus = useAppSelector(selectAuthorizationStatus);
   const currentUser = useAppSelector(selectCurrentUser);
   const favoritesCount = useAppSelector(selectFavorites).length;
-  const token = getToken();
+  const [token, setToken] = useState<Token | null>(null);
+
+  useEffect(() => {
+    setToken(getToken());
+  }, []);
 
   if (authorizationStatus !== AuthorizationStatus.Auth) {
     return (
