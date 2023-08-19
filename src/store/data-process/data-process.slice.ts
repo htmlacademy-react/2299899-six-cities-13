@@ -62,23 +62,17 @@ export const dataProcess = createSlice({
       .addCase(toggleFavoriteAction.fulfilled, (state, action) => {
         const updatedOffer = action.payload;
 
-        const updatedOffers = state.offers.map((offer) => {
-          if (offer.id === updatedOffer.id) {
-            return updatedOffer;
-          } else {
-            return offer;
-          }
-        });
-        state.offers = updatedOffers;
+        state.offers = state.offers.map((offer) =>
+          offer.id === updatedOffer.id ? action.payload : offer
+        );
 
         const otherFavoriteOffers = state.favorites.filter(
           (offer) => offer.id !== updatedOffer.id
         );
-        if (updatedOffer.isFavorite) {
-          state.favorites = [...otherFavoriteOffers, updatedOffer];
-        } else {
-          state.favorites = [...otherFavoriteOffers];
-        }
+
+        state.favorites = action.payload.isFavorite
+          ? [...otherFavoriteOffers, updatedOffer]
+          : otherFavoriteOffers;
       });
   },
 });
