@@ -13,7 +13,7 @@ function CardFavorites({ offer }: CardFavoritesProps): JSX.Element {
         <Link to={`${AppRoute.Offer}/${offer.id}`}>
           <img
             className="place-card__image"
-            src={offer.pictureSmall}
+            src={offer.images[0]}
             width={150}
             height={110}
             alt="Place image"
@@ -38,7 +38,7 @@ function CardFavorites({ offer }: CardFavoritesProps): JSX.Element {
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: `${(offer.rate / 5) * 100}%` }} />
+            <span style={{ width: `${(offer.rating / 5) * 100}%` }} />
             <span className="visually-hidden">Rating</span>
           </div>
         </div>

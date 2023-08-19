@@ -4,13 +4,14 @@ import { Offer } from '../../types/offer';
 import { Link } from 'react-router-dom';
 import { AppRoute, SORT_OPTIONS } from '../../const';
 import Map from '../../components/map/map';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
 import CitiesList from '../../components/cities-list/cities-list';
 import SortOptions from '../../components/sort-options/sort-options';
 import * as sortOptions from './sort-options';
-import { useCurrentCity } from '../../store/selectors';
 import HeaderUser from '../../components/header-user/header-user';
+import { useAppSelector } from '../../hooks';
+import { getCity } from '../../store/app-process/app-process.selectors';
 
 type MainPageProps = {
   offers: Offer[];
@@ -32,7 +33,7 @@ function MainPage(props: MainPageProps): JSX.Element {
   const [activeSort, setActiveSort] = useState<string>(SORT_OPTIONS[0]);
   const [isSortClosed, setIsSortClosed] = useState(true);
 
-  const currentCity = useCurrentCity();
+  const currentCity = useAppSelector(getCity);
   const filteredOffers = offers.filter(
     (offer) => offer.city.name === currentCity
   );
@@ -43,15 +44,15 @@ function MainPage(props: MainPageProps): JSX.Element {
 
   const activeCard = filteredOffers.find((offer) => offer.id === activeCardId);
 
-  const onMouseOverCard: MouseOverLeaveHandler = (evt) => {
+  const onMouseOverCard: MouseOverLeaveHandler = useCallback((evt) => {
     evt.preventDefault();
     setActiveCardId(evt.currentTarget.dataset.id);
-  };
+  }, []);
 
-  const onMouseLeaveCard: MouseOverLeaveHandler = (evt) => {
+  const onMouseLeaveCard: MouseOverLeaveHandler = useCallback((evt) => {
     evt.preventDefault();
     setActiveCardId(undefined);
-  };
+  }, []);
 
   const onSortClick: MouseOverLeaveHandler = (evt) => {
     evt.preventDefault();

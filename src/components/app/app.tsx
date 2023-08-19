@@ -11,13 +11,16 @@ import { HelmetProvider } from 'react-helmet-async';
 import { useAppSelector } from '../../hooks';
 import HistoryRouter from '../history-route/history-route';
 import browserHistory from '../../browser-history';
+import { getAuthorizationStatus } from '../../store/user-process/user-process.selectors';
+import {
+  getIsOffersLoading,
+  getOffers,
+} from '../../store/data-process/data-process.selectors';
 
 function App(): JSX.Element {
-  const authorizationStatus = useAppSelector(
-    (state) => state.authorizationStatus
-  );
-  const isOffersLoading = useAppSelector((state) => state.isOffersLoading);
-  const offers = useAppSelector((state) => state.offers);
+  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+  const isOffersLoading = useAppSelector(getIsOffersLoading);
+  const offers = useAppSelector(getOffers);
 
   if (authorizationStatus === AuthorizationStatus.Unknown || isOffersLoading) {
     return <LoadingPage />;
