@@ -105,7 +105,7 @@ export const checkAuthAction = createAsyncThunk<
 });
 
 export const loginAction = createAsyncThunk<
-  void,
+  UserData,
   AuthData,
   {
     dispatch: AppDispatch;
@@ -124,6 +124,8 @@ export const loginAction = createAsyncThunk<
     dispatch(fetchOffersAction());
     dispatch(fetchFavoritesAction());
     dispatch(redirectToRoute(AppRoute.Main));
+
+    return data;
   }
 );
 

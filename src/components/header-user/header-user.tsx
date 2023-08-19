@@ -3,18 +3,18 @@ import { AppRoute, AuthorizationStatus } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { checkAuthAction, logoutAction } from '../../store/api-actions';
 import {
-  getAuthorizationStatus,
-  getCurrentUser,
+  selectAuthorizationStatus,
+  selectCurrentUser,
 } from '../../store/user-process/user-process.selectors';
 import { getToken } from '../../services/token';
-import { getFavorites } from '../../store/data-process/data-process.selectors';
+import { selectFavorites } from '../../store/data-process/data-process.selectors';
 
 export default function HeaderUser(): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const authorizationStatus = useAppSelector(getAuthorizationStatus);
-  const currentUser = useAppSelector(getCurrentUser);
-  const favoritesCount = useAppSelector(getFavorites).length;
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
+  const currentUser = useAppSelector(selectCurrentUser);
+  const favoritesCount = useAppSelector(selectFavorites).length;
   const token = getToken();
 
   if (authorizationStatus !== AuthorizationStatus.Auth) {

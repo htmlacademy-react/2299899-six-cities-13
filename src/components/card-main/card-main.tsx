@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import cn from 'classnames';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { toggleFavoriteAction } from '../../store/api-actions';
-import { getAuthorizationStatus } from '../../store/user-process/user-process.selectors';
+import { selectAuthorizationStatus } from '../../store/user-process/user-process.selectors';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import { redirectToRoute } from '../../store/action';
 
@@ -21,7 +21,7 @@ function CardMain(props: CardMainProps): JSX.Element {
   const { mouseOverHandler, mouseLeaveHandler } = props;
   const dispatch = useAppDispatch();
   const [isFavorite, setIsFavorite] = useState(offer.isFavorite);
-  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
 
   const handleFavoriteButoonClick = (evt: MouseEvent<HTMLButtonElement>) => {
     evt.preventDefault();

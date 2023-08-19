@@ -11,8 +11,8 @@ import { HelmetProvider } from 'react-helmet-async';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import HistoryRouter from '../history-route/history-route';
 import browserHistory from '../../browser-history';
-import { getAuthorizationStatus } from '../../store/user-process/user-process.selectors';
-import { getIsOffersLoading } from '../../store/data-process/data-process.selectors';
+import { selectAuthorizationStatus } from '../../store/user-process/user-process.selectors';
+import { selectIsOffersLoading } from '../../store/data-process/data-process.selectors';
 import { useEffect } from 'react';
 import {
   checkAuthAction,
@@ -23,8 +23,8 @@ import {
 function App(): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const authorizationStatus = useAppSelector(getAuthorizationStatus);
-  const isOffersLoading = useAppSelector(getIsOffersLoading);
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
+  const isOffersLoading = useAppSelector(selectIsOffersLoading);
 
   useEffect(() => {
     dispatch(checkAuthAction());

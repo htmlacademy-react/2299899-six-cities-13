@@ -4,15 +4,15 @@ import cn from 'classnames';
 import { MouseOverLeaveHandler } from '../card-main/card-main';
 import { setCurrentSort } from '../../store/app-process/app-process.slice';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { getCurrentSort } from '../../store/app-process/app-process.selectors';
+import { selectCurrentSort } from '../../store/app-process/app-process.selectors';
 
 export default function SortOptions(): JSX.Element {
   const [isSortClosed, setIsSortClosed] = useState(true);
-  const currentSort = useAppSelector(getCurrentSort);
+  const currentSort = useAppSelector(selectCurrentSort);
   const dispatch = useAppDispatch();
 
-  const onDropdownClick = () => setIsSortClosed((state) => !state);
-  const onSortClick: MouseOverLeaveHandler = (evt) => {
+  const handleDropdownClick = () => setIsSortClosed((state) => !state);
+  const handleSortClick: MouseOverLeaveHandler = (evt) => {
     evt.preventDefault();
     dispatch(setCurrentSort(evt.currentTarget.innerText));
     setIsSortClosed(true);
@@ -24,7 +24,7 @@ export default function SortOptions(): JSX.Element {
       <span
         className="places__sorting-type"
         tabIndex={0}
-        onClick={onDropdownClick}
+        onClick={handleDropdownClick}
       >
         {currentSort}
         <svg className="places__sorting-arrow" width={7} height={4}>
@@ -43,7 +43,7 @@ export default function SortOptions(): JSX.Element {
               'places__option--active': option === currentSort,
             })}
             tabIndex={0}
-            onClick={onSortClick}
+            onClick={handleSortClick}
           >
             {option}
           </li>

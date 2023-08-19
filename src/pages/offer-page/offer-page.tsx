@@ -17,22 +17,20 @@ import LoadingPage from '../loading-page/loading-page';
 import { capitalizeFirstLetter } from '../../utils';
 import HeaderUser from '../../components/header-user/header-user';
 import {
-  getIsOfferLoading,
-  getNearOffers,
-  getOffer,
+  selectIsOfferLoading,
+  selectNearOffers,
+  selectOffer,
 } from '../../store/data-process/data-process.selectors';
-import { getAuthorizationStatus } from '../../store/user-process/user-process.selectors';
+import { selectAuthorizationStatus } from '../../store/user-process/user-process.selectors';
 import { redirectToRoute } from '../../store/action';
 
 function OfferPage(): JSX.Element {
   const dispatch = useAppDispatch();
-
   const { id = '' } = useParams();
-
-  const authorizationStatus = useAppSelector(getAuthorizationStatus);
-  const currentOffer = useAppSelector(getOffer);
-  const nearOffers = useAppSelector(getNearOffers);
-  const isOfferLoading = useAppSelector(getIsOfferLoading);
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
+  const currentOffer = useAppSelector(selectOffer);
+  const nearOffers = useAppSelector(selectNearOffers);
+  const isOfferLoading = useAppSelector(selectIsOfferLoading);
   const bookmarkRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
@@ -213,7 +211,7 @@ function OfferPage(): JSX.Element {
             <h2 className="near-places__title">
               Other places in the neighbourhood
             </h2>
-            <CardMainList offers={nearOffers} page="offer" />
+            <CardMainList page="offer" />
           </section>
         </div>
       </main>

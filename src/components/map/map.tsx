@@ -6,7 +6,7 @@ import { Offer } from '../../types/offer';
 import { URL_MARKER_CURRENT, URL_MARKER_DEFAULT } from '../../const';
 import { City } from '../../types/city';
 import { useAppSelector } from '../../hooks';
-import { getCardUnderMouse } from '../../store/app-process/app-process.selectors';
+import { selectCardUnderMouse } from '../../store/app-process/app-process.selectors';
 
 type MapProps = {
   city: City;
@@ -30,7 +30,7 @@ export default function Map(props: MapProps): JSX.Element {
   const map = useMap(mapRef, city, zoom);
   const cityLat = city.location.latitude;
   const cityLng = city.location.longitude;
-  const selectedOfferId = useAppSelector(getCardUnderMouse);
+  const selectedOfferId = useAppSelector(selectCardUnderMouse);
   const selectedOffer = offers.find((offer) => offer.id === selectedOfferId);
 
   useEffect(() => {

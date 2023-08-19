@@ -1,10 +1,10 @@
-type MainEmptyProps = {
+type MainCardsBlockEmptyProps = {
   currentCity: string;
 };
 
-export default function MainEmpty({
+export default function MainCardsBlockEmpty({
   currentCity,
-}: MainEmptyProps): JSX.Element {
+}: MainCardsBlockEmptyProps): JSX.Element {
   return (
     <section className="cities__no-places">
       <div className="cities__status-wrapper tabs__content">

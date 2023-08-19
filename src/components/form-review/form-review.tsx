@@ -1,7 +1,7 @@
 import { ChangeEvent, FormEvent, useState, ReactNode } from 'react';
 import { STARS } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { getIsPosted } from '../../store/data-process/data-process.selectors';
+import { selectIsPosted } from '../../store/data-process/data-process.selectors';
 import { setIsPosted } from '../../store/data-process/data-process.slice';
 
 type FormReviewProps = {
@@ -16,7 +16,7 @@ const FORM_DEFAULT_STATE = {
 function FormReview({ onReviewSubmit }: FormReviewProps): JSX.Element {
   const [newReview, setNewReview] = useState(FORM_DEFAULT_STATE);
   const [isSubmitAvailable, setIsSubmitAvailable] = useState(false);
-  const isReviewPosted = useAppSelector(getIsPosted);
+  const isReviewPosted = useAppSelector(selectIsPosted);
   const dispatch = useAppDispatch();
 
   const handleFieldChange = (

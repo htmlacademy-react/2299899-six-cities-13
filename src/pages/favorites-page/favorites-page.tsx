@@ -1,29 +1,23 @@
 import { Helmet } from 'react-helmet-async';
-
-// import CardFavoritesList from '../../components/card-favorite-list/card-favorites-list';
 import CardFavorites from '../../components/card-favorites/card-favorites';
 import { Link } from 'react-router-dom';
 import { AppRoute, CITIES } from '../../const';
 import HeaderUser from '../../components/header-user/header-user';
 import { useAppSelector } from '../../hooks';
-import { getFavorites } from '../../store/data-process/data-process.selectors';
-import { Offer } from '../../types/offer';
+import {
+  selectFavorites,
+  selectGroupedFavorites,
+} from '../../store/data-process/data-process.selectors';
 import cn from 'classnames';
 
 function FavoritesPage(): JSX.Element {
-  const favoriteOffers = useAppSelector(getFavorites);
-
-  const favoriteOffersGrouped: { [key: string]: Offer[] } = CITIES.reduce(
-    (object, city) => ({ ...object, [city]: [] }),
-    {}
-  );
-  favoriteOffers.forEach((offer) => {
-    favoriteOffersGrouped[offer.city.name].push(offer);
-  });
+  const offers = useAppSelector(selectFavorites);
+  const offersCount = offers.length;
+  const groupedOffers = useAppSelector(selectGroupedFavorites);
 
   const favoritesElements = CITIES.map((city) => {
-    if (favoriteOffersGrouped[city].length !== 0) {
-      const cityOffers = favoriteOffersGrouped[city].map((offer) => (
+    if (groupedOffers[city].length !== 0) {
+      const cityOffers = groupedOffers[city].map((offer) => (
         <CardFavorites
           offer={offer}
           key={`favorites-city-${city}-${offer.id}`}
@@ -76,11 +70,11 @@ function FavoritesPage(): JSX.Element {
       </header>
       <main
         className={cn('page__main page__main--favorites', {
-          'page__main--favorites-empty': favoriteOffers.length === 0,
+          'page__main--favorites-empty': offersCount === 0,
         })}
       >
         <div className="page__favorites-container container">
-          {favoriteOffers.length === 0 && (
+          {offersCount === 0 && (
             <section className="favorites favorites--empty">
               <h1 className="visually-hidden">Favorites (empty)</h1>
               <div className="favorites__status-wrapper">
@@ -92,7 +86,7 @@ function FavoritesPage(): JSX.Element {
               </div>
             </section>
           )}
-          {favoriteOffers.length !== 0 && (
+          {offersCount !== 0 && (
             <section className="favorites">
               <h1 className="favorites__title">Saved listing</h1>
               <ul className="favorites__list">{favoritesElements}</ul>

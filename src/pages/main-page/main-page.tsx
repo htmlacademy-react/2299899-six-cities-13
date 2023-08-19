@@ -2,49 +2,24 @@ import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { AppRoute, CITIES } from '../../const';
 import Map from '../../components/map/map';
-import { useCallback } from 'react';
-import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
 import CitiesList from '../../components/cities-list/cities-list';
-
 import HeaderUser from '../../components/header-user/header-user';
-import { useAppDispatch, useAppSelector } from '../../hooks';
-import { getCity } from '../../store/app-process/app-process.selectors';
+import { useAppSelector } from '../../hooks';
+import { selectCurrentCity } from '../../store/app-process/app-process.selectors';
 import cn from 'classnames';
-import Main from '../../components/main/main';
-import MainEmpty from '../../components/main-empty/main-empty';
-import { setCardUnderMouse } from '../../store/app-process/app-process.slice';
-import { getOffers } from '../../store/data-process/data-process.selectors';
+import MainCardsBlock from '../../components/main-cards-block/main-cards-block';
+import MainCardsBlockEmpty from '../../components/main-cards-block-empty/main-cards-block-empty';
+import { selectFilteredOffers } from '../../store/data-process/data-process.selectors';
 
 function MainPage(): JSX.Element {
-  const dispatch = useAppDispatch();
-
-  const offers = useAppSelector(getOffers);
-  const currentCity = useAppSelector(getCity);
-  const filteredOffers = offers.filter(
-    (offer) => offer.city.name === currentCity
-  );
-  const filteredOffersCount = filteredOffers.length;
-
-  const onMouseOverCard: MouseOverLeaveHandler = useCallback(
-    (evt) => {
-      evt.preventDefault();
-      dispatch(setCardUnderMouse(evt.currentTarget.dataset.id));
-    },
-    [dispatch]
-  );
-
-  const onMouseLeaveCard: MouseOverLeaveHandler = useCallback(
-    (evt) => {
-      evt.preventDefault();
-      dispatch(setCardUnderMouse(undefined));
-    },
-    [dispatch]
-  );
+  const currentCity = useAppSelector(selectCurrentCity);
+  const offers = useAppSelector(selectFilteredOffers);
+  const offersCount = offers.length;
 
   return (
     <div
       className={cn('page page--gray page--main', {
-        'page__main--index-empty': filteredOffers.length === 0,
+        'page__main--index-empty': offersCount === 0,
       })}
     >
       <Helmet>
@@ -81,29 +56,26 @@ function MainPage(): JSX.Element {
         <div className="cities">
           <div
             className={cn('cities__places-container container', {
-              'cities__places-container--empty': filteredOffers.length === 0,
+              'cities__places-container--empty': offersCount === 0,
             })}
           >
-            {filteredOffers.length === 0 && (
-              <MainEmpty currentCity={currentCity} />
+            {offersCount === 0 && (
+              <MainCardsBlockEmpty currentCity={currentCity} />
             )}
-            {filteredOffers.length !== 0 && (
-              <Main
-                offers={filteredOffers}
-                filteredOffersCount={filteredOffersCount}
-                onMouseOverCard={onMouseOverCard}
-                onMouseLeaveCard={onMouseLeaveCard}
+            {offersCount !== 0 && (
+              <MainCardsBlock
+                offersCount={offersCount}
                 currentCity={currentCity}
               />
             )}
             <div className="cities__right-section">
-              {filteredOffers.length !== 0 && (
+              {offersCount !== 0 && (
                 <section className="cities__map map">
                   <Map
-                    city={filteredOffers[0].city}
-                    offers={filteredOffers}
+                    city={offers[0].city}
+                    offers={offers}
                     height="500px"
-                    zoom={filteredOffers[0].city.location.zoom}
+                    zoom={offers[0].city.location.zoom}
                   />
                 </section>
               )}
