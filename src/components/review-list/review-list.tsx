@@ -7,8 +7,8 @@ import {
 } from '../../store/api-actions';
 import ReviewElement from '../review/review';
 import { AuthorizationStatus } from '../../const';
-import { getReviews } from '../../store/data-process/data-process.selectors';
-import { getAuthorizationStatus } from '../../store/user-process/user-process.selectors';
+import { selectReviews } from '../../store/data-process/data-process.selectors';
+import { selectAuthorizationStatus } from '../../store/user-process/user-process.selectors';
 
 type ReviewListProps = {
   offerId: string;
@@ -17,14 +17,14 @@ type ReviewListProps = {
 export default function ReviewList(props: ReviewListProps): JSX.Element {
   const { offerId } = props;
   const dispatch = useAppDispatch();
-  const reviews = useAppSelector(getReviews);
-  const authorizationStatus = useAppSelector(getAuthorizationStatus);
+  const reviews = useAppSelector(selectReviews);
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
 
   useEffect(() => {
     dispatch(fetchReviewsAction(offerId));
   }, [offerId, dispatch]);
 
-  const onReviewSubmit = useCallback(
+  const handleReviewSubmit = useCallback(
     (rating: number, review: string) => {
       dispatch(postNewCommentAction({ offerId, comment: review, rating }));
     },
@@ -42,7 +42,7 @@ export default function ReviewList(props: ReviewListProps): JSX.Element {
         ))}
       </ul>
       {authorizationStatus === AuthorizationStatus.Auth && (
-        <FormReview onReviewSubmit={onReviewSubmit} />
+        <FormReview onReviewSubmit={handleReviewSubmit} />
       )}
     </section>
   );

@@ -1,69 +1,27 @@
 import { Helmet } from 'react-helmet-async';
-import CardMainList from '../../components/card-main-list/card-main-list';
-import { Offer } from '../../types/offer';
 import { Link } from 'react-router-dom';
-import { AppRoute, SORT_OPTIONS } from '../../const';
+import { AppRoute, CITIES } from '../../const';
 import Map from '../../components/map/map';
-import { useState, useCallback } from 'react';
-import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
 import CitiesList from '../../components/cities-list/cities-list';
-import SortOptions from '../../components/sort-options/sort-options';
-import * as sortOptions from './sort-options';
 import HeaderUser from '../../components/header-user/header-user';
 import { useAppSelector } from '../../hooks';
-import { getCity } from '../../store/app-process/app-process.selectors';
+import { selectCurrentCity } from '../../store/app-process/app-process.selectors';
+import cn from 'classnames';
+import MainCardsBlock from '../../components/main-cards-block/main-cards-block';
+import MainCardsBlockEmpty from '../../components/main-cards-block-empty/main-cards-block-empty';
+import { selectFilteredOffers } from '../../store/data-process/data-process.selectors';
 
-type MainPageProps = {
-  offers: Offer[];
-  cities: string[];
-};
-
-const sortFunctionMap = {
-  [SORT_OPTIONS[1]]: sortOptions.sortPriceLowToHigh,
-  [SORT_OPTIONS[2]]: sortOptions.sortPriceHighToLow,
-  [SORT_OPTIONS[3]]: sortOptions.sortTop,
-};
-
-function MainPage(props: MainPageProps): JSX.Element {
-  const { offers, cities } = props;
-
-  const [activeCardId, setActiveCardId] = useState<string | undefined>(
-    undefined
-  );
-  const [activeSort, setActiveSort] = useState<string>(SORT_OPTIONS[0]);
-  const [isSortClosed, setIsSortClosed] = useState(true);
-
-  const currentCity = useAppSelector(getCity);
-  const filteredOffers = offers.filter(
-    (offer) => offer.city.name === currentCity
-  );
-  const filteredOffersCount = filteredOffers.length;
-  const sortedfilteredOffers = [...filteredOffers].sort(
-    sortFunctionMap[activeSort]
-  );
-
-  const activeCard = filteredOffers.find((offer) => offer.id === activeCardId);
-
-  const onMouseOverCard: MouseOverLeaveHandler = useCallback((evt) => {
-    evt.preventDefault();
-    setActiveCardId(evt.currentTarget.dataset.id);
-  }, []);
-
-  const onMouseLeaveCard: MouseOverLeaveHandler = useCallback((evt) => {
-    evt.preventDefault();
-    setActiveCardId(undefined);
-  }, []);
-
-  const onSortClick: MouseOverLeaveHandler = (evt) => {
-    evt.preventDefault();
-    setActiveSort(evt.currentTarget.innerText);
-    setIsSortClosed((state) => !state);
-  };
-
-  const onSortOptionsClick = () => setIsSortClosed((state) => !state);
+function MainPage(): JSX.Element {
+  const currentCity = useAppSelector(selectCurrentCity);
+  const offers = useAppSelector(selectFilteredOffers);
+  const offersCount = offers.length;
 
   return (
-    <div className="page page--gray page--main">
+    <div
+      className={cn('page page--gray page--main', {
+        'page__main--index-empty': offersCount === 0,
+      })}
+    >
       <Helmet>
         <title>6 cities</title>
       </Helmet>
@@ -94,37 +52,33 @@ function MainPage(props: MainPageProps): JSX.Element {
       </header>
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
-        <CitiesList cities={cities} currentCity={currentCity} />
+        <CitiesList cities={CITIES} currentCity={currentCity} />
         <div className="cities">
-          <div className="cities__places-container container">
-            <section className="cities__places places">
-              <h2 className="visually-hidden">Places</h2>
-              <b className="places__found">
-                {filteredOffersCount} places to stay in {currentCity}
-              </b>
-              <SortOptions
-                activeSort={activeSort}
-                onSortClick={onSortClick}
-                isSortClosed={isSortClosed}
-                onSortOptionsClick={onSortOptionsClick}
+          <div
+            className={cn('cities__places-container container', {
+              'cities__places-container--empty': offersCount === 0,
+            })}
+          >
+            {offersCount === 0 && (
+              <MainCardsBlockEmpty currentCity={currentCity} />
+            )}
+            {offersCount !== 0 && (
+              <MainCardsBlock
+                offersCount={offersCount}
+                currentCity={currentCity}
               />
-              <CardMainList
-                offers={sortedfilteredOffers}
-                page="main"
-                onMouseOverCard={onMouseOverCard}
-                onMouseLeaveCard={onMouseLeaveCard}
-              />
-            </section>
+            )}
             <div className="cities__right-section">
-              <section className="cities__map map">
-                <Map
-                  city={filteredOffers[0].city}
-                  offers={filteredOffers}
-                  selectedOffer={activeCard}
-                  height="500px"
-                  zoom={filteredOffers[0].city.location.zoom}
-                />
-              </section>
+              {offersCount !== 0 && (
+                <section className="cities__map map">
+                  <Map
+                    city={offers[0].city}
+                    offers={offers}
+                    height="500px"
+                    zoom={offers[0].city.location.zoom}
+                  />
+                </section>
+              )}
             </div>
           </div>
         </div>

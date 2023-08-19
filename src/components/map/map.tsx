@@ -5,11 +5,12 @@ import useMap from '../../hooks/use-map/use-map';
 import { Offer } from '../../types/offer';
 import { URL_MARKER_CURRENT, URL_MARKER_DEFAULT } from '../../const';
 import { City } from '../../types/city';
+import { useAppSelector } from '../../hooks';
+import { selectCardUnderMouse } from '../../store/app-process/app-process.selectors';
 
 type MapProps = {
   city: City;
   offers: Offer[];
-  selectedOffer?: Offer | undefined;
   height: string;
   zoom: number;
 };
@@ -24,11 +25,13 @@ const currentCustomIcon = new Icon({
 
 export default function Map(props: MapProps): JSX.Element {
   const { city, height, zoom } = props;
-  const { offers, selectedOffer } = props;
+  const { offers } = props;
   const mapRef = useRef(null);
   const map = useMap(mapRef, city, zoom);
   const cityLat = city.location.latitude;
   const cityLng = city.location.longitude;
+  const selectedOfferId = useAppSelector(selectCardUnderMouse);
+  const selectedOffer = offers.find((offer) => offer.id === selectedOfferId);
 
   useEffect(() => {
     if (map) {

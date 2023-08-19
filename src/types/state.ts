@@ -16,6 +16,7 @@ export type UserProcess = {
 export type AppProcess = {
   currentSort: string;
   city: string;
+  cardUnderMouse: string | undefined;
 };
 
 export type DataProcess = {
@@ -26,4 +27,5 @@ export type DataProcess = {
   isOffersLoading: boolean;
   isOfferLoading: boolean;
   isPosted: boolean;
+  favorites: Offer[];
 };

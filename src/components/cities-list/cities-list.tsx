@@ -1,8 +1,11 @@
 import cn from 'classnames';
 import { MouseEvent } from 'react';
 import { useAppDispatch } from '../../hooks';
-import { CITIES } from '../../const';
-import { setCity } from '../../store/app-process/app-process.slice';
+import { CITIES, SORT_OPTIONS } from '../../const';
+import {
+  setCity,
+  setCurrentSort,
+} from '../../store/app-process/app-process.slice';
 
 type CitiesListProps = {
   cities: string[];
@@ -19,6 +22,7 @@ export default function CitiesList(props: CitiesListProps): JSX.Element {
     const newCity = CITIES.find((city) => city === cityTitle);
     if (newCity) {
       dispatch(setCity(newCity));
+      dispatch(setCurrentSort(SORT_OPTIONS[0]));
     }
   };
   return (

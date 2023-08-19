@@ -1,7 +1,7 @@
-import { ChangeEvent, FormEvent, useState, ReactElement } from 'react';
+import { ChangeEvent, FormEvent, useState, ReactNode } from 'react';
 import { STARS } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { getIsPosted } from '../../store/data-process/data-process.selectors';
+import { selectIsPosted } from '../../store/data-process/data-process.selectors';
 import { setIsPosted } from '../../store/data-process/data-process.slice';
 
 type FormReviewProps = {
@@ -16,7 +16,7 @@ const FORM_DEFAULT_STATE = {
 function FormReview({ onReviewSubmit }: FormReviewProps): JSX.Element {
   const [newReview, setNewReview] = useState(FORM_DEFAULT_STATE);
   const [isSubmitAvailable, setIsSubmitAvailable] = useState(false);
-  const isReviewPosted = useAppSelector(getIsPosted);
+  const isReviewPosted = useAppSelector(selectIsPosted);
   const dispatch = useAppDispatch();
 
   const handleFieldChange = (
@@ -43,34 +43,31 @@ function FormReview({ onReviewSubmit }: FormReviewProps): JSX.Element {
     }
   };
 
-  const ratingStarsInputs = STARS.map((_star, index) => (
-    <input
-      key={`star-${5 - index}-input`}
-      className="form__rating-input visually-hidden"
-      name="rating"
-      defaultValue={5 - index}
-      id={`${5 - index}-stars`}
-      type="radio"
-      onChange={handleFieldChange}
-    />
-  ));
-  const ratingStarsLabels = STARS.map((star, index) => (
-    <label
-      key={`star-${5 - index}-label`}
-      htmlFor={`${5 - index}-stars`}
-      className="reviews__rating-label form__rating-label"
-      title={star}
-    >
-      <svg className="form__star-image" width={37} height={33}>
-        <use xlinkHref="#icon-star" />
-      </svg>
-    </label>
-  ));
-  const ratingStars = [] as ReactElement[];
-  ratingStarsInputs.forEach((value, index) => {
-    ratingStars.push(value);
-    ratingStars.push(ratingStarsLabels[index]);
-  });
+  const ratingStars = STARS.reduce(
+    (res, star, index) => [
+      ...res,
+      <input
+        key={`star-${5 - index}-input`}
+        className="form__rating-input visually-hidden"
+        name="rating"
+        defaultValue={5 - index}
+        id={`${5 - index}-stars`}
+        type="radio"
+        onChange={handleFieldChange}
+      />,
+      <label
+        key={`star-${5 - index}-label`}
+        htmlFor={`${5 - index}-stars`}
+        className="reviews__rating-label form__rating-label"
+        title={star}
+      >
+        <svg className="form__star-image" width={37} height={33}>
+          <use xlinkHref="#icon-star" />
+        </svg>
+      </label>,
+    ],
+    [] as ReactNode[]
+  );
 
   return (
     <form

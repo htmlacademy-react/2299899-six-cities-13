@@ -1,19 +1,32 @@
+import { MouseEvent } from 'react';
 import { Offer } from '../../types/offer';
 import { Link } from 'react-router-dom';
 import { AppRoute } from '../../const';
+import { useAppDispatch } from '../../hooks';
+import { toggleFavoriteAction } from '../../store/api-actions';
 
 type CardFavoritesProps = {
   offer: Offer;
 };
 
 function CardFavorites({ offer }: CardFavoritesProps): JSX.Element {
+  const dispatch = useAppDispatch();
+
+  const handleFavoriteButoonClick = (evt: MouseEvent<HTMLButtonElement>) => {
+    evt.preventDefault();
+    const offerId = evt.currentTarget.dataset.offerId as string;
+    const isFavorite = Number(evt.currentTarget.dataset.isFavorite);
+    const status = Number(!isFavorite);
+    dispatch(toggleFavoriteAction({ offerId, status }));
+  };
+
   return (
     <article className="favorites__card place-card" data-id={offer.id}>
       <div className="favorites__image-wrapper place-card__image-wrapper">
         <Link to={`${AppRoute.Offer}/${offer.id}`}>
           <img
             className="place-card__image"
-            src={offer.images[0]}
+            src={offer.previewImage}
             width={150}
             height={110}
             alt="Place image"
@@ -29,6 +42,9 @@ function CardFavorites({ offer }: CardFavoritesProps): JSX.Element {
           <button
             className="place-card__bookmark-button place-card__bookmark-button--active button"
             type="button"
+            data-offer-id={offer.id}
+            data-is-favorite={Number(offer.isFavorite)}
+            onClick={handleFavoriteButoonClick}
           >
             <svg className="place-card__bookmark-icon" width={18} height={19}>
               <use xlinkHref="#icon-bookmark" />

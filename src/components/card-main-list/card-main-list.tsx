@@ -1,19 +1,25 @@
-import { Offer } from '../../types/offer';
 import CardMain from '../../components/card-main/card-main';
 import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
 import cn from 'classnames';
+import { useAppSelector } from '../../hooks';
+import {
+  selectNearOffers,
+  selectSortedOffers,
+} from '../../store/data-process/data-process.selectors';
 
 type CardMainListProps = {
-  offers: Offer[];
   page: string;
   onMouseOverCard?: MouseOverLeaveHandler;
   onMouseLeaveCard?: MouseOverLeaveHandler;
 };
 
 function CardMainList(props: CardMainListProps): JSX.Element {
-  const { offers } = props;
   const { page } = props;
   const { onMouseOverCard, onMouseLeaveCard } = props;
+
+  const selector = page === 'main' ? selectSortedOffers : selectNearOffers;
+  const offers = useAppSelector(selector);
+
   return (
     <div
       className={cn('places__list', {

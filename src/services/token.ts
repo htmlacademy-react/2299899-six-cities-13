@@ -1,4 +1,4 @@
-const AUTH_TOKEN_KEY_NAME = 'lkn32pr8uq83nre89v823mr0i0emfmkdfmg';
+const AUTH_TOKEN_KEY_NAME = 'X-token';
 
 export type Token = string;
 

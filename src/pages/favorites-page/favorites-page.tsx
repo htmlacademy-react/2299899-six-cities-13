@@ -1,17 +1,46 @@
 import { Helmet } from 'react-helmet-async';
-
-// import CardFavoritesList from '../../components/card-favorite-list/card-favorites-list';
 import CardFavorites from '../../components/card-favorites/card-favorites';
-import { Offer } from '../../types/offer';
 import { Link } from 'react-router-dom';
-import { AppRoute } from '../../const';
+import { AppRoute, CITIES } from '../../const';
 import HeaderUser from '../../components/header-user/header-user';
+import { useAppSelector } from '../../hooks';
+import {
+  selectFavorites,
+  selectGroupedFavorites,
+} from '../../store/data-process/data-process.selectors';
+import cn from 'classnames';
 
-type FavoritesScreenProps = {
-  offers: Offer[];
-};
+function FavoritesPage(): JSX.Element {
+  const offers = useAppSelector(selectFavorites);
+  const offersCount = offers.length;
+  const groupedOffers = useAppSelector(selectGroupedFavorites);
 
-function FavoritesPage({ offers }: FavoritesScreenProps): JSX.Element {
+  const favoritesElements = CITIES.map((city) => {
+    if (groupedOffers[city].length !== 0) {
+      const cityOffers = groupedOffers[city].map((offer) => (
+        <CardFavorites
+          offer={offer}
+          key={`favorites-city-${city}-${offer.id}`}
+        />
+      ));
+      return (
+        <li
+          className="favorites__locations-items"
+          key={`favorites-city-${city}`}
+        >
+          <div className="favorites__locations locations locations--current">
+            <div className="locations__item">
+              <a className="locations__item-link" href="#">
+                <span>{city}</span>
+              </a>
+            </div>
+          </div>
+          <div className="favorites__places">{cityOffers}</div>
+        </li>
+      );
+    }
+  });
+
   return (
     <div className="page">
       <Helmet>
@@ -39,39 +68,33 @@ function FavoritesPage({ offers }: FavoritesScreenProps): JSX.Element {
           </div>
         </div>
       </header>
-      <main className="page__main page__main--favorites">
+      <main
+        className={cn('page__main page__main--favorites', {
+          'page__main--favorites-empty': offersCount === 0,
+        })}
+      >
         <div className="page__favorites-container container">
-          <section className="favorites">
-            <h1 className="favorites__title">Saved listing</h1>
-            <ul className="favorites__list">
-              <li className="favorites__locations-items">
-                <div className="favorites__locations locations locations--current">
-                  <div className="locations__item">
-                    <a className="locations__item-link" href="#">
-                      <span>Amsterdam</span>
-                    </a>
-                  </div>
-                </div>
-                <div className="favorites__places">
-                  <CardFavorites offer={offers[1]} />
-                </div>
-              </li>
-              <li className="favorites__locations-items">
-                <div className="favorites__locations locations locations--current">
-                  <div className="locations__item">
-                    <a className="locations__item-link" href="#">
-                      <span>Cologne</span>
-                    </a>
-                  </div>
-                </div>
-                {/* <CardFavoritesList offers={offers} /> */}
-                <CardFavorites offer={offers[3]} />
-              </li>
-            </ul>
-          </section>
+          {offersCount === 0 && (
+            <section className="favorites favorites--empty">
+              <h1 className="visually-hidden">Favorites (empty)</h1>
+              <div className="favorites__status-wrapper">
+                <b className="favorites__status">Nothing yet saved.</b>
+                <p className="favorites__status-description">
+                  Save properties to narrow down search or plan your future
+                  trips.
+                </p>
+              </div>
+            </section>
+          )}
+          {offersCount !== 0 && (
+            <section className="favorites">
+              <h1 className="favorites__title">Saved listing</h1>
+              <ul className="favorites__list">{favoritesElements}</ul>
+            </section>
+          )}
         </div>
       </main>
-      <footer className="footer container">
+      <footer className="footer">
         <Link className="footer__logo-link" to={AppRoute.Main}>
           <img
             className="footer__logo"

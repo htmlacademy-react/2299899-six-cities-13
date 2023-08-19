@@ -1,34 +1,37 @@
 import { Helmet } from 'react-helmet-async';
-import { AppRoute } from '../../const';
+import { AppRoute, AuthorizationStatus } from '../../const';
 import { Link, useParams } from 'react-router-dom';
 import NotFoundPage from '../not-found-page/not-found-page';
 import Map from '../../components/map/map';
-import { useEffect } from 'react';
+import { useEffect, MouseEvent, useRef } from 'react';
 import CardMainList from '../../components/card-main-list/card-main-list';
 import ReviewList from '../../components/review-list/review-list';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import {
   fetchNearOffersAction,
   fetchOfferAction,
+  toggleFavoriteAction,
 } from '../../store/api-actions';
 import cn from 'classnames';
 import LoadingPage from '../loading-page/loading-page';
 import { capitalizeFirstLetter } from '../../utils';
 import HeaderUser from '../../components/header-user/header-user';
 import {
-  getIsOfferLoading,
-  getNearOffers,
-  getOffer,
+  selectIsOfferLoading,
+  selectNearOffers,
+  selectOffer,
 } from '../../store/data-process/data-process.selectors';
+import { selectAuthorizationStatus } from '../../store/user-process/user-process.selectors';
+import { redirectToRoute } from '../../store/action';
 
 function OfferPage(): JSX.Element {
   const dispatch = useAppDispatch();
-
   const { id = '' } = useParams();
-
-  const currentOffer = useAppSelector(getOffer);
-  const nearOffers = useAppSelector(getNearOffers);
-  const isOfferLoading = useAppSelector(getIsOfferLoading);
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
+  const currentOffer = useAppSelector(selectOffer);
+  const nearOffers = useAppSelector(selectNearOffers);
+  const isOfferLoading = useAppSelector(selectIsOfferLoading);
+  const bookmarkRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     dispatch(fetchOfferAction(id));
@@ -42,6 +45,21 @@ function OfferPage(): JSX.Element {
   if (isOfferLoading) {
     return <LoadingPage />;
   }
+
+  const handleFavoriteButoonClick = (evt: MouseEvent<HTMLButtonElement>) => {
+    evt.preventDefault();
+    if (authorizationStatus !== AuthorizationStatus.Auth) {
+      dispatch(redirectToRoute(AppRoute.Login));
+    } else {
+      const offerId = evt.currentTarget.dataset.offerId as string;
+      const status = Number(!Number(evt.currentTarget.dataset.isFavorite));
+      dispatch(toggleFavoriteAction({ offerId, status }));
+      if (bookmarkRef.current) {
+        bookmarkRef.current.classList.toggle('offer__bookmark-button--active');
+        bookmarkRef.current.dataset.isFavorite = String(status);
+      }
+    }
+  };
 
   const gallery = currentOffer.images.map((picture) => (
     <div className="offer__image-wrapper" key={`${id}-gallery-${picture}`}>
@@ -96,7 +114,16 @@ function OfferPage(): JSX.Element {
               )}
               <div className="offer__name-wrapper">
                 <h1 className="offer__name">{currentOffer.title}</h1>
-                <button className="offer__bookmark-button button" type="button">
+                <button
+                  ref={bookmarkRef}
+                  className={cn('offer__bookmark-button button', {
+                    'offer__bookmark-button--active': currentOffer.isFavorite,
+                  })}
+                  type="button"
+                  data-offer-id={currentOffer.id}
+                  data-is-favorite={Number(currentOffer.isFavorite)}
+                  onClick={handleFavoriteButoonClick}
+                >
                   <svg className="offer__bookmark-icon" width={31} height={33}>
                     <use xlinkHref="#icon-bookmark" />
                   </svg>
@@ -184,7 +211,7 @@ function OfferPage(): JSX.Element {
             <h2 className="near-places__title">
               Other places in the neighbourhood
             </h2>
-            <CardMainList offers={nearOffers} page="offer" />
+            <CardMainList page="offer" />
           </section>
         </div>
       </main>
