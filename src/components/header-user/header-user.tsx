@@ -1,13 +1,11 @@
-import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { checkAuthAction, logoutAction } from '../../store/api-actions';
+import { logoutAction } from '../../store/api-actions';
 import {
   selectAuthorizationStatus,
   selectCurrentUser,
 } from '../../store/user-process/user-process.selectors';
-import { Token, getToken } from '../../services/token';
 import { selectFavorites } from '../../store/data-process/data-process.selectors';
 
 export default function HeaderUser(): JSX.Element {
@@ -16,11 +14,6 @@ export default function HeaderUser(): JSX.Element {
   const authorizationStatus = useAppSelector(selectAuthorizationStatus);
   const currentUser = useAppSelector(selectCurrentUser);
   const favoritesCount = useAppSelector(selectFavorites).length;
-  const [token, setToken] = useState<Token | null>(null);
-
-  useEffect(() => {
-    setToken(getToken());
-  }, []);
 
   if (authorizationStatus !== AuthorizationStatus.Auth) {
     return (
@@ -30,10 +23,6 @@ export default function HeaderUser(): JSX.Element {
         </Link>
       </li>
     );
-  }
-
-  if (!currentUser && token) {
-    dispatch(checkAuthAction());
   }
 
   const handleSignoutClick = () => {
