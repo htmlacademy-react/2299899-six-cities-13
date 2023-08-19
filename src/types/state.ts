@@ -15,7 +15,7 @@ export type UserProcess = {
 
 export type AppProcess = {
   currentSort: string;
-  city: string;
+  currentCity: string;
   cardUnderMouse: string | undefined;
 };
 

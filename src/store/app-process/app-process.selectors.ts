@@ -1,9 +1,10 @@
 import { NameSpace } from '../../const';
 import { State } from '../../types/state';
 
-export const selectCurrentSort = (state: State): string =>
+export const selectCurrentSort = (state: Pick<State, NameSpace.App>): string =>
   state[NameSpace.App].currentSort;
-export const selectCurrentCity = (state: State): string =>
-  state[NameSpace.App].city;
-export const selectCardUnderMouse = (state: State): string | undefined =>
-  state[NameSpace.App].cardUnderMouse;
+export const selectCurrentCity = (state: Pick<State, NameSpace.App>): string =>
+  state[NameSpace.App].currentCity;
+export const selectCardUnderMouse = (
+  state: Pick<State, NameSpace.App>
+): string | undefined => state[NameSpace.App].cardUnderMouse;

@@ -10,21 +10,23 @@ import {
 import * as options from './sort-options';
 import { GroupedOffers } from '../../types/grouped-offers';
 
-export const selectOffers = (state: State): Offer[] =>
+export const selectOffers = (state: Pick<State, NameSpace.Data>): Offer[] =>
   state[NameSpace.Data].offers;
-export const selectIsOffersLoading = (state: State): boolean =>
-  state[NameSpace.Data].isOffersLoading;
-export const selectOffer = (state: State): Offer | null =>
+export const selectIsOffersLoading = (
+  state: Pick<State, NameSpace.Data>
+): boolean => state[NameSpace.Data].isOffersLoading;
+export const selectOffer = (state: Pick<State, NameSpace.Data>): Offer | null =>
   state[NameSpace.Data].offer;
-export const selectIsOfferLoading = (state: State): boolean =>
-  state[NameSpace.Data].isOfferLoading;
-export const selectReviews = (state: State): Review[] =>
+export const selectIsOfferLoading = (
+  state: Pick<State, NameSpace.Data>
+): boolean => state[NameSpace.Data].isOfferLoading;
+export const selectReviews = (state: Pick<State, NameSpace.Data>): Review[] =>
   state[NameSpace.Data].reviews;
-export const selectNearOffers = (state: State): Offer[] =>
+export const selectNearOffers = (state: Pick<State, NameSpace.Data>): Offer[] =>
   state[NameSpace.Data].nearOffers;
-export const selectIsPosted = (state: State): boolean =>
+export const selectIsPosted = (state: Pick<State, NameSpace.Data>): boolean =>
   state[NameSpace.Data].isPosted;
-export const selectFavorites = (state: State): Offer[] =>
+export const selectFavorites = (state: Pick<State, NameSpace.Data>): Offer[] =>
   state[NameSpace.Data].favorites;
 
 export const selectFilteredOffers = createSelector(
