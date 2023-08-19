@@ -14,7 +14,7 @@ import {
 } from '../../store/api-actions';
 import cn from 'classnames';
 import LoadingPage from '../loading-page/loading-page';
-import { capitalizeFirstLetter } from '../../utils';
+import { capitalizeFirstLetter } from '../../utils/utils';
 import HeaderUser from '../../components/header-user/header-user';
 import {
   selectIsOfferLoading,
