@@ -7,6 +7,8 @@ import {
 } from './app-process.slice';
 import { AppProcess } from '../../types/state';
 import { CITIES, SORT_OPTIONS } from '../../const';
+import { random } from 'faker';
+import { makeFakeOffer } from '../../utils/test-mocks';
 
 describe('AppProcess slice', () => {
   const initialState: AppProcess = {
@@ -17,31 +19,41 @@ describe('AppProcess slice', () => {
 
   it('should return initial state with empty action', () => {
     const emptyAction = { type: '' };
+
     const result = appProcess.reducer(initialState, emptyAction);
+
     expect(result).toEqual(initialState);
   });
 
   it('should return default initial state with empty action and undefined', () => {
     const emptyAction = { type: '' };
+
     const result = appProcess.reducer(undefined, emptyAction);
+
     expect(result).toEqual(initialState);
   });
 
   it('should set "currentSort" in state', () => {
-    const expected = SORT_OPTIONS[1];
+    const expected = random.arrayElement(SORT_OPTIONS);
+
     const result = appProcess.reducer(undefined, setCurrentSort(expected));
+
     expect(result.currentSort).toBe(expected);
   });
 
   it('should set "city" in state', () => {
-    const expected = CITIES[1];
+    const expected = random.arrayElement(CITIES);
+
     const result = appProcess.reducer(undefined, setCity(expected));
+
     expect(result.currentCity).toBe(expected);
   });
 
   it('should set "cardUnderMouse" in state', () => {
-    const expected = '1';
+    const expected = makeFakeOffer().id;
+
     const result = appProcess.reducer(undefined, setCardUnderMouse(expected));
+
     expect(result.cardUnderMouse).toBe(expected);
   });
 });

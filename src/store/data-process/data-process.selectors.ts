@@ -35,7 +35,7 @@ export const selectFilteredOffers = createSelector(
     offers.filter((offer) => offer.city.name === currentCity)
 );
 
-const sortFunctionMap = {
+export const sortFunctionMap = {
   [SORT_OPTIONS[1]]: options.sortPriceLowToHigh,
   [SORT_OPTIONS[2]]: options.sortPriceHighToLow,
   [SORT_OPTIONS[3]]: options.sortTop,
