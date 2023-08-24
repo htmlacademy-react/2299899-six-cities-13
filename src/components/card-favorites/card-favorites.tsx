@@ -45,6 +45,7 @@ function CardFavorites({ offer }: CardFavoritesProps): JSX.Element {
             data-offer-id={offer.id}
             data-is-favorite={Number(offer.isFavorite)}
             onClick={handleFavoriteButoonClick}
+            data-testid="card-favorites-bookmark-button"
           >
             <svg className="place-card__bookmark-icon" width={18} height={19}>
               <use xlinkHref="#icon-bookmark" />

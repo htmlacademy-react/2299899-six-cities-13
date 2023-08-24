@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { AppRoute, CITIES } from '../../const';
+import { AppRoute } from '../../const';
 import Map from '../../components/map/map';
 import CitiesList from '../../components/cities-list/cities-list';
 import HeaderUser from '../../components/header-user/header-user';
@@ -52,7 +52,7 @@ function MainPage(): JSX.Element {
       </header>
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
-        <CitiesList cities={CITIES} currentCity={currentCity} />
+        <CitiesList currentCity={currentCity} />
         <div className="cities">
           <div
             className={cn('cities__places-container container', {

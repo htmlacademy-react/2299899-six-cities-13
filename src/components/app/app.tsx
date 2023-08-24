@@ -9,8 +9,6 @@ import PrivateRoute from '../private-route/private-route';
 import LoadingPage from '../../pages/loading-page/loading-page';
 import { HelmetProvider } from 'react-helmet-async';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import HistoryRouter from '../history-route/history-route';
-import browserHistory from '../../browser-history';
 import { selectAuthorizationStatus } from '../../store/user-process/user-process.selectors';
 import { selectIsOffersLoading } from '../../store/data-process/data-process.selectors';
 import { useEffect } from 'react';
@@ -32,22 +30,20 @@ function App(): JSX.Element {
   }
   return (
     <HelmetProvider>
-      <HistoryRouter history={browserHistory}>
-        <Routes>
-          <Route path={AppRoute.Main} element={<MainPage />} />
-          <Route path={AppRoute.Login} element={<LoginPage />} />
-          <Route path={`${AppRoute.Offer}/:id`} element={<OfferPage />} />
-          <Route
-            path={AppRoute.Favorites}
-            element={
-              <PrivateRoute authorizationStatus={authorizationStatus}>
-                <FavoritesPage />
-              </PrivateRoute>
-            }
-          />
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
-      </HistoryRouter>
+      <Routes>
+        <Route path={AppRoute.Main} element={<MainPage />} />
+        <Route path={AppRoute.Login} element={<LoginPage />} />
+        <Route path={`${AppRoute.Offer}/:id`} element={<OfferPage />} />
+        <Route
+          path={AppRoute.Favorites}
+          element={
+            <PrivateRoute authorizationStatus={authorizationStatus}>
+              <FavoritesPage />
+            </PrivateRoute>
+          }
+        />
+        <Route path="*" element={<NotFoundPage />} />
+      </Routes>
     </HelmetProvider>
   );
 }

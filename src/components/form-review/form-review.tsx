@@ -75,6 +75,7 @@ function FormReview({ onReviewSubmit }: FormReviewProps): JSX.Element {
       action="#"
       method="post"
       onSubmit={handleFormSubmit}
+      data-testid="offer-reviews-form"
     >
       <label className="reviews__label form__label" htmlFor="review">
         Your review

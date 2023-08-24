@@ -1,14 +1,14 @@
 import { DateTimeFormat } from '../../const';
-import { Review } from '../../types/review';
+import { Review as ReviewType } from '../../types/review';
 import { humanizeDate } from '../../utils/utils';
 
 type ReviewProps = {
-  review: Review;
+  review: ReviewType;
 };
 
-export default function ReviewElement({ review }: ReviewProps): JSX.Element {
+export default function Review({ review }: ReviewProps): JSX.Element {
   return (
-    <li className="reviews__item">
+    <li className="reviews__item" data-testid="offer-reviews-list-item">
       <div className="reviews__user user">
         <div className="reviews__avatar-wrapper user__avatar-wrapper">
           <img

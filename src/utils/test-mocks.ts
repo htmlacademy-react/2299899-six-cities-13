@@ -15,6 +15,7 @@ import { AuthorizationStatus, CITIES, NameSpace, SORT_OPTIONS } from '../const';
 import { Review } from '../types/review';
 import { UserData } from '../types/user-data';
 import { AuthData } from '../types/auth-data';
+import { City } from '../types/city';
 
 export type AppThunkDispatch = ThunkDispatch<
   State,
@@ -25,19 +26,21 @@ export type AppThunkDispatch = ThunkDispatch<
 export const extractActionsTypes = (actions: Action<string>[]) =>
   actions.map(({ type }) => type);
 
+export const makeFakeCity = (): City => ({
+  name: random.arrayElement(CITIES),
+  location: {
+    latitude: Number(address.latitude()),
+    longitude: Number(address.longitude()),
+    zoom: datatype.number({ min: 1, max: 20 }),
+  },
+});
+
 export const makeFakeOffer = (): Offer => ({
   id: datatype.uuid(),
   title: name.title(),
   type: random.arrayElement(['apartment', 'room']),
   price: datatype.number({ min: 100, max: 2000 }),
-  city: {
-    name: random.arrayElement(CITIES),
-    location: {
-      latitude: Number(address.latitude()),
-      longitude: Number(address.longitude()),
-      zoom: datatype.number({ min: 1, max: 20 }),
-    },
-  },
+  city: makeFakeCity(),
   location: {
     latitude: Number(address.latitude()),
     longitude: Number(address.longitude()),
@@ -85,7 +88,7 @@ export const makeFakeAuthData = (): AuthData => ({
   password: internet.password(),
 });
 
-export const makeFakeState = (): State => {
+export const makeFakeState = (initialState?: Partial<State>): State => {
   const fakeOffer1 = makeFakeOffer();
   const fakeOffer2 = makeFakeOffer();
   fakeOffer1.isFavorite = true;
@@ -111,5 +114,6 @@ export const makeFakeState = (): State => {
       ),
       currentUser: random.arrayElement([makeFakeUser(), null]),
     },
+    ...(initialState ?? {}),
   };
 };

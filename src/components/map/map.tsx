@@ -57,5 +57,5 @@ export default function Map(props: MapProps): JSX.Element {
     }
   }, [map, offers, selectedOffer, cityLat, cityLng, zoom]);
 
-  return <div style={{ height }} ref={mapRef}></div>;
+  return <div style={{ height }} ref={mapRef} data-testid="map"></div>;
 }

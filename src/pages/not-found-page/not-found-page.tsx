@@ -35,7 +35,7 @@ function NotFoundPage(): JSX.Element {
         </div>
       </header>
       <main className="page__main page__main--index">
-        <div className="container" style={{ textAlign: 'center' }}>
+        <div className="container" style={{ textAlign: 'center' }} data-testid='page-not-found-container'>
           <h1>404. Page not found</h1>
           <Link to={AppRoute.Main}>Back to main page</Link>
         </div>

@@ -8,12 +8,12 @@ import {
 } from '../../store/app-process/app-process.slice';
 
 type CitiesListProps = {
-  cities: string[];
   currentCity: string;
 };
 
-export default function CitiesList(props: CitiesListProps): JSX.Element {
-  const { cities, currentCity } = props;
+export default function CitiesList({
+  currentCity,
+}: CitiesListProps): JSX.Element {
   const dispatch = useAppDispatch();
 
   const handleCityChange = (evt: MouseEvent<HTMLSpanElement>) => {
@@ -25,23 +25,24 @@ export default function CitiesList(props: CitiesListProps): JSX.Element {
       dispatch(setCurrentSort(SORT_OPTIONS[0]));
     }
   };
+
+  const citiesElements = CITIES.map((city) => (
+    <li key={city} className="locations__item">
+      <a
+        className={cn('locations__item-link tabs__item', {
+          'tabs__item--active': currentCity === city,
+        })}
+        href="#"
+      >
+        <span onClick={handleCityChange}>{city}</span>
+      </a>
+    </li>
+  ));
+
   return (
     <div className="tabs">
       <section className="locations container">
-        <ul className="locations__list tabs__list">
-          {cities.map((city) => (
-            <li key={city} className="locations__item">
-              <a
-                className={cn('locations__item-link tabs__item', {
-                  'tabs__item--active': currentCity === city,
-                })}
-                href="#"
-              >
-                <span onClick={handleCityChange}>{city}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
+        <ul className="locations__list tabs__list">{citiesElements}</ul>
       </section>
     </div>
   );

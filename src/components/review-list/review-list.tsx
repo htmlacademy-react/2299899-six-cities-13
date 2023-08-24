@@ -36,7 +36,7 @@ export default function ReviewList(props: ReviewListProps): JSX.Element {
       <h2 className="reviews__title">
         Reviews · <span className="reviews__amount">{reviews.length}</span>
       </h2>
-      <ul className="reviews__list">
+      <ul className="reviews__list" data-testid="offer-reviews-list">
         {reviews.map((review) => (
           <ReviewElement key={`reviews-${review.id}`} review={review} />
         ))}
