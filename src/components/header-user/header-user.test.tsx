@@ -3,12 +3,15 @@ import { render, screen } from '@testing-library/react';
 import HeaderUser from './header-user';
 import { withHistory, withStore } from '../../utils/test-mocks-components';
 import {
+  extractActionsTypes,
   makeFakeOffer,
   makeFakeState,
   makeFakeUser,
 } from '../../utils/test-mocks';
-import { AuthorizationStatus, NameSpace } from '../../const';
+import { APIRoute, AuthorizationStatus, NameSpace } from '../../const';
 import { State } from '../../types/state';
+import { fetchOffersAction, logoutAction } from '../../store/api-actions';
+import userEvent from '@testing-library/user-event';
 
 describe('Component: HeaderUser', () => {
   let mockState: State;
@@ -46,5 +49,26 @@ describe('Component: HeaderUser', () => {
     expect(
       container.getElementsByClassName('header__favorite-count')[0].textContent
     ).toBe(`${mockState[NameSpace.Data].favorites.length}`);
+  });
+
+  it('should dispatch "logoutAction.pending", "fetchOffersAction.pending", "logoutAction.fulfilled", "fetchOffersAction.fulfilled" when clicked on "Sign out" button', async () => {
+    mockState[NameSpace.User].authorizationStatus = AuthorizationStatus.Auth;
+    const { withStoreComponent, mockStore, mockAxiosAdapter } = withStore(
+      withHistory(<HeaderUser />),
+      mockState
+    );
+    mockAxiosAdapter.onDelete(APIRoute.Logout).reply(200);
+    mockAxiosAdapter.onGet(APIRoute.Offers).reply(200, [makeFakeOffer()]);
+
+    render(withStoreComponent);
+    await userEvent.click(screen.getByText('Sign out'));
+    const actions = extractActionsTypes(mockStore.getActions());
+
+    expect(actions).toEqual([
+      logoutAction.pending.type,
+      fetchOffersAction.pending.type,
+      logoutAction.fulfilled.type,
+      fetchOffersAction.fulfilled.type,
+    ]);
   });
 });

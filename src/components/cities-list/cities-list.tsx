@@ -16,9 +16,9 @@ export default function CitiesList({
 }: CitiesListProps): JSX.Element {
   const dispatch = useAppDispatch();
 
-  const handleCityChange = (evt: MouseEvent<HTMLSpanElement>) => {
+  const handleCityChange = (evt: MouseEvent<HTMLLIElement>) => {
     evt.preventDefault();
-    const cityTitle = evt.currentTarget.innerText;
+    const cityTitle = evt.currentTarget.textContent;
     const newCity = CITIES.find((city) => city === cityTitle);
     if (newCity) {
       dispatch(setCity(newCity));
@@ -27,14 +27,19 @@ export default function CitiesList({
   };
 
   const citiesElements = CITIES.map((city) => (
-    <li key={city} className="locations__item">
+    <li
+      key={city}
+      className="locations__item"
+      onClick={handleCityChange}
+      data-testid="city-item"
+    >
       <a
         className={cn('locations__item-link tabs__item', {
           'tabs__item--active': currentCity === city,
         })}
         href="#"
       >
-        <span onClick={handleCityChange}>{city}</span>
+        <span>{city}</span>
       </a>
     </li>
   ));

@@ -38,6 +38,7 @@ export default function SortOptions(): JSX.Element {
         className="places__sorting-type"
         tabIndex={0}
         onClick={handleDropdownClick}
+        data-testid="sort-options-status"
       >
         {currentSort}
         <svg className="places__sorting-arrow" width={7} height={4}>
