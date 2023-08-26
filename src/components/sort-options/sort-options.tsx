@@ -18,6 +18,19 @@ export default function SortOptions(): JSX.Element {
     setIsSortClosed(true);
   };
 
+  const listElements = SORT_OPTIONS.map((option) => (
+    <li
+      key={`sort-option-${option}`}
+      className={cn('places__option', {
+        'places__option--active': option === currentSort,
+      })}
+      tabIndex={0}
+      onClick={handleSortClick}
+    >
+      {option}
+    </li>
+  ));
+
   return (
     <form className="places__sorting" action="#" method="get">
       <span className="places__sorting-caption">Sort by </span>
@@ -25,6 +38,7 @@ export default function SortOptions(): JSX.Element {
         className="places__sorting-type"
         tabIndex={0}
         onClick={handleDropdownClick}
+        data-testid="sort-options-status"
       >
         {currentSort}
         <svg className="places__sorting-arrow" width={7} height={4}>
@@ -36,18 +50,7 @@ export default function SortOptions(): JSX.Element {
           isSortClosed ? 'closed' : 'opened'
         }`}
       >
-        {SORT_OPTIONS.map((option) => (
-          <li
-            key={`sort-option-${option}`}
-            className={cn('places__option', {
-              'places__option--active': option === currentSort,
-            })}
-            tabIndex={0}
-            onClick={handleSortClick}
-          >
-            {option}
-          </li>
-        ))}
+        {listElements}
       </ul>
     </form>
   );

@@ -1,4 +1,11 @@
-import { ChangeEvent, FormEvent, useState, ReactNode } from 'react';
+import {
+  ChangeEvent,
+  FormEvent,
+  useState,
+  ReactNode,
+  useEffect,
+  useRef,
+} from 'react';
 import { STARS } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { selectIsPosted } from '../../store/data-process/data-process.selectors';
@@ -14,32 +21,39 @@ const FORM_DEFAULT_STATE = {
 };
 
 function FormReview({ onReviewSubmit }: FormReviewProps): JSX.Element {
+  const formRef = useRef<HTMLFormElement | null>(null);
   const [newReview, setNewReview] = useState(FORM_DEFAULT_STATE);
   const [isSubmitAvailable, setIsSubmitAvailable] = useState(false);
   const isReviewPosted = useAppSelector(selectIsPosted);
   const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    if (newReview.rating && newReview.review.length >= 50) {
+      setIsSubmitAvailable(true);
+    } else {
+      setIsSubmitAvailable(false);
+    }
+  }, [newReview]);
+
+  useEffect(() => {
+    if (isReviewPosted) {
+      formRef.current?.reset();
+      setNewReview(FORM_DEFAULT_STATE);
+      dispatch(setIsPosted(false));
+    }
+  }, [dispatch, isReviewPosted]);
 
   const handleFieldChange = (
     evt: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = evt.target;
     setNewReview({ ...newReview, [name]: value });
-    if (newReview.rating && newReview.review.length >= 50) {
-      setIsSubmitAvailable(true);
-    } else {
-      setIsSubmitAvailable(false);
-    }
   };
 
   const handleFormSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
-    if (newReview.rating) {
+    if (newReview.rating && newReview.review.length >= 50) {
       onReviewSubmit(Number(newReview.rating), newReview.review);
-    }
-    if (isReviewPosted) {
-      evt.currentTarget.reset();
-      setNewReview(FORM_DEFAULT_STATE);
-      dispatch(setIsPosted(false));
     }
   };
 
@@ -54,12 +68,14 @@ function FormReview({ onReviewSubmit }: FormReviewProps): JSX.Element {
         id={`${5 - index}-stars`}
         type="radio"
         onChange={handleFieldChange}
+        data-testid={`form-review-rating-${5 - index}-input`}
       />,
       <label
         key={`star-${5 - index}-label`}
         htmlFor={`${5 - index}-stars`}
         className="reviews__rating-label form__rating-label"
         title={star}
+        data-testid={`form-review-rating-${5 - index}-label`}
       >
         <svg className="form__star-image" width={37} height={33}>
           <use xlinkHref="#icon-star" />
@@ -71,10 +87,12 @@ function FormReview({ onReviewSubmit }: FormReviewProps): JSX.Element {
 
   return (
     <form
+      ref={formRef}
       className="reviews__form form"
       action="#"
       method="post"
       onSubmit={handleFormSubmit}
+      data-testid="offer-reviews-form"
     >
       <label className="reviews__label form__label" htmlFor="review">
         Your review
@@ -87,6 +105,7 @@ function FormReview({ onReviewSubmit }: FormReviewProps): JSX.Element {
         placeholder="Tell how was your stay, what you like and what can be improved"
         defaultValue={newReview.review}
         onChange={handleFieldChange}
+        data-testid="form-review-text"
       />
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
@@ -98,6 +117,7 @@ function FormReview({ onReviewSubmit }: FormReviewProps): JSX.Element {
           className="reviews__submit form__submit button"
           type="submit"
           disabled={!isSubmitAvailable}
+          data-testid="form-review-submit"
         >
           Submit
         </button>

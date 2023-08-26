@@ -38,12 +38,12 @@ function OfferPage(): JSX.Element {
     dispatch(fetchNearOffersAction(id));
   }, [id, dispatch]);
 
-  if (!currentOffer) {
-    return <NotFoundPage />;
-  }
-
   if (isOfferLoading) {
     return <LoadingPage />;
+  }
+
+  if (!currentOffer) {
+    return <NotFoundPage />;
   }
 
   const handleFavoriteButoonClick = (evt: MouseEvent<HTMLButtonElement>) => {

@@ -1,45 +1,15 @@
 import { Helmet } from 'react-helmet-async';
-import CardFavorites from '../../components/card-favorites/card-favorites';
 import { Link } from 'react-router-dom';
-import { AppRoute, CITIES } from '../../const';
+import { AppRoute } from '../../const';
 import HeaderUser from '../../components/header-user/header-user';
 import { useAppSelector } from '../../hooks';
-import {
-  selectFavorites,
-  selectGroupedFavorites,
-} from '../../store/data-process/data-process.selectors';
+import { selectFavorites } from '../../store/data-process/data-process.selectors';
 import cn from 'classnames';
+import CardFavoritesList from '../../components/card-favorite-list/card-favorites-list';
 
 function FavoritesPage(): JSX.Element {
   const offers = useAppSelector(selectFavorites);
   const offersCount = offers.length;
-  const groupedOffers = useAppSelector(selectGroupedFavorites);
-
-  const favoritesElements = CITIES.map((city) => {
-    if (groupedOffers[city].length !== 0) {
-      const cityOffers = groupedOffers[city].map((offer) => (
-        <CardFavorites
-          offer={offer}
-          key={`favorites-city-${city}-${offer.id}`}
-        />
-      ));
-      return (
-        <li
-          className="favorites__locations-items"
-          key={`favorites-city-${city}`}
-        >
-          <div className="favorites__locations locations locations--current">
-            <div className="locations__item">
-              <a className="locations__item-link" href="#">
-                <span>{city}</span>
-              </a>
-            </div>
-          </div>
-          <div className="favorites__places">{cityOffers}</div>
-        </li>
-      );
-    }
-  });
 
   return (
     <div className="page">
@@ -86,12 +56,7 @@ function FavoritesPage(): JSX.Element {
               </div>
             </section>
           )}
-          {offersCount !== 0 && (
-            <section className="favorites">
-              <h1 className="favorites__title">Saved listing</h1>
-              <ul className="favorites__list">{favoritesElements}</ul>
-            </section>
-          )}
+          {offersCount !== 0 && <CardFavoritesList />}
         </div>
       </main>
       <footer className="footer">
