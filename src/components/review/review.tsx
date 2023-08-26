@@ -1,6 +1,6 @@
 import { DateTimeFormat } from '../../const';
 import { Review } from '../../types/review';
-import { humanizeDate } from '../../utils';
+import { humanizeDate } from '../../utils/utils';
 
 type ReviewProps = {
   review: Review;

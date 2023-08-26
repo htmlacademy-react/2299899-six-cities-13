@@ -60,18 +60,16 @@ export const dataProcess = createSlice({
         state.favorites = action.payload;
       })
       .addCase(toggleFavoriteAction.fulfilled, (state, action) => {
-        const updatedOffer = action.payload;
-
         state.offers = state.offers.map((offer) =>
-          offer.id === updatedOffer.id ? action.payload : offer
+          offer.id === action.payload.id ? action.payload : offer
         );
 
         const otherFavoriteOffers = state.favorites.filter(
-          (offer) => offer.id !== updatedOffer.id
+          (offer) => offer.id !== action.payload.id
         );
 
         state.favorites = action.payload.isFavorite
-          ? [...otherFavoriteOffers, updatedOffer]
+          ? [...otherFavoriteOffers, action.payload]
           : otherFavoriteOffers;
       });
   },
