@@ -18,8 +18,11 @@ export default function HeaderUser(): JSX.Element {
   if (authorizationStatus !== AuthorizationStatus.Auth) {
     return (
       <li className="header__nav-item">
-        <Link className="header__nav-link" to={AppRoute.Login}>
-          <span className="header__signout">Sign in</span>
+        <Link
+          className="header__nav-link header__nav-link--profile"
+          to={AppRoute.Login}
+        >
+          <span className="header__login">Sign in</span>
         </Link>
       </li>
     );
@@ -44,11 +47,7 @@ export default function HeaderUser(): JSX.Element {
         </Link>
       </li>
       <li className="header__nav-item">
-        <Link
-          className="header__nav-link"
-          to={AppRoute.Main}
-          onClick={handleSignoutClick}
-        >
+        <Link className="header__nav-link" to={{}} onClick={handleSignoutClick}>
           <span className="header__signout">Sign out</span>
         </Link>
       </li>

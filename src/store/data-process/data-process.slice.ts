@@ -7,7 +7,7 @@ import {
   fetchOfferAction,
   fetchOffersAction,
   fetchReviewsAction,
-  postNewCommentAction,
+  postNewReviewAction,
   toggleFavoriteAction,
 } from '../api-actions';
 
@@ -16,9 +16,9 @@ const initialState: DataProcess = {
   offer: null,
   reviews: [],
   nearOffers: [],
-  isOffersLoading: false,
-  isOfferLoading: false,
-  isPosted: false,
+  isLoading: false,
+  isReviewPosting: false,
+  isReviewPosted: null,
   favorites: [],
 };
 
@@ -26,24 +26,27 @@ export const dataProcess = createSlice({
   name: NameSpace.Data,
   initialState,
   reducers: {
-    setIsPosted: (state, action: PayloadAction<boolean>) => {
-      state.isPosted = action.payload;
+    setIsReviewPosting: (state, action: PayloadAction<boolean>) => {
+      state.isReviewPosting = action.payload;
+    },
+    setIsReviewPosted: (state, action: PayloadAction<boolean | null>) => {
+      state.isReviewPosted = action.payload;
     },
   },
   extraReducers(builder) {
     builder
       .addCase(fetchOffersAction.pending, (state) => {
-        state.isOffersLoading = true;
+        state.isLoading = true;
       })
       .addCase(fetchOffersAction.fulfilled, (state, action) => {
-        state.isOffersLoading = false;
+        state.isLoading = false;
         state.offers = action.payload;
       })
       .addCase(fetchOfferAction.pending, (state) => {
-        state.isOfferLoading = true;
+        state.isLoading = true;
       })
       .addCase(fetchOfferAction.fulfilled, (state, action) => {
-        state.isOfferLoading = false;
+        state.isLoading = false;
         state.offer = action.payload;
       })
       .addCase(fetchReviewsAction.fulfilled, (state, action) => {
@@ -52,9 +55,17 @@ export const dataProcess = createSlice({
       .addCase(fetchNearOffersAction.fulfilled, (state, action) => {
         state.nearOffers = action.payload;
       })
-      .addCase(postNewCommentAction.fulfilled, (state, action) => {
+      .addCase(postNewReviewAction.rejected, (state) => {
+        state.isReviewPosting = false;
+        state.isReviewPosted = false;
+      })
+      .addCase(postNewReviewAction.pending, (state) => {
+        state.isReviewPosting = true;
+      })
+      .addCase(postNewReviewAction.fulfilled, (state, action) => {
+        state.isReviewPosting = false;
         state.reviews = [...state.reviews, action.payload];
-        state.isPosted = true;
+        state.isReviewPosted = true;
       })
       .addCase(fetchFavoritesAction.fulfilled, (state, action) => {
         state.favorites = action.payload;
@@ -75,4 +86,4 @@ export const dataProcess = createSlice({
   },
 });
 
-export const { setIsPosted } = dataProcess.actions;
+export const { setIsReviewPosting, setIsReviewPosted } = dataProcess.actions;

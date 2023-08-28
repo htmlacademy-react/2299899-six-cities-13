@@ -3,7 +3,7 @@ import { MouseEvent } from 'react';
 import { useAppDispatch } from '../../hooks';
 import { CITIES, SORT_OPTIONS } from '../../const';
 import {
-  setCity,
+  setCurrentCity,
   setCurrentSort,
 } from '../../store/app-process/app-process.slice';
 
@@ -21,7 +21,7 @@ export default function CitiesList({
     const cityTitle = evt.currentTarget.textContent;
     const newCity = CITIES.find((city) => city === cityTitle);
     if (newCity) {
-      dispatch(setCity(newCity));
+      dispatch(setCurrentCity(newCity));
       dispatch(setCurrentSort(SORT_OPTIONS[0]));
     }
   };

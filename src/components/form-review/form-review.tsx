@@ -8,11 +8,15 @@ import {
 } from 'react';
 import { STARS } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
-import { selectIsPosted } from '../../store/data-process/data-process.selectors';
-import { setIsPosted } from '../../store/data-process/data-process.slice';
+import {
+  selectIsReviewPosting,
+  selectIsReviewPosted,
+} from '../../store/data-process/data-process.selectors';
+import { setIsReviewPosted } from '../../store/data-process/data-process.slice';
+import { postNewReviewAction } from '../../store/api-actions';
 
 type FormReviewProps = {
-  onReviewSubmit: (rating: number, review: string) => void;
+  offerId: string;
 };
 
 const FORM_DEFAULT_STATE = {
@@ -20,15 +24,21 @@ const FORM_DEFAULT_STATE = {
   review: '',
 };
 
-function FormReview({ onReviewSubmit }: FormReviewProps): JSX.Element {
+function FormReview({ offerId }: FormReviewProps): JSX.Element {
+  const dispatch = useAppDispatch();
+  const isReviewPosting = useAppSelector(selectIsReviewPosting);
+  const isReviewPosted = useAppSelector(selectIsReviewPosted);
+
   const formRef = useRef<HTMLFormElement | null>(null);
   const [newReview, setNewReview] = useState(FORM_DEFAULT_STATE);
   const [isSubmitAvailable, setIsSubmitAvailable] = useState(false);
-  const isReviewPosted = useAppSelector(selectIsPosted);
-  const dispatch = useAppDispatch();
 
   useEffect(() => {
-    if (newReview.rating && newReview.review.length >= 50) {
+    if (
+      newReview.rating &&
+      newReview.review.length >= 50 &&
+      newReview.review.length <= 300
+    ) {
       setIsSubmitAvailable(true);
     } else {
       setIsSubmitAvailable(false);
@@ -39,22 +49,26 @@ function FormReview({ onReviewSubmit }: FormReviewProps): JSX.Element {
     if (isReviewPosted) {
       formRef.current?.reset();
       setNewReview(FORM_DEFAULT_STATE);
-      dispatch(setIsPosted(false));
+      dispatch(setIsReviewPosted(null));
     }
   }, [dispatch, isReviewPosted]);
 
   const handleFieldChange = (
     evt: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
-    const { name, value } = evt.target;
+    const { name, value } = evt.currentTarget;
     setNewReview({ ...newReview, [name]: value });
   };
 
   const handleFormSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
-    if (newReview.rating && newReview.review.length >= 50) {
-      onReviewSubmit(Number(newReview.rating), newReview.review);
-    }
+    dispatch(
+      postNewReviewAction({
+        offerId,
+        comment: newReview.review,
+        rating: Number(newReview.rating),
+      })
+    );
   };
 
   const ratingStars = STARS.reduce(
@@ -64,11 +78,13 @@ function FormReview({ onReviewSubmit }: FormReviewProps): JSX.Element {
         key={`star-${5 - index}-input`}
         className="form__rating-input visually-hidden"
         name="rating"
-        defaultValue={5 - index}
+        value={5 - index}
         id={`${5 - index}-stars`}
         type="radio"
         onChange={handleFieldChange}
         data-testid={`form-review-rating-${5 - index}-input`}
+        disabled={!!isReviewPosting}
+        checked={5 - index === Number(newReview.rating)}
       />,
       <label
         key={`star-${5 - index}-label`}
@@ -106,6 +122,7 @@ function FormReview({ onReviewSubmit }: FormReviewProps): JSX.Element {
         defaultValue={newReview.review}
         onChange={handleFieldChange}
         data-testid="form-review-text"
+        disabled={!!isReviewPosting}
       />
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
@@ -116,7 +133,7 @@ function FormReview({ onReviewSubmit }: FormReviewProps): JSX.Element {
         <button
           className="reviews__submit form__submit button"
           type="submit"
-          disabled={!isSubmitAvailable}
+          disabled={!isSubmitAvailable || !!isReviewPosting}
           data-testid="form-review-submit"
         >
           Submit

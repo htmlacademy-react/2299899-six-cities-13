@@ -16,7 +16,7 @@ describe('Component: OfferPage', () => {
   });
 
   it('should render Loading Component when offer is loading', () => {
-    mockState[NameSpace.Data].isOfferLoading = true;
+    mockState[NameSpace.Data].isLoading = true;
     const { withStoreComponent } = withStore(
       withHistory(<OfferPage />),
       mockState
@@ -28,7 +28,7 @@ describe('Component: OfferPage', () => {
   });
 
   it('should render correctly when offer is loaded', () => {
-    mockState[NameSpace.Data].isOfferLoading = false;
+    mockState[NameSpace.Data].isLoading = false;
     const { withStoreComponent } = withStore(
       withHistory(<OfferPage />),
       mockState

@@ -24,8 +24,8 @@ export type DataProcess = {
   offer: Offer | null;
   reviews: Review[];
   nearOffers: Offer[];
-  isOffersLoading: boolean;
-  isOfferLoading: boolean;
-  isPosted: boolean;
+  isLoading: boolean;
+  isReviewPosting: boolean;
+  isReviewPosted: boolean | null;
   favorites: Offer[];
 };

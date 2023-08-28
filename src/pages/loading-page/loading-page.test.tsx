@@ -4,7 +4,7 @@ import LoadingPage from './loading-page';
 
 describe('Component: LoadingPage', () => {
   it('should render correctly', () => {
-    const expectedText = /Loading/i;
+    const expectedText = /Loading.../i;
 
     render(<LoadingPage />);
 

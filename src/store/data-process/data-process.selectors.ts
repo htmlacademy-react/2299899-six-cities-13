@@ -7,25 +7,26 @@ import {
   selectCurrentCity,
   selectCurrentSort,
 } from '../app-process/app-process.selectors';
-import * as options from './sort-options';
+import * as options from '../../utils/sort-options';
 import { GroupedOffers } from '../../types/grouped-offers';
+import { random } from 'faker';
 
 export const selectOffers = (state: Pick<State, NameSpace.Data>): Offer[] =>
   state[NameSpace.Data].offers;
-export const selectIsOffersLoading = (
-  state: Pick<State, NameSpace.Data>
-): boolean => state[NameSpace.Data].isOffersLoading;
+export const selectIsLoading = (state: Pick<State, NameSpace.Data>): boolean =>
+  state[NameSpace.Data].isLoading;
 export const selectOffer = (state: Pick<State, NameSpace.Data>): Offer | null =>
   state[NameSpace.Data].offer;
-export const selectIsOfferLoading = (
-  state: Pick<State, NameSpace.Data>
-): boolean => state[NameSpace.Data].isOfferLoading;
 export const selectReviews = (state: Pick<State, NameSpace.Data>): Review[] =>
   state[NameSpace.Data].reviews;
 export const selectNearOffers = (state: Pick<State, NameSpace.Data>): Offer[] =>
   state[NameSpace.Data].nearOffers;
-export const selectIsPosted = (state: Pick<State, NameSpace.Data>): boolean =>
-  state[NameSpace.Data].isPosted;
+export const selectIsReviewPosting = (
+  state: Pick<State, NameSpace.Data>
+): boolean => state[NameSpace.Data].isReviewPosting;
+export const selectIsReviewPosted = (
+  state: Pick<State, NameSpace.Data>
+): boolean | null => state[NameSpace.Data].isReviewPosted;
 export const selectFavorites = (state: Pick<State, NameSpace.Data>): Offer[] =>
   state[NameSpace.Data].favorites;
 
@@ -56,5 +57,15 @@ export const selectGroupedFavorites = createSelector(
       groupedOffers[offer.city.name].push(offer);
     });
     return groupedOffers;
+  }
+);
+
+export const selectThreeRandomNearOffers = createSelector(
+  selectNearOffers,
+  (offers) => {
+    if (offers.length <= 3) {
+      return offers;
+    }
+    return random.arrayElements(offers, 3);
   }
 );

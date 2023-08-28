@@ -5,10 +5,13 @@ import { makeFakeReview } from '../../utils/test-mocks';
 
 describe('Component: Review', () => {
   it('should render correctly', () => {
-    const mockData = makeFakeReview();
+    const mockReview = makeFakeReview();
 
-    render(<Review review={mockData} />);
+    const { container } = render(<Review review={mockReview} />);
 
     expect(screen.getByTestId('offer-reviews-list-item')).toBeInTheDocument();
+    expect(
+      container.getElementsByClassName('reviews__user-name')[0].textContent
+    ).toBe(mockReview.user.name);
   });
 });

@@ -18,7 +18,7 @@ describe('AppProcess selectors', () => {
     expect(result).toBe(expected);
   });
 
-  it('should return "city" from state', () => {
+  it('should return "currentCity" from state', () => {
     const expected = state[NameSpace.App].currentCity;
 
     const result = selectCurrentCity(state);

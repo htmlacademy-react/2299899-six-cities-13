@@ -13,32 +13,32 @@ import {
   toggleFavoriteAction,
 } from '../../store/api-actions';
 import cn from 'classnames';
-import LoadingPage from '../loading-page/loading-page';
 import { capitalizeFirstLetter } from '../../utils/utils';
 import HeaderUser from '../../components/header-user/header-user';
 import {
-  selectIsOfferLoading,
-  selectNearOffers,
+  selectIsLoading,
   selectOffer,
+  selectThreeRandomNearOffers,
 } from '../../store/data-process/data-process.selectors';
 import { selectAuthorizationStatus } from '../../store/user-process/user-process.selectors';
 import { redirectToRoute } from '../../store/action';
+import LoadingPage from '../loading-page/loading-page';
 
 function OfferPage(): JSX.Element {
   const dispatch = useAppDispatch();
   const { id = '' } = useParams();
   const authorizationStatus = useAppSelector(selectAuthorizationStatus);
   const currentOffer = useAppSelector(selectOffer);
-  const nearOffers = useAppSelector(selectNearOffers);
-  const isOfferLoading = useAppSelector(selectIsOfferLoading);
+  const nearOffers = useAppSelector(selectThreeRandomNearOffers);
   const bookmarkRef = useRef<HTMLButtonElement>(null);
+  const isLoading = useAppSelector(selectIsLoading);
 
   useEffect(() => {
     dispatch(fetchOfferAction(id));
     dispatch(fetchNearOffersAction(id));
   }, [id, dispatch]);
 
-  if (isOfferLoading) {
+  if (isLoading) {
     return <LoadingPage />;
   }
 
@@ -61,7 +61,7 @@ function OfferPage(): JSX.Element {
     }
   };
 
-  const gallery = currentOffer.images.map((picture) => (
+  const gallery = currentOffer.images.slice(0, 6).map((picture) => (
     <div className="offer__image-wrapper" key={`${id}-gallery-${picture}`}>
       <img className="offer__image" src={picture} alt="Photo studio" />
     </div>
@@ -133,7 +133,9 @@ function OfferPage(): JSX.Element {
               <div className="offer__rating rating">
                 <div className="offer__stars rating__stars">
                   <span
-                    style={{ width: `${(currentOffer.rating / 5) * 100}%` }}
+                    style={{
+                      width: `${(Math.round(currentOffer.rating) / 5) * 100}%`,
+                    }}
                   />
                   <span className="visually-hidden">Rating</span>
                 </div>
@@ -186,9 +188,9 @@ function OfferPage(): JSX.Element {
                   <span className="offer__user-name">
                     {currentOffer.host.name}
                   </span>
-                  <span className="offer__user-status">
-                    {currentOffer.host.isPro && 'Pro'}
-                  </span>
+                  {currentOffer.host.isPro && (
+                    <span className="offer__user-status">Pro</span>
+                  )}
                 </div>
                 <div className="offer__description">
                   <p className="offer__text">{currentOffer.description}</p>
@@ -203,6 +205,7 @@ function OfferPage(): JSX.Element {
               offers={nearOffers}
               height="579px"
               zoom={currentOffer.city.location.zoom}
+              currentOffer={currentOffer}
             />
           </section>
         </section>
@@ -211,7 +214,7 @@ function OfferPage(): JSX.Element {
             <h2 className="near-places__title">
               Other places in the neighbourhood
             </h2>
-            <CardMainList page="offer" />
+            <CardMainList page={AppRoute.Offer} />
           </section>
         </div>
       </main>

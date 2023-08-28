@@ -7,17 +7,19 @@ import { toggleFavoriteAction } from '../../store/api-actions';
 import { selectAuthorizationStatus } from '../../store/user-process/user-process.selectors';
 import { AppRoute, AuthorizationStatus } from '../../const';
 import { redirectToRoute } from '../../store/action';
+import { capitalizeFirstLetter } from '../../utils/utils';
 
 export type MouseOverLeaveHandler = (evt: MouseEvent<HTMLElement>) => void;
 
 type CardMainProps = {
   offer: Offer;
+  className: string;
   mouseOverHandler?: MouseOverLeaveHandler;
   mouseLeaveHandler?: MouseOverLeaveHandler;
 };
 
 function CardMain(props: CardMainProps): JSX.Element {
-  const { offer } = props;
+  const { offer, className } = props;
   const { mouseOverHandler, mouseLeaveHandler } = props;
   const dispatch = useAppDispatch();
   const [isFavorite, setIsFavorite] = useState(offer.isFavorite);
@@ -37,7 +39,7 @@ function CardMain(props: CardMainProps): JSX.Element {
 
   return (
     <article
-      className="cities__card place-card"
+      className={`place-card ${className}__card`}
       data-id={offer.id}
       onMouseOver={mouseOverHandler}
       onMouseLeave={mouseLeaveHandler}
@@ -47,7 +49,7 @@ function CardMain(props: CardMainProps): JSX.Element {
           <span>Premium</span>
         </div>
       )}
-      <div className="cities__image-wrapper place-card__image-wrapper">
+      <div className={`place-card__image-wrapper ${className}__image-wrapper`}>
         {!!offer.previewImage && (
           <Link to={`/offer/${offer.id}`}>
             <img
@@ -84,14 +86,16 @@ function CardMain(props: CardMainProps): JSX.Element {
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: `${(offer.rating / 5) * 100}%` }} />
+            <span
+              style={{ width: `${(Math.round(offer.rating) / 5) * 100}%` }}
+            />
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
         <h2 className="place-card__name">
           <Link to={`offer/${offer.id}`}>{offer.title}</Link>
         </h2>
-        <p className="place-card__type">{offer.type}</p>
+        <p className="place-card__type">{capitalizeFirstLetter(offer.type)}</p>
       </div>
     </article>
   );

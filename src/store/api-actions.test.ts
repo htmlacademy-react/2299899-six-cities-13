@@ -23,7 +23,7 @@ import {
   fetchReviewsAction,
   loginAction,
   logoutAction,
-  postNewCommentAction,
+  postNewReviewAction,
   toggleFavoriteAction,
 } from './api-actions';
 import { redirectToRoute } from './action';
@@ -347,7 +347,7 @@ describe('Api actions', () => {
   });
 
   describe('loginAction', () => {
-    it('should dispatch "loginAction.pending", "checkAuthAction.pending", "fetchOffersAction.pending", "fetchFavoritesAction.pending", "redirectToRoute", "loginAction.fulfilled",  when server response 200', async () => {
+    it('should dispatch "loginAction.pending", "redirectToRoute", "loginAction.fulfilled",  when server response 200', async () => {
       const serverReplyTest = { token: 'secret' };
       mockAxiosAdapter.onPost(APIRoute.Login).reply(200, serverReplyTest);
 
@@ -356,9 +356,6 @@ describe('Api actions', () => {
 
       expect(actions).toEqual([
         loginAction.pending.type,
-        checkAuthAction.pending.type,
-        fetchOffersAction.pending.type,
-        fetchFavoritesAction.pending.type,
         redirectToRoute.type,
         loginAction.fulfilled.type,
       ]);
@@ -389,7 +386,7 @@ describe('Api actions', () => {
   });
 
   describe('logoutAction', () => {
-    it('should dispatch "logoutAction.pending", "fetchOffersAction.pending", "logoutAction.fulfilled" when server response 204', async () => {
+    it('should dispatch "logoutAction.pending", "logoutAction.fulfilled" when server response 204', async () => {
       mockAxiosAdapter.onDelete(APIRoute.Logout).reply(204);
 
       await store.dispatch(logoutAction());
@@ -397,7 +394,6 @@ describe('Api actions', () => {
 
       expect(actions).toEqual([
         logoutAction.pending.type,
-        fetchOffersAction.pending.type,
         logoutAction.fulfilled.type,
       ]);
     });
@@ -412,7 +408,7 @@ describe('Api actions', () => {
     });
   });
 
-  describe('postNewCommentAction', () => {
+  describe('postNewReviewAction', () => {
     const serverReplyTest = makeFakeReview();
     const mockRequest = {
       offerId: '{offerId}',
@@ -420,58 +416,58 @@ describe('Api actions', () => {
       rating: datatype.number({ min: 1, max: 5 }),
     };
 
-    it('should dispatch "postNewCommentAction.pending", "postNewCommentAction.fulfilled",  when server response 201', async () => {
+    it('should dispatch "postNewReviewAction.pending", "postNewReviewAction.fulfilled",  when server response 201', async () => {
       mockAxiosAdapter
         .onPost(`${APIRoute.Reviews}/{offerId}`)
         .reply(201, serverReplyTest);
 
-      await store.dispatch(postNewCommentAction(mockRequest));
+      await store.dispatch(postNewReviewAction(mockRequest));
       const emittedActions = store.getActions();
       const extractedActionsTypes = extractActionsTypes(emittedActions);
-      const postNewCommentActionFulfilled = emittedActions.at(1) as ReturnType<
-        typeof postNewCommentAction.fulfilled
+      const postNewReviewActionFulfilled = emittedActions.at(1) as ReturnType<
+        typeof postNewReviewAction.fulfilled
       >;
 
       expect(extractedActionsTypes).toEqual([
-        postNewCommentAction.pending.type,
-        postNewCommentAction.fulfilled.type,
+        postNewReviewAction.pending.type,
+        postNewReviewAction.fulfilled.type,
       ]);
-      expect(postNewCommentActionFulfilled.payload).toEqual(serverReplyTest);
+      expect(postNewReviewActionFulfilled.payload).toEqual(serverReplyTest);
     });
 
-    it('should dispatch "postNewCommentAction.pending", "postNewCommentAction.rejected" with server response 400', async () => {
+    it('should dispatch "postNewReviewAction.pending", "postNewReviewAction.rejected" with server response 400', async () => {
       mockAxiosAdapter.onPost(`${APIRoute.Reviews}/{offerId}`).reply(400);
 
-      await store.dispatch(postNewCommentAction(mockRequest));
+      await store.dispatch(postNewReviewAction(mockRequest));
       const actions = extractActionsTypes(store.getActions());
 
       expect(actions).toEqual([
-        postNewCommentAction.pending.type,
-        postNewCommentAction.rejected.type,
+        postNewReviewAction.pending.type,
+        postNewReviewAction.rejected.type,
       ]);
     });
 
-    it('should dispatch "postNewCommentAction.pending", "postNewCommentAction.rejected" with server response 401', async () => {
+    it('should dispatch "postNewReviewAction.pending", "postNewReviewAction.rejected" with server response 401', async () => {
       mockAxiosAdapter.onPost(`${APIRoute.Reviews}/{offerId}`).reply(401);
 
-      await store.dispatch(postNewCommentAction(mockRequest));
+      await store.dispatch(postNewReviewAction(mockRequest));
       const actions = extractActionsTypes(store.getActions());
 
       expect(actions).toEqual([
-        postNewCommentAction.pending.type,
-        postNewCommentAction.rejected.type,
+        postNewReviewAction.pending.type,
+        postNewReviewAction.rejected.type,
       ]);
     });
 
-    it('should dispatch "postNewCommentAction.pending", "postNewCommentAction.rejected" with server response 404', async () => {
+    it('should dispatch "postNewReviewAction.pending", "postNewReviewAction.rejected" with server response 404', async () => {
       mockAxiosAdapter.onPost(`${APIRoute.Reviews}/{offerId}`).reply(404);
 
-      await store.dispatch(postNewCommentAction(mockRequest));
+      await store.dispatch(postNewReviewAction(mockRequest));
       const actions = extractActionsTypes(store.getActions());
 
       expect(actions).toEqual([
-        postNewCommentAction.pending.type,
-        postNewCommentAction.rejected.type,
+        postNewReviewAction.pending.type,
+        postNewReviewAction.rejected.type,
       ]);
     });
   });

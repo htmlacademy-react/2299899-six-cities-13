@@ -40,7 +40,7 @@ function FavoritesPage(): JSX.Element {
       </header>
       <main
         className={cn('page__main page__main--favorites', {
-          'page__main--favorites-empty': offersCount === 0,
+          'page__main--favorites-empty page--favorites-empty': offersCount === 0,
         })}
       >
         <div className="page__favorites-container container">

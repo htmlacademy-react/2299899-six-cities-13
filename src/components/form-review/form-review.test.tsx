@@ -1,24 +1,29 @@
 import { describe } from 'vitest';
-import { extractActionsTypes, makeFakeState } from '../../utils/test-mocks';
+import {
+  extractActionsTypes,
+  makeFakeOffer,
+  makeFakeReview,
+  makeFakeState,
+} from '../../utils/test-mocks';
 import { withStore } from '../../utils/test-mocks-components';
-import { NameSpace, STARS } from '../../const';
+import { APIRoute, STARS } from '../../const';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { State } from '../../types/state';
 import FormReview from './form-review';
-import { setIsPosted } from '../../store/data-process/data-process.slice';
+import { postNewReviewAction } from '../../store/api-actions';
 
-describe('Component: MainCardsBlock', () => {
+describe('Component: FormReview', () => {
   let mockState: State;
+  const mockOffer = makeFakeOffer();
 
   beforeEach(() => {
     mockState = makeFakeState();
   });
 
   it('should render correctly', () => {
-    const onReviewSubmit = vi.fn();
     const { withStoreComponent } = withStore(
-      <FormReview onReviewSubmit={onReviewSubmit} />,
+      <FormReview offerId={mockOffer.id} />,
       mockState
     );
 
@@ -36,15 +41,19 @@ describe('Component: MainCardsBlock', () => {
     expect(screen.getByTestId('form-review-submit')).toBeDisabled();
   });
 
-  it('should dispatch "setIsPosted" when click on submit button and "isPosted" is true', async () => {
-    const onReviewSubmit = vi.fn();
+  it('should dispatch "postNewReviewAction.pending", "postNewReviewAction.fulfilled" when click on submit button', async () => {
     const testDescription =
       'We loved it so much, the house, the veiw, the location just great.';
-    mockState[NameSpace.Data].isPosted = true;
-    const { withStoreComponent, mockStore } = withStore(
-      <FormReview onReviewSubmit={onReviewSubmit} />,
+    const { withStoreComponent, mockStore, mockAxiosAdapter } = withStore(
+      <FormReview offerId={mockOffer.id} />,
       mockState
     );
+    mockAxiosAdapter
+      .onPost(`${APIRoute.Reviews}/${mockOffer.id}`, {
+        comment: testDescription,
+        rating: 5,
+      })
+      .reply(200, makeFakeReview());
 
     render(withStoreComponent);
     await userEvent.type(
@@ -59,7 +68,9 @@ describe('Component: MainCardsBlock', () => {
     expect(screen.getByTestId('form-review-rating-5-input')).toBeChecked();
     expect(screen.getByTestId('form-review-text')).toHaveValue(testDescription);
     expect(screen.getByTestId('form-review-submit')).not.toBeDisabled();
-    expect(onReviewSubmit).toBeCalledTimes(1);
-    expect(actions).toEqual([setIsPosted.type]);
+    expect(actions).toEqual([
+      postNewReviewAction.pending.type,
+      postNewReviewAction.fulfilled.type,
+    ]);
   });
 });

@@ -16,6 +16,18 @@ describe('Component: MainPage', () => {
     mockState[NameSpace.Data].offers = [mockOffer];
   });
 
+  it('should render "Loading" when offers are loading', () => {
+    mockState[NameSpace.Data].isLoading = true;
+    const { withStoreComponent } = withStore(
+      withHistory(<MainPage />),
+      mockState
+    );
+
+    render(withStoreComponent);
+
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
+  });
+
   it('should render correctly with filtered offers', () => {
     mockState[NameSpace.App].currentCity = mockOffer.city.name;
     const { withStoreComponent } = withStore(
