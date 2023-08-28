@@ -34,23 +34,36 @@ function FormReview({ offerId }: FormReviewProps): JSX.Element {
   const [isSubmitAvailable, setIsSubmitAvailable] = useState(false);
 
   useEffect(() => {
-    if (
-      newReview.rating &&
-      newReview.review.length >= 50 &&
-      newReview.review.length <= 300
-    ) {
-      setIsSubmitAvailable(true);
-    } else {
-      setIsSubmitAvailable(false);
+    let isMounted = true;
+
+    if (isMounted) {
+      const check =
+        !!newReview.rating &&
+        newReview.review.length >= 50 &&
+        newReview.review.length <= 300;
+
+      setIsSubmitAvailable(check);
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [newReview]);
 
   useEffect(() => {
-    if (isReviewPosted) {
-      formRef.current?.reset();
-      setNewReview(FORM_DEFAULT_STATE);
-      dispatch(setIsReviewPosted(null));
+    let isMounted = true;
+
+    if (isMounted) {
+      if (isReviewPosted) {
+        formRef.current?.reset();
+        setNewReview(FORM_DEFAULT_STATE);
+        dispatch(setIsReviewPosted(null));
+      }
     }
+
+    return () => {
+      isMounted = false;
+    };
   }, [dispatch, isReviewPosted]);
 
   const handleFieldChange = (

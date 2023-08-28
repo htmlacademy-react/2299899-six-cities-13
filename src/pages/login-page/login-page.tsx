@@ -26,7 +26,7 @@ function LoginPage(): JSX.Element {
     dispatch(redirectToRoute(AppRoute.Main));
   }
 
-  const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
+  const handleFormSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
     if (loginRef.current !== null && passwordRef.current !== null) {
       dispatch(
@@ -38,7 +38,7 @@ function LoginPage(): JSX.Element {
     }
   };
 
-  const handleRandomCityClick = () => {
+  const handleRandomCityButtonClick = () => {
     dispatch(setCurrentCity(randomCity));
   };
 
@@ -72,7 +72,7 @@ function LoginPage(): JSX.Element {
               className="login__form form"
               action="#"
               method="post"
-              onSubmit={handleSubmit}
+              onSubmit={handleFormSubmit}
             >
               <div className="login__input-wrapper form__input-wrapper">
                 <label className="visually-hidden">E-mail</label>
@@ -111,7 +111,7 @@ function LoginPage(): JSX.Element {
           </section>
           <section
             className="locations locations--login locations--current"
-            onClick={handleRandomCityClick}
+            onClick={handleRandomCityButtonClick}
           >
             <div className="locations__item">
               <span className="locations__item-link">
