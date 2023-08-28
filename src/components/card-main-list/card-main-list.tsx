@@ -3,9 +3,10 @@ import { MouseOverLeaveHandler } from '../../components/card-main/card-main';
 import cn from 'classnames';
 import { useAppSelector } from '../../hooks';
 import {
-  selectNearOffers,
   selectSortedOffers,
+  selectThreeRandomNearOffers,
 } from '../../store/data-process/data-process.selectors';
+import { AppRoute } from '../../const';
 
 type CardMainListProps = {
   page: string;
@@ -17,15 +18,15 @@ function CardMainList(props: CardMainListProps): JSX.Element {
   const { page } = props;
   const { onMouseOverCard, onMouseLeaveCard } = props;
 
-  const selector = page === 'main' ? selectSortedOffers : selectNearOffers;
+  const selector =
+    page === AppRoute.Main ? selectSortedOffers : selectThreeRandomNearOffers;
   const offers = useAppSelector(selector);
 
   return (
     <div
       className={cn('places__list', {
-        'cities__places-list': page === 'main',
-        'tabs__content': page === 'main',
-        'near-places__list': page === 'offer',
+        'cities__places-list tabs__content': page === AppRoute.Main,
+        'near-places__list': page === AppRoute.Offer,
       })}
     >
       {offers.map((offer) => (
@@ -34,6 +35,7 @@ function CardMainList(props: CardMainListProps): JSX.Element {
           offer={offer}
           mouseOverHandler={onMouseOverCard}
           mouseLeaveHandler={onMouseLeaveCard}
+          className={page === AppRoute.Main ? 'cities' : 'near-places'}
         />
       ))}
     </div>

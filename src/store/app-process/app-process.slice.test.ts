@@ -2,7 +2,7 @@ import { describe } from 'vitest';
 import {
   appProcess,
   setCardUnderMouse,
-  setCity,
+  setCurrentCity,
   setCurrentSort,
 } from './app-process.slice';
 import { AppProcess } from '../../types/state';
@@ -41,10 +41,10 @@ describe('AppProcess slice', () => {
     expect(result.currentSort).toBe(expected);
   });
 
-  it('should set "city" in state', () => {
+  it('should set "currentCity" in state', () => {
     const expected = random.arrayElement(CITIES);
 
-    const result = appProcess.reducer(undefined, setCity(expected));
+    const result = appProcess.reducer(undefined, setCurrentCity(expected));
 
     expect(result.currentCity).toBe(expected);
   });

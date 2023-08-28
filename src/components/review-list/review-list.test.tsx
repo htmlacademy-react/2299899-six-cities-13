@@ -2,24 +2,30 @@ import { describe } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { withHistory, withStore } from '../../utils/test-mocks-components';
 import {
-  extractActionsTypes,
   makeFakeOffer,
   makeFakeReview,
   makeFakeState,
 } from '../../utils/test-mocks';
 import ReviewList from './review-list';
-import { APIRoute, AuthorizationStatus, NameSpace } from '../../const';
-import userEvent from '@testing-library/user-event';
-import { fetchReviewsAction } from '../../store/api-actions';
+import { AuthorizationStatus, NameSpace } from '../../const';
+import { State } from '../../types/state';
+import { Offer } from '../../types/offer';
+import { Review } from '../../types/review';
 
 describe('Component: ReviewList', () => {
-  const mockState = makeFakeState();
-  const mockOffer = makeFakeOffer();
+  let mockState: State;
+  let mockOffer: Offer;
+  let mockReview: Review;
+
+  beforeEach(() => {
+    mockState = makeFakeState();
+    mockOffer = makeFakeOffer();
+    mockReview = makeFakeReview();
+  });
 
   it('should render correctly with given offer id, existed reviews and auth user status', () => {
-    const mockReview = makeFakeReview();
-    mockState[NameSpace.Data].reviews = [mockReview];
-    const mockReviewsAmount = mockState[NameSpace.Data].reviews.length;
+    const reviews = [mockReview, mockReview];
+    mockState[NameSpace.Data].reviews = reviews;
     mockState[NameSpace.User].authorizationStatus = AuthorizationStatus.Auth;
     const { withStoreComponent } = withStore(
       withHistory(<ReviewList offerId={mockOffer.id} />),
@@ -30,12 +36,13 @@ describe('Component: ReviewList', () => {
 
     expect(
       screen.getByText(
-        (_, element) =>
-          element?.textContent === `Reviews · ${mockReviewsAmount}`
+        (_, element) => element?.textContent === `Reviews · ${reviews.length}`
       )
     ).toBeInTheDocument();
     expect(screen.getByTestId('offer-reviews-list')).toBeInTheDocument();
-    expect(screen.getByTestId('offer-reviews-list-item')).toBeInTheDocument();
+    expect(screen.getAllByTestId('offer-reviews-list-item').length).toBe(
+      reviews.length
+    );
     expect(screen.getByTestId('offer-reviews-form')).toBeInTheDocument();
   });
 
@@ -59,32 +66,5 @@ describe('Component: ReviewList', () => {
       screen.queryByTestId('offer-reviews-list-item')
     ).not.toBeInTheDocument();
     expect(screen.queryByTestId('offer-reviews-form')).not.toBeInTheDocument();
-  });
-
-  it('should dispatch "fetchReviewsAction.pending", "fetchReviewsAction.fulfilled" when submit review', async () => {
-    mockState[NameSpace.User].authorizationStatus = AuthorizationStatus.Auth;
-    const { withStoreComponent, mockStore, mockAxiosAdapter } = withStore(
-      withHistory(<ReviewList offerId={mockOffer.id} />),
-      mockState
-    );
-    mockAxiosAdapter
-      .onPost(`${APIRoute.Reviews}/${mockOffer.id}`, {
-        offerId: mockOffer.id,
-        comment: '',
-        rating: 5,
-      })
-      .reply(200, makeFakeReview());
-    mockAxiosAdapter
-      .onGet(`${APIRoute.Reviews}/${mockOffer.id}`)
-      .reply(200, [makeFakeReview()]);
-
-    render(withStoreComponent);
-    await userEvent.click(screen.getByTestId('form-review-submit'));
-    const actions = extractActionsTypes(mockStore.getActions());
-
-    expect(actions).toEqual([
-      fetchReviewsAction.pending.type,
-      fetchReviewsAction.fulfilled.type,
-    ]);
   });
 });

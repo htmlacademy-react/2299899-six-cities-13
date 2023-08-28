@@ -4,7 +4,7 @@ import CardMainList from './card-main-list';
 import { render } from '@testing-library/react';
 import { State } from '../../types/state';
 import { makeFakeOffer, makeFakeState } from '../../utils/test-mocks';
-import { NameSpace } from '../../const';
+import { AppRoute, NameSpace } from '../../const';
 
 describe('Component: CardMainList', () => {
   let mockState: State;
@@ -13,7 +13,7 @@ describe('Component: CardMainList', () => {
     mockState = makeFakeState();
   });
 
-  it('should render correctly on main page', () => {
+  it('should render correctly on "MainPage"', () => {
     const onMouseOverCard = vi.fn();
     const onMouseLeaveCard = vi.fn();
     const offers = mockState[NameSpace.Data].offers;
@@ -24,7 +24,7 @@ describe('Component: CardMainList', () => {
     const { withStoreComponent } = withStore(
       withHistory(
         <CardMainList
-          page="main"
+          page={AppRoute.Main}
           onMouseOverCard={onMouseOverCard}
           onMouseLeaveCard={onMouseLeaveCard}
         />
@@ -45,10 +45,10 @@ describe('Component: CardMainList', () => {
     );
   });
 
-  it('should render correctly on offer page', () => {
+  it('should render correctly on "OfferPage"', () => {
     mockState[NameSpace.Data].nearOffers = [makeFakeOffer(), makeFakeOffer()];
     const { withStoreComponent } = withStore(
-      withHistory(<CardMainList page="offer" />),
+      withHistory(<CardMainList page={AppRoute.Offer} />),
       mockState
     );
 

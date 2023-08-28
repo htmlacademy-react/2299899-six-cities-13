@@ -4,10 +4,17 @@ import { withHistory, withStore } from '../../utils/test-mocks-components';
 import { makeFakeOffer, makeFakeState } from '../../utils/test-mocks';
 import { NameSpace } from '../../const';
 import FavoritesPage from './favorites-page';
+import { State } from '../../types/state';
+import { Offer } from '../../types/offer';
 
 describe('Component: FavoritesPage', () => {
-  const mockOffer = makeFakeOffer();
-  const mockState = makeFakeState();
+  let mockState: State;
+  let mockOffer: Offer;
+
+  beforeEach(() => {
+    mockOffer = makeFakeOffer();
+    mockState = makeFakeState();
+  });
 
   it('should render correctly with existed favorites', () => {
     mockState[NameSpace.Data].favorites = [mockOffer];
@@ -18,6 +25,9 @@ describe('Component: FavoritesPage', () => {
 
     render(withStoreComponent);
 
+    expect(screen.getByRole('main')).not.toHaveClass(
+      'page__main--favorites-empty'
+    );
     expect(screen.getByText(mockOffer.city.name)).toBeInTheDocument();
     expect(screen.getByText(mockOffer.title)).toBeInTheDocument();
   });
@@ -31,6 +41,7 @@ describe('Component: FavoritesPage', () => {
 
     render(withStoreComponent);
 
+    expect(screen.getByRole('main')).toHaveClass('page__main--favorites-empty');
     expect(screen.getByText('Favorites (empty)')).toBeInTheDocument();
     expect(screen.getByText('Nothing yet saved.')).toBeInTheDocument();
     expect(

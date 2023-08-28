@@ -4,17 +4,33 @@ import { AppRoute } from '../../const';
 import Map from '../../components/map/map';
 import CitiesList from '../../components/cities-list/cities-list';
 import HeaderUser from '../../components/header-user/header-user';
-import { useAppSelector } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { selectCurrentCity } from '../../store/app-process/app-process.selectors';
 import cn from 'classnames';
 import MainCardsBlock from '../../components/main-cards-block/main-cards-block';
 import MainCardsBlockEmpty from '../../components/main-cards-block-empty/main-cards-block-empty';
-import { selectFilteredOffers } from '../../store/data-process/data-process.selectors';
+import {
+  selectFilteredOffers,
+  selectIsLoading,
+} from '../../store/data-process/data-process.selectors';
+import { useEffect } from 'react';
+import { fetchOffersAction } from '../../store/api-actions';
+import LoadingPage from '../loading-page/loading-page';
 
 function MainPage(): JSX.Element {
+  const dispatch = useAppDispatch();
   const currentCity = useAppSelector(selectCurrentCity);
   const offers = useAppSelector(selectFilteredOffers);
+  const isLoading = useAppSelector(selectIsLoading);
   const offersCount = offers.length;
+
+  useEffect(() => {
+    dispatch(fetchOffersAction());
+  }, [dispatch]);
+
+  if (isLoading) {
+    return <LoadingPage />;
+  }
 
   return (
     <div

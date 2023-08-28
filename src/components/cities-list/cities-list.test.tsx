@@ -10,7 +10,7 @@ import CitiesList from './cities-list';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import {
-  setCity,
+  setCurrentCity,
   setCurrentSort,
 } from '../../store/app-process/app-process.slice';
 import { State } from '../../types/state';
@@ -42,7 +42,7 @@ describe('Component: CitiesList', () => {
     ).toBe(mockCity.name);
   });
 
-  it('should dispatch "setCity", "setCurrentSort" when city is changed', async () => {
+  it('should dispatch "setCurrentCity", "setCurrentSort" when city is changed', async () => {
     mockState[NameSpace.App].currentCity = CITIES[0];
     const { withStoreComponent, mockStore } = withStore(
       <CitiesList currentCity={CITIES[0]} />
@@ -52,6 +52,6 @@ describe('Component: CitiesList', () => {
     await userEvent.click(screen.getAllByTestId('city-item')[1]);
     const actions = extractActionsTypes(mockStore.getActions());
 
-    expect(actions).toEqual([setCity.type, setCurrentSort.type]);
+    expect(actions).toEqual([setCurrentCity.type, setCurrentSort.type]);
   });
 });

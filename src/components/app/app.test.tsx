@@ -9,14 +9,14 @@ import App from './app';
 describe('Application Routing', () => {
   let mockHistory: MemoryHistory;
   const mockState = makeFakeState();
-  mockState[NameSpace.Data].isOffersLoading = false;
+  mockState[NameSpace.Data].isLoading = false;
   mockState[NameSpace.User].authorizationStatus = AuthorizationStatus.NoAuth;
 
   beforeEach(() => {
     mockHistory = createMemoryHistory();
   });
 
-  it('should render MainPage when user navigates to "/"', () => {
+  it('should render "MainPage" when user navigates to "/"', () => {
     const { withStoreComponent } = withStore(
       withHistory(<App />, mockHistory),
       mockState
@@ -28,7 +28,7 @@ describe('Application Routing', () => {
     expect(screen.getByText(CITIES[0])).toBeInTheDocument();
   });
 
-  it('should render LoginPage when user navigates to "/login"', () => {
+  it('should render "LoginPage" when user navigates to "/login"', () => {
     const { withStoreComponent } = withStore(
       withHistory(<App />, mockHistory),
       mockState
@@ -41,7 +41,7 @@ describe('Application Routing', () => {
     expect(screen.getByText('Password')).toBeInTheDocument();
   });
 
-  it('should render OfferPage when user navigates to "/offer/:id"', () => {
+  it('should render "OfferPage" when user navigates to "/offer/:id"', () => {
     const { withStoreComponent } = withStore(
       withHistory(<App />, mockHistory),
       mockState
@@ -60,7 +60,7 @@ describe('Application Routing', () => {
     ).toBeInTheDocument();
   });
 
-  it('should render FavoritesPage when user navigates to "/favorites"', () => {
+  it('should render "FavoritesPage" when user navigates to "/favorites"', () => {
     mockState[NameSpace.User].authorizationStatus = AuthorizationStatus.Auth;
     const { withStoreComponent } = withStore(
       withHistory(<App />, mockHistory),
@@ -78,7 +78,7 @@ describe('Application Routing', () => {
     ).toBeInTheDocument();
   });
 
-  it('should render NotFoundPage when user navigates to non-existing route', () => {
+  it('should render "NotFoundPage" when user navigates to non-existing route', () => {
     const { withStoreComponent } = withStore(
       withHistory(<App />, mockHistory),
       mockState

@@ -51,3 +51,5 @@ export const SORT_OPTIONS = [
 export const DateTimeFormat = {
   COMMENT_DATE: 'MMMM YYYY',
 };
+
+export const PASSWORD_RULE = '^(?:[0-9]+[a-zA-Z]|[a-zA-Z]+[0-9])[0-9a-zA-Z]*$';

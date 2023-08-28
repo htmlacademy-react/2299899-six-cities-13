@@ -1,12 +1,12 @@
 import { describe } from 'vitest';
-import { dataProcess, setIsPosted } from './data-process.slice';
+import { dataProcess, setIsReviewPosted } from './data-process.slice';
 import {
   fetchFavoritesAction,
   fetchNearOffersAction,
   fetchOfferAction,
   fetchOffersAction,
   fetchReviewsAction,
-  postNewCommentAction,
+  postNewReviewAction,
   toggleFavoriteAction,
 } from '../api-actions';
 import { Offer } from '../../types/offer';
@@ -19,13 +19,13 @@ describe('DataProcess slice', () => {
     offer: null,
     reviews: [],
     nearOffers: [],
-    isOffersLoading: false,
-    isOfferLoading: false,
-    isPosted: false,
+    isLoading: false,
+    isReviewPosting: false,
+    isReviewPosted: null,
     favorites: [],
   };
-  const offerTest = makeFakeOffer();
-  const reviewTest = makeFakeReview();
+  const mockOffer = makeFakeOffer();
+  const mockReview = makeFakeReview();
 
   it('should return initial state with empty action', () => {
     const emptyAction = { type: '' };
@@ -46,9 +46,9 @@ describe('DataProcess slice', () => {
   it('should set "isPosted" in state', () => {
     const expected = datatype.boolean();
 
-    const result = dataProcess.reducer(undefined, setIsPosted(expected));
+    const result = dataProcess.reducer(undefined, setIsReviewPosted(expected));
 
-    expect(result.isPosted).toBe(expected);
+    expect(result.isReviewPosted).toBe(expected);
   });
 
   it('should set "isOffersLoading" to "true" with "fetchOffersAction.pending"', () => {
@@ -56,80 +56,80 @@ describe('DataProcess slice', () => {
 
     const result = dataProcess.reducer(undefined, fetchOffersAction.pending);
 
-    expect(result.isOffersLoading).toBe(expected);
+    expect(result.isLoading).toBe(expected);
   });
 
-  it('should set "isOffersLoading" to "false", "offers" to payload with "fetchOffersAction.fulfilled"', () => {
+  it('should set "isLoading" to "false", "offers" to payload with "fetchOffersAction.fulfilled"', () => {
     const expected = {
       ...initialState,
-      isOffersLoading: false,
-      offers: [offerTest],
+      isLoading: false,
+      offers: [mockOffer],
     };
 
     const result = dataProcess.reducer(
       undefined,
-      fetchOffersAction.fulfilled([offerTest], '', undefined)
+      fetchOffersAction.fulfilled([mockOffer], '', undefined)
     );
 
     expect(result).toEqual(expected);
   });
 
-  it('should set "isOfferLoading" to "true" with "fetchOfferAction.pending"', () => {
+  it('should set "isLoading" to "true" with "fetchOfferAction.pending"', () => {
     const expected = true;
 
     const result = dataProcess.reducer(undefined, fetchOfferAction.pending);
 
-    expect(result.isOfferLoading).toBe(expected);
+    expect(result.isLoading).toBe(expected);
   });
 
-  it('should set "isOfferLoading" to "false", "offer" to payload with "fetchOfferAction.fulfilled"', () => {
+  it('should set "isLoading" to "false", "offer" to payload with "fetchOfferAction.fulfilled"', () => {
     const expected = {
       ...initialState,
-      isOfferLoading: false,
-      offer: offerTest,
+      isLoading: false,
+      offer: mockOffer,
     };
 
     const result = dataProcess.reducer(
       undefined,
-      fetchOfferAction.fulfilled(offerTest, '', offerTest.id)
+      fetchOfferAction.fulfilled(mockOffer, '', mockOffer.id)
     );
 
     expect(result).toEqual(expected);
   });
 
   it('should set "reviews" to payload with "fetchReviewsAction.fulfilled"', () => {
-    const expected = [reviewTest];
+    const expected = [mockReview];
 
     const result = dataProcess.reducer(
       undefined,
-      fetchReviewsAction.fulfilled([reviewTest], '', offerTest.id)
+      fetchReviewsAction.fulfilled([mockReview], '', mockOffer.id)
     );
 
     expect(result.reviews).toEqual(expected);
   });
 
   it('should set "nearOffers" to payload with "fetchNearOffersAction.fulfilled"', () => {
-    const expected = [offerTest];
+    const expected = [mockOffer];
 
     const result = dataProcess.reducer(
       undefined,
-      fetchNearOffersAction.fulfilled([offerTest], '', offerTest.id)
+      fetchNearOffersAction.fulfilled([mockOffer], '', mockOffer.id)
     );
 
     expect(result.nearOffers).toEqual(expected);
   });
 
-  it('should add new review to "reviews", set "isPosted" to "true" with "postNewCommentAction.fulfilled"', () => {
+  it('should add new review to "reviews", set "isReviewPosted" to "true" with "postNewReviewAction.fulfilled"', () => {
     const expected = {
       ...initialState,
-      reviews: [...initialState.reviews, reviewTest],
-      isPosted: true,
+      reviews: [...initialState.reviews, mockReview],
+      isReviewPosted: true,
     };
 
     const result = dataProcess.reducer(
       undefined,
-      postNewCommentAction.fulfilled(reviewTest, '', {
-        offerId: offerTest.id,
+      postNewReviewAction.fulfilled(mockReview, '', {
+        offerId: mockOffer.id,
         comment: '',
         rating: 5,
       })
@@ -139,11 +139,11 @@ describe('DataProcess slice', () => {
   });
 
   it('should set "favorites" to payload with "fetchFavoritesAction.fulfilled"', () => {
-    const expected = [offerTest];
+    const expected = [mockOffer];
 
     const result = dataProcess.reducer(
       undefined,
-      fetchFavoritesAction.fulfilled([offerTest], '', undefined)
+      fetchFavoritesAction.fulfilled([mockOffer], '', undefined)
     );
 
     expect(result.favorites).toEqual(expected);
@@ -154,9 +154,9 @@ describe('DataProcess slice', () => {
 
     const result = dataProcess.reducer(
       undefined,
-      toggleFavoriteAction.fulfilled(offerTest, '', {
-        offerId: offerTest.id,
-        status: Number(!offerTest.isFavorite),
+      toggleFavoriteAction.fulfilled(mockOffer, '', {
+        offerId: mockOffer.id,
+        status: Number(!mockOffer.isFavorite),
       })
     );
 

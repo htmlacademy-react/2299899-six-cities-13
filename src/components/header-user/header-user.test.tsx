@@ -10,7 +10,7 @@ import {
 } from '../../utils/test-mocks';
 import { APIRoute, AuthorizationStatus, NameSpace } from '../../const';
 import { State } from '../../types/state';
-import { fetchOffersAction, logoutAction } from '../../store/api-actions';
+import { logoutAction } from '../../store/api-actions';
 import userEvent from '@testing-library/user-event';
 
 describe('Component: HeaderUser', () => {
@@ -51,7 +51,7 @@ describe('Component: HeaderUser', () => {
     ).toBe(`${mockState[NameSpace.Data].favorites.length}`);
   });
 
-  it('should dispatch "logoutAction.pending", "fetchOffersAction.pending", "logoutAction.fulfilled", "fetchOffersAction.fulfilled" when clicked on "Sign out" button', async () => {
+  it('should dispatch "logoutAction.pending", "logoutAction.fulfilled" when clicked on "Sign out" button', async () => {
     mockState[NameSpace.User].authorizationStatus = AuthorizationStatus.Auth;
     const { withStoreComponent, mockStore, mockAxiosAdapter } = withStore(
       withHistory(<HeaderUser />),
@@ -66,9 +66,7 @@ describe('Component: HeaderUser', () => {
 
     expect(actions).toEqual([
       logoutAction.pending.type,
-      fetchOffersAction.pending.type,
       logoutAction.fulfilled.type,
-      fetchOffersAction.fulfilled.type,
     ]);
   });
 });

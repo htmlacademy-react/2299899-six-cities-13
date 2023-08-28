@@ -13,6 +13,7 @@ type MapProps = {
   offers: Offer[];
   height: string;
   zoom: number;
+  currentOffer?: Offer;
 };
 
 const defaultCustomIcon = new Icon({
@@ -25,7 +26,7 @@ const currentCustomIcon = new Icon({
 
 export default function Map(props: MapProps): JSX.Element {
   const { city, height, zoom } = props;
-  const { offers } = props;
+  const { offers, currentOffer } = props;
   const mapRef = useRef(null);
   const map = useMap(mapRef, city, zoom);
   const cityLat = city.location.latitude;
@@ -51,11 +52,20 @@ export default function Map(props: MapProps): JSX.Element {
           )
           .addTo(markerLayer);
       });
+
+      if (currentOffer) {
+        const marker = new Marker({
+          lat: currentOffer.location.latitude,
+          lng: currentOffer.location.longitude,
+        });
+        marker.setIcon(currentCustomIcon).addTo(markerLayer);
+      }
+
       return () => {
         map.removeLayer(markerLayer);
       };
     }
-  }, [map, offers, selectedOffer, cityLat, cityLng, zoom]);
+  }, [map, offers, selectedOffer, cityLat, cityLng, zoom, currentOffer]);
 
   return <div style={{ height }} ref={mapRef} data-testid="map"></div>;
 }

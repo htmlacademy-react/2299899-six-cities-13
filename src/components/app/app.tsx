@@ -10,22 +10,25 @@ import LoadingPage from '../../pages/loading-page/loading-page';
 import { HelmetProvider } from 'react-helmet-async';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { selectAuthorizationStatus } from '../../store/user-process/user-process.selectors';
-import { selectIsOffersLoading } from '../../store/data-process/data-process.selectors';
 import { useEffect } from 'react';
-import { checkAuthAction, fetchOffersAction } from '../../store/api-actions';
+import { checkAuthAction, fetchFavoritesAction } from '../../store/api-actions';
 
 function App(): JSX.Element {
   const dispatch = useAppDispatch();
 
   const authorizationStatus = useAppSelector(selectAuthorizationStatus);
-  const isOffersLoading = useAppSelector(selectIsOffersLoading);
 
   useEffect(() => {
-    dispatch(fetchOffersAction());
     dispatch(checkAuthAction());
   }, [dispatch]);
 
-  if (authorizationStatus === AuthorizationStatus.Unknown || isOffersLoading) {
+  useEffect(() => {
+    if (authorizationStatus === AuthorizationStatus.Auth) {
+      dispatch(fetchFavoritesAction());
+    }
+  }, [dispatch, authorizationStatus]);
+
+  if (authorizationStatus === AuthorizationStatus.Unknown) {
     return <LoadingPage />;
   }
   return (

@@ -4,6 +4,7 @@ import CardMainList from '../card-main-list/card-main-list';
 import { MouseOverLeaveHandler } from '../card-main/card-main';
 import SortOptions from '../sort-options/sort-options';
 import { setCardUnderMouse } from '../../store/app-process/app-process.slice';
+import { AppRoute } from '../../const';
 
 type MainCardsBlockProps = {
   offersCount: number;
@@ -34,14 +35,18 @@ export default function MainCardsBlock(
   );
 
   return (
-    <section className="cities__places places" data-testid="main-page-offers-block">
+    <section
+      className="cities__places places"
+      data-testid="main-page-offers-block"
+    >
       <h2 className="visually-hidden">Places</h2>
       <b className="places__found">
-        {offersCount} places to stay in {currentCity}
+        {offersCount} place{offersCount >= 2 ? 's' : ''} to stay in{' '}
+        {currentCity}
       </b>
       <SortOptions />
       <CardMainList
-        page="main"
+        page={AppRoute.Main}
         onMouseOverCard={onMouseOverCard}
         onMouseLeaveCard={onMouseLeaveCard}
       />

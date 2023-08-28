@@ -1,15 +1,30 @@
 import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
-import { AppRoute } from '../../const';
+import {
+  AppRoute,
+  AuthorizationStatus,
+  CITIES,
+  PASSWORD_RULE,
+} from '../../const';
 import { FormEvent, useRef } from 'react';
-import { useAppDispatch } from '../../hooks';
+import { useAppDispatch, useAppSelector } from '../../hooks';
 import { loginAction } from '../../store/api-actions';
+import { selectAuthorizationStatus } from '../../store/user-process/user-process.selectors';
+import { redirectToRoute } from '../../store/action';
+import { random } from 'faker';
+import { setCurrentCity } from '../../store/app-process/app-process.slice';
 
 function LoginPage(): JSX.Element {
   const loginRef = useRef<HTMLInputElement | null>(null);
   const passwordRef = useRef<HTMLInputElement | null>(null);
+  const randomCity = random.arrayElement(CITIES);
 
   const dispatch = useAppDispatch();
+  const authorizationStatus = useAppSelector(selectAuthorizationStatus);
+
+  if (authorizationStatus === AuthorizationStatus.Auth) {
+    dispatch(redirectToRoute(AppRoute.Main));
+  }
 
   const handleSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();
@@ -22,6 +37,11 @@ function LoginPage(): JSX.Element {
       );
     }
   };
+
+  const handleRandomCityClick = () => {
+    dispatch(setCurrentCity(randomCity));
+  };
+
   return (
     <div className="page page--gray page--login">
       <Helmet>
@@ -74,6 +94,8 @@ function LoginPage(): JSX.Element {
                   type="password"
                   name="password"
                   placeholder="Password"
+                  pattern={PASSWORD_RULE}
+                  title="Password must contain a one digit and a one letter"
                   required
                   data-testid="passwordElement"
                 />
@@ -81,16 +103,20 @@ function LoginPage(): JSX.Element {
               <button
                 className="login__submit form__submit button"
                 type="submit"
+                data-testid="login-submit"
               >
                 Sign in
               </button>
             </form>
           </section>
-          <section className="locations locations--login locations--current">
+          <section
+            className="locations locations--login locations--current"
+            onClick={handleRandomCityClick}
+          >
             <div className="locations__item">
-              <a className="locations__item-link" href="#">
-                <span>Amsterdam</span>
-              </a>
+              <span className="locations__item-link">
+                <Link to={AppRoute.Main}>{randomCity}</Link>
+              </span>
             </div>
           </section>
         </div>

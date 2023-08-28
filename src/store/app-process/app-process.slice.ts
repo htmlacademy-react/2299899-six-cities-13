@@ -15,7 +15,7 @@ export const appProcess = createSlice({
     setCurrentSort: (state, action: PayloadAction<string>) => {
       state.currentSort = action.payload;
     },
-    setCity: (state, action: PayloadAction<string>) => {
+    setCurrentCity: (state, action: PayloadAction<string>) => {
       state.currentCity = action.payload;
     },
     setCardUnderMouse: (state, action: PayloadAction<string | undefined>) => {
@@ -24,5 +24,5 @@ export const appProcess = createSlice({
   },
 });
 
-export const { setCurrentSort, setCity, setCardUnderMouse } =
+export const { setCurrentSort, setCurrentCity, setCardUnderMouse } =
   appProcess.actions;

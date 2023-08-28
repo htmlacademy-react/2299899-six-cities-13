@@ -85,7 +85,7 @@ export const makeFakeUser = (): UserData => ({
 
 export const makeFakeAuthData = (): AuthData => ({
   login: internet.email(),
-  password: internet.password(),
+  password: 'i1',
 });
 
 export const makeFakeState = (initialState?: Partial<State>): State => {
@@ -98,9 +98,9 @@ export const makeFakeState = (initialState?: Partial<State>): State => {
       offer: fakeOffer1,
       reviews: [makeFakeReview()],
       nearOffers: [fakeOffer2],
-      isOffersLoading: false,
-      isOfferLoading: false,
-      isPosted: false,
+      isLoading: false,
+      isReviewPosting: false,
+      isReviewPosted: null,
       favorites: [fakeOffer1],
     },
     [NameSpace.App]: {
