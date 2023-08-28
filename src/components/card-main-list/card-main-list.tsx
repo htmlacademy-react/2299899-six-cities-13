@@ -33,8 +33,8 @@ function CardMainList(props: CardMainListProps): JSX.Element {
         <CardMain
           key={offer.id}
           offer={offer}
-          mouseOverHandler={onMouseOverCard}
-          mouseLeaveHandler={onMouseLeaveCard}
+          onMouseOverCard={onMouseOverCard}
+          onMouseLeaveCard={onMouseLeaveCard}
           className={page === AppRoute.Main ? 'cities' : 'near-places'}
         />
       ))}

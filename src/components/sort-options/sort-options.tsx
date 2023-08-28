@@ -12,6 +12,7 @@ export default function SortOptions(): JSX.Element {
   const dispatch = useAppDispatch();
 
   const handleDropdownClick = () => setIsSortClosed((state) => !state);
+
   const handleSortClick: MouseOverLeaveHandler = (evt) => {
     evt.preventDefault();
     dispatch(setCurrentSort(evt.currentTarget.innerText));

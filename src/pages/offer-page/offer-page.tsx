@@ -46,7 +46,7 @@ function OfferPage(): JSX.Element {
     return <NotFoundPage />;
   }
 
-  const handleFavoriteButoonClick = (evt: MouseEvent<HTMLButtonElement>) => {
+  const handleFavoriteButtonClick = (evt: MouseEvent<HTMLButtonElement>) => {
     evt.preventDefault();
     if (authorizationStatus !== AuthorizationStatus.Auth) {
       dispatch(redirectToRoute(AppRoute.Login));
@@ -122,7 +122,7 @@ function OfferPage(): JSX.Element {
                   type="button"
                   data-offer-id={currentOffer.id}
                   data-is-favorite={Number(currentOffer.isFavorite)}
-                  onClick={handleFavoriteButoonClick}
+                  onClick={handleFavoriteButtonClick}
                 >
                   <svg className="offer__bookmark-icon" width={31} height={33}>
                     <use xlinkHref="#icon-bookmark" />

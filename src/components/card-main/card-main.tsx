@@ -14,18 +14,18 @@ export type MouseOverLeaveHandler = (evt: MouseEvent<HTMLElement>) => void;
 type CardMainProps = {
   offer: Offer;
   className: string;
-  mouseOverHandler?: MouseOverLeaveHandler;
-  mouseLeaveHandler?: MouseOverLeaveHandler;
+  onMouseOverCard?: MouseOverLeaveHandler;
+  onMouseLeaveCard?: MouseOverLeaveHandler;
 };
 
 function CardMain(props: CardMainProps): JSX.Element {
   const { offer, className } = props;
-  const { mouseOverHandler, mouseLeaveHandler } = props;
+  const { onMouseOverCard, onMouseLeaveCard } = props;
   const dispatch = useAppDispatch();
   const [isFavorite, setIsFavorite] = useState(offer.isFavorite);
   const authorizationStatus = useAppSelector(selectAuthorizationStatus);
 
-  const handleFavoriteButoonClick = (evt: MouseEvent<HTMLButtonElement>) => {
+  const handleFavoriteButtonClick = (evt: MouseEvent<HTMLButtonElement>) => {
     evt.preventDefault();
     if (authorizationStatus !== AuthorizationStatus.Auth) {
       dispatch(redirectToRoute(AppRoute.Login));
@@ -41,8 +41,8 @@ function CardMain(props: CardMainProps): JSX.Element {
     <article
       className={`place-card ${className}__card`}
       data-id={offer.id}
-      onMouseOver={mouseOverHandler}
-      onMouseLeave={mouseLeaveHandler}
+      onMouseOver={onMouseOverCard}
+      onMouseLeave={onMouseLeaveCard}
     >
       {offer.isPremium && (
         <div className="place-card__mark">
@@ -75,7 +75,7 @@ function CardMain(props: CardMainProps): JSX.Element {
             type="button"
             data-offer-id={offer.id}
             data-is-favorite={Number(isFavorite)}
-            onClick={handleFavoriteButoonClick}
+            onClick={handleFavoriteButtonClick}
             data-testid="card-main-bookmark-button"
           >
             <svg className="place-card__bookmark-icon" width={18} height={19}>

@@ -18,7 +18,7 @@ export default function MainCardsBlock(
 
   const dispatch = useAppDispatch();
 
-  const onMouseOverCard: MouseOverLeaveHandler = useCallback(
+  const handleCardHoverCard: MouseOverLeaveHandler = useCallback(
     (evt) => {
       evt.preventDefault();
       dispatch(setCardUnderMouse(evt.currentTarget.dataset.id));
@@ -26,7 +26,7 @@ export default function MainCardsBlock(
     [dispatch]
   );
 
-  const onMouseLeaveCard: MouseOverLeaveHandler = useCallback(
+  const handleCardUnhoverCard: MouseOverLeaveHandler = useCallback(
     (evt) => {
       evt.preventDefault();
       dispatch(setCardUnderMouse(undefined));
@@ -47,8 +47,8 @@ export default function MainCardsBlock(
       <SortOptions />
       <CardMainList
         page={AppRoute.Main}
-        onMouseOverCard={onMouseOverCard}
-        onMouseLeaveCard={onMouseLeaveCard}
+        onMouseOverCard={handleCardHoverCard}
+        onMouseLeaveCard={handleCardUnhoverCard}
       />
     </section>
   );
