@@ -16,17 +16,19 @@ import {
 import { useEffect } from 'react';
 import LoadingPage from '../loading-page/loading-page';
 import { fetchOffersAction } from '../../store/api-actions';
+import { selectCurrentUser } from '../../store/user-process/user-process.selectors';
 
 function MainPage(): JSX.Element {
   const dispatch = useAppDispatch();
   const currentCity = useAppSelector(selectCurrentCity);
   const offers = useAppSelector(selectFilteredOffers);
+  const currentUser = useAppSelector(selectCurrentUser);
   const isLoading = useAppSelector(selectIsLoading);
   const offersCount = offers.length;
 
   useEffect(() => {
     dispatch(fetchOffersAction());
-  }, [dispatch]);
+  }, [dispatch, currentUser]);
 
   if (isLoading) {
     return <LoadingPage />;
@@ -90,7 +92,7 @@ function MainPage(): JSX.Element {
                   <Map
                     city={offers[0].city}
                     offers={offers}
-                    height="500px"
+                    height="100%"
                     zoom={offers[0].city.location.zoom}
                   />
                 </section>

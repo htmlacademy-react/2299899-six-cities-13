@@ -6,7 +6,7 @@ import {
   CITIES,
   PASSWORD_RULE,
 } from '../../const';
-import { FormEvent, useRef } from 'react';
+import { FormEvent, useRef, useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { loginAction } from '../../store/api-actions';
 import { selectAuthorizationStatus } from '../../store/user-process/user-process.selectors';
@@ -22,9 +22,11 @@ function LoginPage(): JSX.Element {
   const dispatch = useAppDispatch();
   const authorizationStatus = useAppSelector(selectAuthorizationStatus);
 
-  if (authorizationStatus === AuthorizationStatus.Auth) {
-    dispatch(redirectToRoute(AppRoute.Main));
-  }
+  useEffect(() => {
+    if (authorizationStatus === AuthorizationStatus.Auth) {
+      dispatch(redirectToRoute(AppRoute.Main));
+    }
+  }, [dispatch, authorizationStatus]);
 
   const handleFormSubmit = (evt: FormEvent<HTMLFormElement>) => {
     evt.preventDefault();

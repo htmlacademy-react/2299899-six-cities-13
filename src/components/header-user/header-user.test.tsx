@@ -12,6 +12,7 @@ import { APIRoute, AuthorizationStatus, NameSpace } from '../../const';
 import { State } from '../../types/state';
 import { logoutAction } from '../../store/api-actions';
 import userEvent from '@testing-library/user-event';
+import { setCurrentUser } from '../../store/user-process/user-process.slice';
 
 describe('Component: HeaderUser', () => {
   let mockState: State;
@@ -66,6 +67,7 @@ describe('Component: HeaderUser', () => {
 
     expect(actions).toEqual([
       logoutAction.pending.type,
+      setCurrentUser.type,
       logoutAction.fulfilled.type,
     ]);
   });
