@@ -14,8 +14,8 @@ import {
   selectIsLoading,
 } from '../../store/data-process/data-process.selectors';
 import { useEffect } from 'react';
-import { fetchOffersAction } from '../../store/api-actions';
 import LoadingPage from '../loading-page/loading-page';
+import { fetchOffersAction } from '../../store/api-actions';
 
 function MainPage(): JSX.Element {
   const dispatch = useAppDispatch();
