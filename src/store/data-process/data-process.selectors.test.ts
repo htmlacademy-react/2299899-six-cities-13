@@ -11,10 +11,10 @@ import {
   selectOffers,
   selectReviews,
   selectSortedOffers,
-  selectThreeRandomNearOffers,
+  selectRandomNearOffers,
   sortFunctionMap,
 } from './data-process.selectors';
-import { CITIES, NameSpace } from '../../const';
+import { CITIES, NameSpace, OFFER_MAX_NEARBY_OFFERS_SHOWN } from '../../const';
 import { makeFakeOffer, makeFakeState } from '../../utils/test-mocks';
 import { GroupedOffers } from '../../types/grouped-offers';
 import { State } from '../../types/state';
@@ -128,15 +128,15 @@ describe('DataProcess selectors', () => {
     expect(result).toEqual(groupedOffers);
   });
 
-  it('should return "threeRandomNearOffers" based on "nearOffers" from state', () => {
+  it('should return "randomNearOffers" based on "nearOffers" from state in amount of "OFFER_MAX_NEARBY_OFFERS_SHOWN"', () => {
     const nearOffers = [];
     for (let i = 0; i <= 4; i++) {
       nearOffers.push(makeFakeOffer());
     }
     mockState[NameSpace.Data].nearOffers = nearOffers;
 
-    const result = selectThreeRandomNearOffers(mockState);
+    const result = selectRandomNearOffers(mockState);
 
-    expect(result.length).toBe(3);
+    expect(result.length).toBe(OFFER_MAX_NEARBY_OFFERS_SHOWN);
   });
 });

@@ -6,7 +6,7 @@ import {
   useEffect,
   useRef,
 } from 'react';
-import { STARS } from '../../const';
+import { ReviewDescriptionLimit, STARS } from '../../const';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import {
   selectIsReviewPosting,
@@ -39,8 +39,8 @@ function FormReview({ offerId }: FormReviewProps): JSX.Element {
     if (isMounted) {
       const check =
         !!newReview.rating &&
-        newReview.review.length >= 50 &&
-        newReview.review.length <= 300;
+        newReview.review.length >= ReviewDescriptionLimit.Min &&
+        newReview.review.length <= ReviewDescriptionLimit.Max;
 
       setIsSubmitAvailable(check);
     }

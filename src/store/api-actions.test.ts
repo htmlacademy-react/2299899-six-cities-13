@@ -29,6 +29,7 @@ import {
 import { redirectToRoute } from './action';
 import * as tokenStorage from '../services/token';
 import { datatype } from 'faker';
+import { setCurrentUser } from './user-process/user-process.slice';
 
 describe('Api actions', () => {
   const axios = createAPI();
@@ -386,7 +387,7 @@ describe('Api actions', () => {
   });
 
   describe('logoutAction', () => {
-    it('should dispatch "logoutAction.pending", "logoutAction.fulfilled" when server response 204', async () => {
+    it('should dispatch "logoutAction.pending", "setCurrentUser", "logoutAction.fulfilled" when server response 204', async () => {
       mockAxiosAdapter.onDelete(APIRoute.Logout).reply(204);
 
       await store.dispatch(logoutAction());
@@ -394,6 +395,7 @@ describe('Api actions', () => {
 
       expect(actions).toEqual([
         logoutAction.pending.type,
+        setCurrentUser.type,
         logoutAction.fulfilled.type,
       ]);
     });

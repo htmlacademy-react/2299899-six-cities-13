@@ -3,7 +3,7 @@ import FormReview from '../../components/form-review/form-review';
 import { useAppDispatch, useAppSelector } from '../../hooks';
 import { fetchReviewsAction } from '../../store/api-actions';
 import ReviewElement from '../review/review';
-import { AuthorizationStatus } from '../../const';
+import { AuthorizationStatus, OFFER_MAX_REVIEWS_SHOWN } from '../../const';
 import { selectReviews } from '../../store/data-process/data-process.selectors';
 import { selectAuthorizationStatus } from '../../store/user-process/user-process.selectors';
 import { sortReviewsNewToOld } from '../../utils/sort-options';
@@ -30,7 +30,7 @@ export default function ReviewList(props: ReviewListProps): JSX.Element {
       <ul className="reviews__list" data-testid="offer-reviews-list">
         {[...reviews]
           .sort(sortReviewsNewToOld)
-          .slice(0, 10)
+          .slice(0, OFFER_MAX_REVIEWS_SHOWN)
           .map((review) => (
             <ReviewElement key={`reviews-${review.id}`} review={review} />
           ))}

@@ -42,6 +42,9 @@ export const dataProcess = createSlice({
         state.isLoading = false;
         state.offers = action.payload;
       })
+      .addCase(fetchOffersAction.rejected, (state) => {
+        state.isLoading = false;
+      })
       .addCase(fetchOfferAction.pending, (state) => {
         state.isLoading = true;
       })
@@ -49,15 +52,14 @@ export const dataProcess = createSlice({
         state.isLoading = false;
         state.offer = action.payload;
       })
+      .addCase(fetchOfferAction.rejected, (state) => {
+        state.isLoading = false;
+      })
       .addCase(fetchReviewsAction.fulfilled, (state, action) => {
         state.reviews = action.payload;
       })
       .addCase(fetchNearOffersAction.fulfilled, (state, action) => {
         state.nearOffers = action.payload;
-      })
-      .addCase(postNewReviewAction.rejected, (state) => {
-        state.isReviewPosting = false;
-        state.isReviewPosted = false;
       })
       .addCase(postNewReviewAction.pending, (state) => {
         state.isReviewPosting = true;
@@ -66,6 +68,10 @@ export const dataProcess = createSlice({
         state.isReviewPosting = false;
         state.reviews = [...state.reviews, action.payload];
         state.isReviewPosted = true;
+      })
+      .addCase(postNewReviewAction.rejected, (state) => {
+        state.isReviewPosting = false;
+        state.isReviewPosted = false;
       })
       .addCase(fetchFavoritesAction.fulfilled, (state, action) => {
         state.favorites = action.payload;

@@ -8,6 +8,7 @@ import { AuthData } from '../types/auth-data';
 import { UserData } from '../types/user-data';
 import { dropToken, saveToken } from '../services/token';
 import { Review } from '../types/review';
+import { setCurrentUser } from './user-process/user-process.slice';
 
 export const fetchOffersAction = createAsyncThunk<
   Offer[],
@@ -133,9 +134,10 @@ export const logoutAction = createAsyncThunk<
     state: State;
     extra: AxiosInstance;
   }
->('user/logout', async (_arg, { extra: api }) => {
+>('user/logout', async (_arg, { dispatch, extra: api }) => {
   await api.delete(APIRoute.Logout);
   dropToken();
+  dispatch(setCurrentUser(null));
 });
 
 export const postNewReviewAction = createAsyncThunk<
@@ -145,12 +147,10 @@ export const postNewReviewAction = createAsyncThunk<
 >(
   'data/postNewReview',
   async ({ offerId, comment, rating }, { extra: api }) => {
-    const data = (
-      await api.post(`${APIRoute.Reviews}/${offerId}`, {
-        comment,
-        rating,
-      })
-    ).data as Review;
+    const { data } = await api.post<Review>(`${APIRoute.Reviews}/${offerId}`, {
+      comment,
+      rating,
+    });
     return data;
   }
 );

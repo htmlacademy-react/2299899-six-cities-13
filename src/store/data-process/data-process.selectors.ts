@@ -1,4 +1,9 @@
-import { CITIES, NameSpace, SORT_OPTIONS } from '../../const';
+import {
+  CITIES,
+  NameSpace,
+  OFFER_MAX_NEARBY_OFFERS_SHOWN,
+  SORT_OPTIONS,
+} from '../../const';
 import { Offer } from '../../types/offer';
 import { Review } from '../../types/review';
 import { State } from '../../types/state';
@@ -60,12 +65,12 @@ export const selectGroupedFavorites = createSelector(
   }
 );
 
-export const selectThreeRandomNearOffers = createSelector(
+export const selectRandomNearOffers = createSelector(
   selectNearOffers,
   (offers) => {
-    if (offers.length <= 3) {
+    if (offers.length <= OFFER_MAX_NEARBY_OFFERS_SHOWN) {
       return offers;
     }
-    return random.arrayElements(offers, 3);
+    return random.arrayElements(offers, OFFER_MAX_NEARBY_OFFERS_SHOWN);
   }
 );

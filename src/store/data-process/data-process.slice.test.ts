@@ -74,6 +74,20 @@ describe('DataProcess slice', () => {
     expect(result).toEqual(expected);
   });
 
+  it('should set "isLoading" to "false" with "fetchOffersAction.rejected"', () => {
+    const expected = {
+      ...initialState,
+      isLoading: false,
+    };
+
+    const result = dataProcess.reducer(
+      undefined,
+      fetchOffersAction.rejected(null, '', undefined)
+    );
+
+    expect(result).toEqual(expected);
+  });
+
   it('should set "isLoading" to "true" with "fetchOfferAction.pending"', () => {
     const expected = true;
 
@@ -92,6 +106,20 @@ describe('DataProcess slice', () => {
     const result = dataProcess.reducer(
       undefined,
       fetchOfferAction.fulfilled(mockOffer, '', mockOffer.id)
+    );
+
+    expect(result).toEqual(expected);
+  });
+
+  it('should set "isLoading" to "false" with "fetchOfferAction.rejected"', () => {
+    const expected = {
+      ...initialState,
+      isLoading: false,
+    };
+
+    const result = dataProcess.reducer(
+      undefined,
+      fetchOfferAction.rejected(null, '', mockOffer.id)
     );
 
     expect(result).toEqual(expected);

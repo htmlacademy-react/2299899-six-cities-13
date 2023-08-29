@@ -4,7 +4,7 @@ import cn from 'classnames';
 import { useAppSelector } from '../../hooks';
 import {
   selectSortedOffers,
-  selectThreeRandomNearOffers,
+  selectRandomNearOffers,
 } from '../../store/data-process/data-process.selectors';
 import { AppRoute } from '../../const';
 
@@ -19,7 +19,7 @@ function CardMainList(props: CardMainListProps): JSX.Element {
   const { onMouseOverCard, onMouseLeaveCard } = props;
 
   const selector =
-    page === AppRoute.Main ? selectSortedOffers : selectThreeRandomNearOffers;
+    page === AppRoute.Main ? selectSortedOffers : selectRandomNearOffers;
   const offers = useAppSelector(selector);
 
   return (

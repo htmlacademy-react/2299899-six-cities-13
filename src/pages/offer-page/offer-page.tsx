@@ -1,5 +1,9 @@
 import { Helmet } from 'react-helmet-async';
-import { AppRoute, AuthorizationStatus } from '../../const';
+import {
+  AppRoute,
+  AuthorizationStatus,
+  OFFER_MAX_IMAGES_SHOWN,
+} from '../../const';
 import { Link, useParams } from 'react-router-dom';
 import NotFoundPage from '../not-found-page/not-found-page';
 import Map from '../../components/map/map';
@@ -18,7 +22,7 @@ import HeaderUser from '../../components/header-user/header-user';
 import {
   selectIsLoading,
   selectOffer,
-  selectThreeRandomNearOffers,
+  selectRandomNearOffers,
 } from '../../store/data-process/data-process.selectors';
 import { selectAuthorizationStatus } from '../../store/user-process/user-process.selectors';
 import { redirectToRoute } from '../../store/action';
@@ -29,14 +33,19 @@ function OfferPage(): JSX.Element {
   const { id = '' } = useParams();
   const authorizationStatus = useAppSelector(selectAuthorizationStatus);
   const currentOffer = useAppSelector(selectOffer);
-  const nearOffers = useAppSelector(selectThreeRandomNearOffers);
+  const nearOffers = useAppSelector(selectRandomNearOffers);
   const bookmarkRef = useRef<HTMLButtonElement>(null);
   const isLoading = useAppSelector(selectIsLoading);
 
   useEffect(() => {
     dispatch(fetchOfferAction(id));
-    dispatch(fetchNearOffersAction(id));
   }, [id, dispatch]);
+
+  useEffect(() => {
+    if (currentOffer) {
+      dispatch(fetchNearOffersAction(id));
+    }
+  }, [id, dispatch, currentOffer]);
 
   if (isLoading) {
     return <LoadingPage />;
@@ -61,11 +70,13 @@ function OfferPage(): JSX.Element {
     }
   };
 
-  const gallery = currentOffer.images.slice(0, 6).map((picture) => (
-    <div className="offer__image-wrapper" key={`${id}-gallery-${picture}`}>
-      <img className="offer__image" src={picture} alt="Photo studio" />
-    </div>
-  ));
+  const gallery = currentOffer.images
+    .slice(0, OFFER_MAX_IMAGES_SHOWN)
+    .map((picture) => (
+      <div className="offer__image-wrapper" key={`${id}-gallery-${picture}`}>
+        <img className="offer__image" src={picture} alt="Photo studio" />
+      </div>
+    ));
 
   const goods = currentOffer.goods.map((service) => (
     <li className="offer__inside-item" key={`${id}-inside-${service}`}>

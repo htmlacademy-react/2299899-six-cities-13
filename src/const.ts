@@ -53,3 +53,14 @@ export const DateTimeFormat = {
 };
 
 export const PASSWORD_RULE = '^(?:[0-9]+[a-zA-Z]|[a-zA-Z]+[0-9])[0-9a-zA-Z]*$';
+
+export enum ReviewDescriptionLimit {
+  Min = 50,
+  Max = 300,
+}
+
+export const OFFER_MAX_IMAGES_SHOWN = 6;
+
+export const OFFER_MAX_REVIEWS_SHOWN = 10;
+
+export const OFFER_MAX_NEARBY_OFFERS_SHOWN = 3;
